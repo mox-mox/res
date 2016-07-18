@@ -88,6 +88,22 @@ architecture rw_test of cache_tb is
         );
     end component;
 	--}}}
+    component FWFT_FIFO
+        Generic (
+            constant DATA_WIDTH : positive := 32;
+            constant FIFO_DEPTH : positive := 8
+        );
+        port (
+            CLK     : in std_logic;
+            RST     : in std_logic;
+            DataIn  : in std_logic_vector(31 downto 0);
+            WriteEn : in std_logic;
+            ReadEn  : in std_logic;
+            DataOut : out std_logic_vector(31 downto 0);
+            Full    : out std_logic;
+            Empty   : out std_logic
+        );
+    end component;
 
 	--{{{
     -- AHB Lite 
@@ -136,7 +152,21 @@ architecture rw_test of cache_tb is
     signal dclk              : std_logic := '0';
 	--}}}
 
+        signal rst : std_logic := '0';
         signal cnt : unsigned(31 downto 0) := (others => '0');
+
+        signal data : std_logic_vector(31 downto 0) := (others => '0');
+        signal data_rd_writeen : std_logic := '0';
+
+        signal cmd_readen : std_logic := '0';
+        signal cmd_out    : std_logic_vector(31 downto 0) := (others => '0');
+        signal cmd_dummy  : std_logic_vector(1 downto 0) := (others => '0');
+
+        signal wr_readen : std_logic := '0';
+        signal wr_out    : std_logic_vector(31 downto 0) := (others => '0');
+
+        signal latest_cmd : std_logic_vector(5 downto 0) := (others => '0');
+
 begin
     
 	--{{{
@@ -187,6 +217,44 @@ begin
          DCLK           => dclk,
          mem_calib_done      => mem_calib_done
     );
+
+    fifo_read : FWFT_FIFO port map (
+        CLK     => p1_rd_clk,
+        DataIn  => data,
+        WriteEn => data_rd_writeen,
+        ReadEn  => p1_rd_en, 
+        DataOut => p1_rd_data,
+        Empty   => p1_rd_empty,
+        Full    => p1_rd_full,
+        RST     => rst
+        
+    );
+
+    fifo_cmd : FWFT_FIFO port map (
+        CLK     => p1_rd_clk,
+        DataIn(29 downto 0)  => p1_cmd_addr,
+        DataIn(31 downto 30)  => cmd_dummy,
+        WriteEn => p1_cmd_en,
+        ReadEn  => cmd_readen, 
+        DataOut => cmd_out,
+        Empty   => p1_cmd_empty,
+        Full    => p1_cmd_full,
+        RST     => rst
+        
+    );
+
+    fifo_wr : FWFT_FIFO port map (
+        CLK     => p1_rd_clk,
+        DataIn  => p1_wr_data,
+        WriteEn => p1_wr_en,
+        ReadEn  => wr_readen, 
+        DataOut => wr_out,
+        Empty   => p1_wr_empty,
+        Full    => p1_wr_full,
+        RST     => rst
+    );
+
+    --);
 	--}}}
 
     -- clock generator ( 20ns => 50 MHz )
@@ -198,15 +266,33 @@ begin
     end process;
 
 -- AHB Side
+     -- hclk <=
+     hresetN <= '0';
+     -- haddr <=
+     htrans <= "00"; -- not really important here, so just zero it out
+     -- hwdata <=
+     -- hwrite <=
+     hsel <= '1'; -- for now, its always our turn ;)
+     hready <= '1';
+     -- hreadyout <= will be set later
+     -- hrdata <= will be set later
+     hsize <= "100"; -- for now, only 4 byte
+
     -- test read commands
     hwrite <= '0'; -- we want to read in the next cycles
     haddr <= x"b00bb1e5";
+<<<<<<< HEAD
+    --hwdata <= x"b00bb1e5" after 20 ns;
+    hready <= '1';
+    hsel <= '1';
+=======
     hwdata <= x"b00bb1e5" after 20 ns;
 	--hsize <= "111"; -- "111" means a size of 1024 bits, which is much more than our bus witdth.
 	hsize <= "010";   -- "010" meaning 32 bits is a much saner setting.
     hready <= '1';
     hsel <= '1';
     --hsel <= '0' after 20 ns;
+>>>>>>> f9701cb96810f798446fc2f054139d01897afb36
 
 -- Memory Controller side
     -- all get the same stepping
@@ -214,9 +300,6 @@ begin
     p1_wr_clk <= dclk;
     p1_cmd_clk <= dclk;
     p1_rd_empty <= '0';
-
-
-
 
 
     -- Command Path
@@ -231,9 +314,9 @@ begin
 
     -- Write Datapath
          --p1_wr_clk         : out
-         --p1_wr_data        : out
-         --p1_wr_mask        : out
-         --p1_wr_en          : out
+         --p1_wr_data        : out -- target is fifo 
+         --p1_wr_mask        : out 
+         --p1_wr_en          : out -- target is fifo
          --p1_wr_count       : in 
          --p1_wr_empty       : in 
          p1_wr_error       <= '0'; --: in 
@@ -242,13 +325,17 @@ begin
     -- Read Datapath
          --p1_rd_clk         : out
          --p1_rd_en          : out
-         --p1_rd_data        : in 
-         --p1_rd_full        : in 
-         --p1_rd_empty       : in 
-         --p1_rd_count       : in 
-         --p1_rd_overflow    : in 
+         --p1_rd_data        : in -- served by fifo
+         --p1_rd_full        : in -- served by fifo 
+         --p1_rd_empty       : in -- served by fifo 
+         --p1_rd_count       : in -- served by fifo 
+         p1_rd_overflow    <= '0'; --in, lets assume we never overflow, for now
          p1_rd_error       <= '0'; --: in 
 
+<<<<<<< HEAD
+    -- 1 check command-queue
+    -- 2 read command from fifo
+=======
 		 mem_calib_done <= '1';
 		 hresetN <= '0', '1' after 5 ns;
 
@@ -265,19 +352,43 @@ begin
     -- write "fifo"
 
     -- read "fifo"
+>>>>>>> f9701cb96810f798446fc2f054139d01897afb36
     process 
-        -- variable that count the clock
     begin
-        wait until rising_edge(p1_rd_clk);
-        if (p1_rd_en = '1' ) then
-            p1_rd_data <= std_logic_vector(cnt);
-            cnt <= cnt + 1;
-        else 
-            cnt <= (others => '0');
+        wait until rising_edge(p1_cmd_clk);
+        if ( p1_cmd_en = '1' ) then
+            -- read cmd-fifo
+            cmd_readen <= '1';
+            latest_cmd <= p1_cmd_bl; -- store burst length 
+        else
+            -- do nothing
+            cmd_readen <= '0';
         end if;
     end process; 
 
+    -- 3 write out data to fifo in length of burst length
+    process (latest_cmd)
+    begin
+        for i in 0 to 7 loop
+            if ( i  <= to_integer(unsigned(latest_cmd))) then
+                data_rd_writeen <= '1';
+                data <= std_logic_vector(cnt);
+                cnt <= cnt + "1";
+            end if;
+        end loop;   
+        if ( to_integer(cnt) = to_integer(unsigned(latest_cmd))) then
+            data_rd_writeen <= '0';
+            cnt <= (others => '0');
+        end if;
+    end process;
 
+<<<<<<< HEAD
+--	stop_simulation :process
+--	begin
+--j		wait for 100 ns; --run the simulation for this duration
+--j		assert false report "simulation ended" severity failure;
+--	end process;
+=======
 
 
 
@@ -289,6 +400,7 @@ begin
 		wait for 10000 ns; --run the simulation for this duration
 		assert false report "simulation ended" severity failure;
 	end process;
+>>>>>>> f9701cb96810f798446fc2f054139d01897afb36
 
 
 
