@@ -202,10 +202,11 @@ begin
     hwrite <= '0'; -- we want to read in the next cycles
     haddr <= x"b00bb1e5";
     hwdata <= x"b00bb1e5" after 20 ns;
-    hsize <= "111";
+	--hsize <= "111"; -- "111" means a size of 1024 bits, which is much more than our bus witdth.
+	hsize <= "010";   -- "010" meaning 32 bits is a much saner setting.
     hready <= '1';
     hsel <= '1';
-    hsel <= '0' after 20 ns;
+    --hsel <= '0' after 20 ns;
 
 -- Memory Controller side
     -- all get the same stepping
@@ -248,6 +249,9 @@ begin
          --p1_rd_overflow    : in 
          p1_rd_error       <= '0'; --: in 
 
+		 mem_calib_done <= '1';
+		 hresetN <= '0', '1' after 5 ns;
+
 
 
 
@@ -282,7 +286,7 @@ begin
 
 	stop_simulation :process
 	begin
-		wait for 100 ns; --run the simulation for this duration
+		wait for 10000 ns; --run the simulation for this duration
 		assert false report "simulation ended" severity failure;
 	end process;
 

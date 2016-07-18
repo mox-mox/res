@@ -22,6 +22,7 @@ end WRITE_FSM;
 architecture syn of WRITE_FSM is
 	signal current_state, next_state : write_fsm_state_type := idl_rdt;
 begin
+	state <= current_state;
 	--{{{
 	calculate_next_state: process(current_state, REQUEST, HIT, DRAM_BUSY, HCLK)
 	begin
@@ -77,7 +78,7 @@ begin
 	adopt_next_state: process(DCLK)
 	begin
 		if(rising_edge(DCLK)) then
-			if( RES_n = '1' ) then
+			if( RES_n = '0' ) then
 				current_state        <= idl_rdt;
 			else
 				current_state        <= next_state;

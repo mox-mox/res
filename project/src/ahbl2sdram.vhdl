@@ -10,59 +10,63 @@ entity AHBL2SDRAM is
 -- AHB-LITE Interface {{{
 
 -- Global signals ---------------------------------------------------------------------------------------------------------------
-		HCLK              : in  std_logic;                     -- Bus clock
-		HRESETn           : in  std_logic;                     -- Reset
+		HCLK              : in    std_logic;                     -- Bus clock
+		HRESETn           : in    std_logic;                     -- Reset
 -- AHB Slave inputs ---------------------------------------------------------------------------------------------------
-		HSEL              : in  std_logic;                     -- Slave select
-		HADDR             : in  std_logic_vector(31 downto 0); -- Slave address
-		HWRITE            : in  std_logic;                     -- Diretion: 0: Master read, 1: Master write
-		HSIZE             : in  std_logic_vector( 2 downto 0); -- Transfer Word size: 000: Byte, 001: Halfword, 010: Word, others: undefined
-		-- HBURST         : in  std_logic_vector( 2 downto 0)  -- NOT IMPLEMENTED
-		-- HPROT          : in  std_logic_vector( 3 downto 0)  -- NOT IMPLEMENTED, Could be used to create a seperated cache for instructions and data.
-		HTRANS            : in  std_logic_vector( 1 downto 0); -- Transaction status: 00: IDLE, 01: BUSY, 10: NON-SEQUENTIAL, 11: SEQUENTIAL
-		-- HMASTLOCK      : in  std_logic;                     -- NOT IMPLEMENTED
-		HREADY            : in  std_logic;                     -- Master's ready signal: 0: Busy, 1: Ready for next transaction
-
-		HWDATA            : in  std_logic_vector(31 downto 0); -- Incomming Data from master
+		HSEL              : in    std_logic;                     -- Slave select
+		HADDR             : in    std_logic_vector(31 downto 0); -- Slave address
+		HWRITE            : in    std_logic;                     -- Diretion: 0: Master read, 1: Master write
+		HSIZE             : in    std_logic_vector( 2 downto 0); -- Transfer Word size: 000: Byte, 001: Halfword, 010: Word, others: undefined
+		-- HBURST         : in    std_logic_vector( 2 downto 0)  -- NOT IMPLEMENTED
+		-- HPROT          : in    std_logic_vector( 3 downto 0)  -- NOT IMPLEMENTED, Could be used to create a seperated cache for instructions and data.
+		HTRANS            : in    std_logic_vector( 1 downto 0); -- Transaction status: 00: IDLE, 01: BUSY, 10: NON-SEQUENTIAL, 11: SEQUENTIAL
+		-- HMASTLOCK      : in    std_logic;                     -- NOT IMPLEMENTED
+		HREADY            : in    std_logic;                     -- Master's ready signal: 0: Busy, 1: Ready for next transaction
+		HWDATA            : in    std_logic_vector(31 downto 0); -- Incomming Data from master
 -- AHB Slave outputs --------------------------------------------------------------------------------------------------
-		HREADYOUT         : out std_logic;                     -- Slave's ready signal: 0: Busy, 1: Ready
-		HRESP             : out std_logic;                     -- Transfer response: 0: Okay, 1: Error. Needs one additional wait state with HREADYout low.
-		HRDATA            : out std_logic_vector(31 downto 0); -- Outgoing Data to master }}}
+		HREADYOUT         : out   std_logic;                     -- Slave's ready signal: 0: Busy, 1: Ready
+		HRESP             : out   std_logic;                     -- Transfer response: 0: Okay, 1: Error. Needs one additional wait state with HREADYout low.
+		HRDATA            : out   std_logic_vector(31 downto 0); -- Outgoing Data to master }}}
 
 -- Memory Controller Interface {{{
 
 -- Command Path -------------------------------------------------------------------------------------------------------
-		p1_cmd_clk        : out std_logic;                     -- User clock for the command FIFO
-		p1_cmd_instr      : out std_logic_vector(2 downto 0);  -- Current instruction. 000: Wrtie, 001: Read, 010: Read w. precharge, 011: ...
-		p1_cmd_addr       : out std_logic_vector(29 downto 0); -- Byte start address for current transaction.
-		p1_cmd_bl         : out std_logic_vector(5 downto 0);  -- Busrst length-1, eg. 0 indicates a burst of one word
-		p1_cmd_en         : out std_logic;                     -- Write enable for the command FIFO: 0: Diabled, 1: Enabled
-		p1_cmd_empty      : in  std_logic;                     -- Command FIFO empty bit: 0: Not empty, 1: Empty
-		p1_cmd_error      : in  std_logic;                     -- Error bit. Need to reset the MCB to resolve.
-		p1_cmd_full       : in  std_logic;                     -- Command FIFO full bit: 0: Not full, 1: Full
+		p1_cmd_clk        : out   std_logic;                     -- User clock for the command FIFO
+		p1_cmd_instr      : out   std_logic_vector(2 downto 0);  -- Current instruction. 000: Wrtie, 001: Read, 010: Read w. precharge, 011: ...
+		p1_cmd_addr       : out   std_logic_vector(29 downto 0); -- Byte start address for current transaction.
+		p1_cmd_bl         : out   std_logic_vector(5 downto 0);  -- Busrst length-1, eg. 0 indicates a burst of one word
+		p1_cmd_en         : out   std_logic;                     -- Write enable for the command FIFO: 0: Diabled, 1: Enabled
+		p1_cmd_empty      : in    std_logic;                     -- Command FIFO empty bit: 0: Not empty, 1: Empty
+		p1_cmd_error      : in    std_logic;                     -- Error bit. Need to reset the MCB to resolve.
+		p1_cmd_full       : in    std_logic;                     -- Command FIFO full bit: 0: Not full, 1: Full
 -- Write Datapath -----------------------------------------------------------------------------------------------------
-		p1_wr_clk         : out std_logic;                     -- Clock for the write data FIFO
-		p1_wr_data        : out std_logic_vector(31 downto 0); -- Data to be stored in the FIFO and be written to the DDR2-DRAM.
-		p1_wr_mask        : out std_logic_vector(3 downto 0);  -- Mask write data. A high bit means corresponding byte is not written to the RAM.
-		p1_wr_en          : out std_logic;                     -- Write enable for the write data FIFO
-		p1_wr_count       : in  std_logic_vector( 6 downto 0); -- Write data FIFO fill level: 0: empty. Note longer latency than p1_wr_empty!
-		p1_wr_empty       : in  std_logic;                     -- Write data FIFO empty bit: 0: Not empty, 1: Empty
-		p1_wr_error       : in  std_logic;                     -- Error bit. Need to reset the MCB to resolve.
-		p1_wr_full        : in  std_logic;                     -- Write data FIFO full bit: 0: Not full, 1: Full
-		p1_wr_underrun    : in  std_logic;                     -- Underrun flag. 0: All ok, 1: Underrun. Last valid data is written repeatedly.
+		p1_wr_clk         : out   std_logic;                     -- Clock for the write data FIFO
+		p1_wr_data        : out   std_logic_vector(31 downto 0); -- Data to be stored in the FIFO and be written to the DDR2-DRAM.
+		p1_wr_mask        : out   std_logic_vector(3 downto 0);  -- Mask write data. A high bit means corresponding byte is not written to the RAM.
+		p1_wr_en          : out   std_logic;                     -- Write enable for the write data FIFO
+		p1_wr_count       : in    std_logic_vector( 6 downto 0); -- Write data FIFO fill level: 0: empty. Note longer latency than p1_wr_empty!
+		p1_wr_empty       : in    std_logic;                     -- Write data FIFO empty bit: 0: Not empty, 1: Empty
+		p1_wr_error       : in    std_logic;                     -- Error bit. Need to reset the MCB to resolve.
+		p1_wr_full        : in    std_logic;                     -- Write data FIFO full bit: 0: Not full, 1: Full
+		p1_wr_underrun    : in    std_logic;                     -- Underrun flag. 0: All ok, 1: Underrun. Last valid data is written repeatedly.
 -- Read Datapath ------------------------------------------------------------------------------------------------------
-		p1_rd_clk         : out std_logic;                     -- Clock for the read data FIFO
-		p1_rd_en          : out std_logic;                     -- Read enable bit for the read data FIFO: 0: Diabled, 1: Enabled
-		p1_rd_data        : in  std_logic_vector(31 downto 0); -- Data read from the RAM
-		p1_rd_full        : in  std_logic;                     -- Read data FIFO full bit: 0: All ok, 1: Full. Data will be discarded.
-		p1_rd_empty       : in  std_logic;                     -- Read data FIFO empty bit: 0: Not empty, 1: Empty. Cannot read data from FIFO.
-		p1_rd_count       : in  std_logic_vector(6 downto 0);  -- Read data FIFO fill level: 0: empty. Note longer latency than p1_rd_full!
-		p1_rd_overflow    : in  std_logic;                     -- Overflow flag: 0: All ok, 1: Data was lost because the FIFO overflowed.
-		p1_rd_error       : in  std_logic;                     -- Error bit. Need to reset the MCB to resolve. }}}
+		p1_rd_clk         : out   std_logic;                     -- Clock for the read data FIFO
+		p1_rd_en          : out   std_logic;                     -- Read enable bit for the read data FIFO: 0: Diabled, 1: Enabled
+		p1_rd_data        : in    std_logic_vector(31 downto 0); -- Data read from the RAM
+		p1_rd_full        : in    std_logic;                     -- Read data FIFO full bit: 0: All ok, 1: Full. Data will be discarded.
+		p1_rd_empty       : in    std_logic;                     -- Read data FIFO empty bit: 0: Not empty, 1: Empty. Cannot read data from FIFO.
+		p1_rd_count       : in    std_logic_vector(6 downto 0);  -- Read data FIFO fill level: 0: empty. Note longer latency than p1_rd_full!
+		p1_rd_overflow    : in    std_logic;                     -- Overflow flag: 0: All ok, 1: Data was lost because the FIFO overflowed.
+		p1_rd_error       : in    std_logic;                     -- Error bit. Need to reset the MCB to resolve. }}}
 
 -- Miscellaneous non-bus signals {{{
-		DCLK              : in std_logic;                      -- Double speed internal clock used to speed up the internal logic.
-		mem_calib_done    : in std_logic);                     -- Clock used to speed up the internal logic. MUST BE SYNCHRONISED WITH HCLK!! }}}
+		DCLK              : in    std_logic;                      -- Double speed internal clock used to speed up the internal logic.
+		mem_calib_done    : in    std_logic;                      -- Clock used to speed up the internal logic. MUST BE SYNCHRONISED WITH HCLK!!
+		HIT_COUNT         : out   std_logic_vector(31 downto 0);  -- The number of accesses that resulted in a cache hit since the last reset.
+		MISS_COUNT        : out   std_logic_vector(31 downto 0);  -- The number of accesses that resulted in a cache miss since the last reset.
+		INVALIDATE_LOW    : inout std_logic_vector(31 downto 0);  -- Writing this and INVALIDATE_HIGH to a value except 0xffffffff marks all lines in that...
+		INVALIDATE_HIGH   : inout std_logic_vector(31 downto 0)); -- ...range as invalid. !!! SUCCESSIVE WRITES MUST WAIT UNTIL THE CACHE CONTROLLER HAS...
+		                                                          -- ...WRITTEN BOTH REGISTERS TO 0xffffffff AGAIN !!! }}} TODO: Implement this.
 end AHBL2SDRAM;
 
 
@@ -233,8 +237,10 @@ architecture cache of AHBL2SDRAM is
 
 	--{{{ Hit and Miss Registers for statistics These will probably need to be moved to the module that contains the register file.
 
-	signal hit_counter  : unsigned (31 downto 0) := (others => '0');
-	signal miss_counter : unsigned (31 downto 0) := (others => '0');
+	--signal hit_counter  : unsigned (31 downto 0) := (others => '0');
+	--signal miss_counter : unsigned (31 downto 0) := (others => '0');
+	signal hit_counter  : std_logic_vector(31 downto 0) := (others => '0');
+	signal miss_counter : std_logic_vector(31 downto 0) := (others => '0');
 	---}}}
 
 	--{{{ Helper functions
@@ -243,6 +249,9 @@ architecture cache of AHBL2SDRAM is
 	function hsize_2_real_size (HSIZE : std_logic_vector(2 downto 0)) return natural is
 	variable real_size : integer range 4 downto 0;
 	begin
+		--for i in 0 to HSIZE'LENGTH-1 loop
+		--	report "HSIZE("&integer'image(i)&") value is" & std_logic'image(HSIZE(i));
+		--end loop;
 		if HSIZE = "000" then
 			real_size := 1;
 		elsif HSIZE = "001" then
@@ -262,6 +271,10 @@ architecture cache of AHBL2SDRAM is
 	variable result: std_logic_vector(31 downto 0);
 	variable real_size : natural := hsize_2_real_size(HSIZE);
 	begin
+		report "HSIZE value is";
+		for i in 0 to HSIZE'LENGTH-1 loop
+			report  std_logic'image(HSIZE(i));
+		end loop;
 		result := std_logic_vector(shift_right(unsigned(DATA), to_integer(unsigned(BS))*8));
 		case real_size is
 			when 1 => result := "000000000000000000000000" & result( 7 downto 0);
@@ -323,6 +336,8 @@ begin
 
 	--{{{ Common signals
 
+	hit_count      <= hit_counter;
+	miss_count     <= miss_counter;
 	p1_cmd_clk     <= DCLK;
 	p1_wr_clk      <= DCLK;
 	p1_rd_clk      <= DCLK;
@@ -339,7 +354,7 @@ begin
 	                  '0' after 1 ns; -- TODO: Verfify if this is correct.
 	--}}}
 	--{{{
-	HREADYOUT      <= '1'             after 1 ns when (HRESETn = '1')                                                                          else
+	HREADYOUT      <= '1'             after 1 ns when (HRESETn = '0')                                                                          else
 	                  '0'             after 1 ns when (mem_calib_done = '0' and (read_request = '1' or write_request = '1'))                   else
 	                  '0'             after 1 ns when ((read_request = '1' and read_busy = '1') or (write_request = '1' and write_busy = '1')) else
 	                  hit             after 1 ns when (read_current_state=cmp_dlv)                                                             else
@@ -350,7 +365,7 @@ begin
 	                  '1'             after 1 ns; -- Signal readiness on reset and all conditions where the cache is not not ready.
 	--}}}
 	--{{{
-	HRDATA         <= align_output_data(HADDR_BS, HSIZE, data_sram_b_do     ) after 1 ns when (read_current_state=cmp_dlv) else
+	HRDATA         <= align_output_data(           HADDR_BS,            HSIZE, data_sram_b_do     ) after 1 ns when (read_current_state=cmp_dlv) else
 	                  align_output_data(read_SAVE1_HADDR_BS, read_SAVE1_HSIZE, p1_rd_data         ) after 1 ns when (read_current_state=rd0)     else
 	                  align_output_data(read_SAVE1_HADDR_BS, read_SAVE1_HSIZE, read_keep_dram_data) after 1 ns when (read_current_state=rd1_keep) else
 	                  (others => '-') after 1 ns;
@@ -410,7 +425,7 @@ begin
 	latch_bus : process(HCLK) -- Using HCLK is intended here!
 	begin
 		if(rising_edge(HCLK)) then
-			if(HRESETn = '1') then
+			if(HRESETn = '0') then
 				SAVE0_HADDR <= (others => '0');
 				SAVE0_HSIZE <= (others => '0');
 			elsif ( HSEL = '1' and HREADY = '1' ) then
@@ -437,8 +452,8 @@ begin
 	--{{{
 	write_propagate : process(DCLK)
 	begin
-		if(rising_edge(HCLK)) then
-			if(HRESETn = '1') then
+		if(rising_edge(DCLK)) then
+			if(HRESETn = '0') then
 				write_SAVE1_HADDR  <= ( others => '0' );
 				write_SAVE1_HSIZE  <= ( others => '0' );
 				write_SAVE1_HWDATA <= ( others => '0' );
@@ -523,8 +538,8 @@ begin
 	--{{{
 	read_propagate : process(DCLK)
 	begin
-		if(rising_edge(HCLK)) then
-			if(HRESETn = '1') then
+		if(rising_edge(DCLK)) then
+			if(HRESETn = '0') then
 				read_SAVE1_HADDR <= (others => '0');
 				read_SAVE1_HSIZE <= (others => '0');
 			else
@@ -549,9 +564,9 @@ begin
 			miss_counter <= (others => '0');
 		elsif ( read_current_state=cmp_dlv or write_current_state=cmp_sto ) then
 			if ( hit = '1' ) then
-				hit_counter <= hit_counter + "1";
+				hit_counter <= std_logic_vector(unsigned(hit_counter) + "1");
 			else
-				miss_counter <= miss_counter + "1";
+				miss_counter <= std_logic_vector(unsigned(miss_counter) + "1");
 			end if;
 		end if;
 	end process;
