@@ -178,8 +178,8 @@ architecture cache of AHBL2SDRAM is
 	signal write_current_state       :  write_fsm_state_type;
 
 	signal write_SAVE1_HADDR         :   std_logic_vector(31 downto  0);
-	alias  write_SAVE1_HADDR_TAG     is write_SAVE1_HADDR(23 downto 12);
-	alias  write_SAVE1_HADDR_IDX     is write_SAVE1_HADDR(11 downto  5);
+	--alias  write_SAVE1_HADDR_TAG     is write_SAVE1_HADDR(23 downto 12);
+	--alias  write_SAVE1_HADDR_IDX     is write_SAVE1_HADDR(11 downto  5);
 	alias  write_SAVE1_HADDR_BS      is write_SAVE1_HADDR( 1 downto  0);
 	signal write_SAVE1_HWDATA        :   std_logic_vector(31 downto  0);
 	signal write_SAVE1_HSIZE         :   std_logic_vector( 2 downto  0);
@@ -209,6 +209,7 @@ architecture cache of AHBL2SDRAM is
 	signal read_current_state        :  read_fsm_state_type;
 
 	signal read_SAVE1_HADDR          :  std_logic_vector(31 downto  0);
+	alias  read_SAVE1_HADDR_TAG      is read_SAVE1_HADDR(23 downto 12);
 	alias  read_SAVE1_HADDR_WS       is read_SAVE1_HADDR( 4 downto  2);
 	alias  read_SAVE1_HADDR_IDX      is read_SAVE1_HADDR(11 downto  5);
 	alias  read_SAVE1_HADDR_BS       is read_SAVE1_HADDR( 1 downto  0);
@@ -484,11 +485,11 @@ begin
 	                    '0' after 1 ns;
 	--}}}
 	--{{{
-	tag_sram_b_idx   <= "000" & write_SAVE1_HADDR_IDX      after 1 ns when (read_current_state=rd1_keep) else
+	tag_sram_b_idx   <= "000" & read_SAVE1_HADDR_IDX      after 1 ns when (read_current_state=rd1_keep) else
 	                    (others => '-')                    after 1 ns;
 	--}}}
 	--{{{
-	tag_sram_b_di    <= "111" & '1' & write_SAVE1_HADDR_TAG after 1 ns when (read_current_state=rd1_keep) else
+	tag_sram_b_di    <= "111" & '1' & read_SAVE1_HADDR_TAG after 1 ns when (read_current_state=rd1_keep) else
 	                    (others => '-')                     after 1 ns;
 	--}}}
 	--{{{
