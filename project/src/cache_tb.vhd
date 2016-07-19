@@ -267,7 +267,6 @@ begin
 
 -- AHB Side
      -- hclk <=
-     hresetN <= '0';
      -- haddr <=
      htrans <= "00"; -- not really important here, so just zero it out
      -- hwdata <=
@@ -281,18 +280,11 @@ begin
     -- test read commands
     hwrite <= '0'; -- we want to read in the next cycles
     haddr <= x"b00bb1e5";
-<<<<<<< HEAD
-    --hwdata <= x"b00bb1e5" after 20 ns;
-    hready <= '1';
-    hsel <= '1';
-=======
     hwdata <= x"b00bb1e5" after 20 ns;
+    --hsize <= "100"; -- for now, only 4 byte RTFM: http://www.eecs.umich.edu/courses/eecs373/readings/ARM_IHI0033A_AMBA_AHB-Lite_SPEC.pdf, Table 3-2 Transfer size encoding
 	--hsize <= "111"; -- "111" means a size of 1024 bits, which is much more than our bus witdth.
 	hsize <= "010";   -- "010" meaning 32 bits is a much saner setting.
-    hready <= '1';
-    hsel <= '1';
     --hsel <= '0' after 20 ns;
->>>>>>> f9701cb96810f798446fc2f054139d01897afb36
 
 -- Memory Controller side
     -- all get the same stepping
@@ -332,27 +324,13 @@ begin
          p1_rd_overflow    <= '0'; --in, lets assume we never overflow, for now
          p1_rd_error       <= '0'; --: in 
 
-<<<<<<< HEAD
     -- 1 check command-queue
     -- 2 read command from fifo
-=======
 		 mem_calib_done <= '1';
 		 hresetN <= '0', '1' after 5 ns;
-
-
-
-
-
-
-
-
-
-
-
     -- write "fifo"
 
     -- read "fifo"
->>>>>>> f9701cb96810f798446fc2f054139d01897afb36
     process 
     begin
         wait until rising_edge(p1_cmd_clk);
@@ -382,13 +360,6 @@ begin
         end if;
     end process;
 
-<<<<<<< HEAD
---	stop_simulation :process
---	begin
---j		wait for 100 ns; --run the simulation for this duration
---j		assert false report "simulation ended" severity failure;
---	end process;
-=======
 
 
 
@@ -400,7 +371,6 @@ begin
 		wait for 10000 ns; --run the simulation for this duration
 		assert false report "simulation ended" severity failure;
 	end process;
->>>>>>> f9701cb96810f798446fc2f054139d01897afb36
 
 
 
