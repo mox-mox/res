@@ -477,7 +477,7 @@ begin
 	                    '0' after 1 ns;
 	--}}}
 	--{{{
-	read_busy        <= '0' after 1 ns when (read_current_state=idl_rdt or read_current_state=cmp_dlv or read_current_state=sync) else
+	read_busy        <= '0' after 1 ns when (read_current_state=idl_rdt or read_current_state=cmp_dlv or read_current_state=req0 or read_current_state=req1 or read_current_state=rd0 or read_current_state=rd1_keep or read_current_state=sync) else
 	                    '1' after 1 ns;
 	--}}}
 	--{{{
