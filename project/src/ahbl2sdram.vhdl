@@ -32,9 +32,9 @@ entity AHBL2SDRAM is
 
 -- Command Path -------------------------------------------------------------------------------------------------------
 		p1_cmd_clk        : out   std_logic;                     -- User clock for the command FIFO
-		p1_cmd_instr      : out   std_logic_vector(2 downto 0);  -- Current instruction. 000: Wrtie, 001: Read, 010: Read w. precharge, 011: ...
+		p1_cmd_instr      : out   std_logic_vector( 2 downto 0); -- Current instruction. 000: Wrtie, 001: Read, 010: Read w. precharge, 011: ...
 		p1_cmd_addr       : out   std_logic_vector(29 downto 0); -- Byte start address for current transaction.
-		p1_cmd_bl         : out   std_logic_vector(5 downto 0);  -- Busrst length-1, eg. 0 indicates a burst of one word
+		p1_cmd_bl         : out   std_logic_vector( 5 downto 0); -- Busrst length-1, eg. 0 indicates a burst of one word
 		p1_cmd_en         : out   std_logic;                     -- Write enable for the command FIFO: 0: Diabled, 1: Enabled
 		p1_cmd_empty      : in    std_logic;                     -- Command FIFO empty bit: 0: Not empty, 1: Empty
 		p1_cmd_error      : in    std_logic;                     -- Error bit. Need to reset the MCB to resolve.
@@ -42,7 +42,7 @@ entity AHBL2SDRAM is
 -- Write Datapath -----------------------------------------------------------------------------------------------------
 		p1_wr_clk         : out   std_logic;                     -- Clock for the write data FIFO
 		p1_wr_data        : out   std_logic_vector(31 downto 0); -- Data to be stored in the FIFO and be written to the DDR2-DRAM.
-		p1_wr_mask        : out   std_logic_vector(3 downto 0);  -- Mask write data. A high bit means corresponding byte is not written to the RAM.
+		p1_wr_mask        : out   std_logic_vector( 3 downto 0); -- Mask write data. A high bit means corresponding byte is not written to the RAM.
 		p1_wr_en          : out   std_logic;                     -- Write enable for the write data FIFO
 		p1_wr_count       : in    std_logic_vector( 6 downto 0); -- Write data FIFO fill level: 0: empty. Note longer latency than p1_wr_empty!
 		p1_wr_empty       : in    std_logic;                     -- Write data FIFO empty bit: 0: Not empty, 1: Empty
@@ -55,7 +55,7 @@ entity AHBL2SDRAM is
 		p1_rd_data        : in    std_logic_vector(31 downto 0); -- Data read from the RAM
 		p1_rd_full        : in    std_logic;                     -- Read data FIFO full bit: 0: All ok, 1: Full. Data will be discarded.
 		p1_rd_empty       : in    std_logic;                     -- Read data FIFO empty bit: 0: Not empty, 1: Empty. Cannot read data from FIFO.
-		p1_rd_count       : in    std_logic_vector(6 downto 0);  -- Read data FIFO fill level: 0: empty. Note longer latency than p1_rd_full!
+		p1_rd_count       : in    std_logic_vector( 6 downto 0); -- Read data FIFO fill level: 0: empty. Note longer latency than p1_rd_full!
 		p1_rd_overflow    : in    std_logic;                     -- Overflow flag: 0: All ok, 1: Data was lost because the FIFO overflowed.
 		p1_rd_error       : in    std_logic;                     -- Error bit. Need to reset the MCB to resolve. }}}
 
@@ -65,8 +65,8 @@ entity AHBL2SDRAM is
 		HIT_COUNT         : out   std_logic_vector(31 downto 0);  -- The number of accesses that resulted in a cache hit since the last reset.
 		MISS_COUNT        : out   std_logic_vector(31 downto 0);  -- The number of accesses that resulted in a cache miss since the last reset.
 		INVALIDATE_LOW    : inout std_logic_vector(31 downto 0);  -- Writing this and INVALIDATE_HIGH to a value except 0xffffffff marks all lines in that...
-		INVALIDATE_HIGH   : inout std_logic_vector(31 downto 0)); -- ...range as invalid. !!! SUCCESSIVE WRITES MUST WAIT UNTIL THE CACHE CONTROLLER HAS...
-		                                                          -- ...WRITTEN BOTH REGISTERS TO 0xffffffff AGAIN !!! }}} TODO: Implement this.
+		INVALIDATE_HIGH   : inout std_logic_vector(31 downto 0)   -- ...range as invalid. !!! SUCCESSIVE WRITES MUST WAIT UNTIL THE CACHE CONTROLLER HAS...
+		);                                                        -- ...WRITTEN BOTH REGISTERS TO 0xffffffff AGAIN !!! }}} TODO: Implement this.
 end AHBL2SDRAM;
 
 
@@ -272,10 +272,10 @@ architecture cache of AHBL2SDRAM is
 	variable result: std_logic_vector(31 downto 0);
 	variable real_size : natural := hsize_2_real_size(HSIZE);
 	begin
-		report "HSIZE value is";
-		for i in 0 to HSIZE'LENGTH-1 loop
-			report  std_logic'image(HSIZE(i));
-		end loop;
+		--report "HSIZE value is";
+		--for i in 0 to HSIZE'LENGTH-1 loop
+		--	report  std_logic'image(HSIZE(i));
+		--end loop;
 		result := std_logic_vector(shift_right(unsigned(DATA), to_integer(unsigned(BS))*8));
 		case real_size is
 			when 1 => result := "000000000000000000000000" & result( 7 downto 0);

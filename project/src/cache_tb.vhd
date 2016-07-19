@@ -84,7 +84,11 @@ architecture rw_test of cache_tb is
                 p1_rd_error       : in  std_logic;                     -- Error bit. Need to reset the MCB to resolve.
         -- Quadruple speed internal clock
                 DCLK              : in std_logic; 
-                mem_calib_done         : in std_logic
+                mem_calib_done         : in std_logic;
+                HIT_COUNT         : out   std_logic_vector(31 downto 0);  -- The number of accesses that resulted in a cache hit since the last reset.
+                MISS_COUNT        : out   std_logic_vector(31 downto 0);  -- The number of accesses that resulted in a cache miss since the last reset.
+                INVALIDATE_LOW    : inout std_logic_vector(31 downto 0);
+                INVALIDATE_HIGH   : inout std_logic_vector(31 downto 0)
         );
     end component;
 	--}}}
@@ -172,50 +176,54 @@ begin
 	--{{{
     main : AHBL2SDRAM port map (
     -- AHB Lite 
-         HCLK           => hclk,
-         HRESETn        => hresetN, 
-         HADDR          => haddr,
-         HTRANS         => htrans,
-         HWDATA         => hwdata,
-         HWRITE         => hwrite,
-         HSEL           => hsel,
-         HREADY         => hready,
-         HREADYOUT      => hreadyout,
-         HRDATA         => hrdata,
-         HSIZE          => hsize,
+         HCLK               => hclk,
+         HRESETn            => hresetN, 
+         HADDR              => haddr,
+         HTRANS             => htrans,
+         HWDATA             => hwdata,
+         HWRITE             => hwrite,
+         HSEL               => hsel,
+         HREADY             => hready,
+         HREADYOUT          => hreadyout,
+         HRDATA             => hrdata,
+         HSIZE              => hsize,
 
     -- Command Path
-         p1_cmd_addr    => p1_cmd_addr,
-         p1_cmd_bl      => p1_cmd_bl,
-         p1_cmd_clk     => p1_cmd_clk,
-         p1_cmd_empty   => p1_cmd_empty,
-         p1_cmd_en      => p1_cmd_en,
-         p1_cmd_error   => p1_cmd_error,
-         p1_cmd_full    => p1_cmd_full,
-         p1_cmd_instr   => p1_cmd_instr,
+         p1_cmd_addr        => p1_cmd_addr,
+         p1_cmd_bl          => p1_cmd_bl,
+         p1_cmd_clk         => p1_cmd_clk,
+         p1_cmd_empty       => p1_cmd_empty,
+         p1_cmd_en          => p1_cmd_en,
+         p1_cmd_error       => p1_cmd_error,
+         p1_cmd_full        => p1_cmd_full,
+         p1_cmd_instr       => p1_cmd_instr,
 
     -- Write Datapath
-         p1_wr_clk      => p1_wr_clk,
-         p1_wr_count    => p1_wr_count, 
-         p1_wr_data     => p1_wr_data, 
-         p1_wr_empty    => p1_wr_empty,
-         p1_wr_en       => p1_wr_en,
-         p1_wr_error    => p1_wr_error,
-         p1_wr_full     => p1_wr_full,
-         p1_wr_mask     => p1_wr_mask,
-         p1_wr_underrun => p1_wr_underrun,
+         p1_wr_clk          => p1_wr_clk,
+         p1_wr_count        => p1_wr_count, 
+         p1_wr_data         => p1_wr_data, 
+         p1_wr_empty        => p1_wr_empty,
+         p1_wr_en           => p1_wr_en,
+         p1_wr_error        => p1_wr_error,
+         p1_wr_full         => p1_wr_full,
+         p1_wr_mask         => p1_wr_mask,
+         p1_wr_underrun     => p1_wr_underrun,
     -- Read Datapath
-         p1_rd_clk      => p1_rd_clk,
-         p1_rd_en       => p1_rd_en,
-         p1_rd_data     => p1_rd_data,
-         p1_rd_full     => p1_rd_full,
-         p1_rd_empty    => p1_rd_empty,
-         p1_rd_count    => p1_rd_count,
-         p1_rd_overflow => p1_rd_overflow,
-         p1_rd_error    => p1_rd_error,
+         p1_rd_clk          => p1_rd_clk,
+         p1_rd_en           => p1_rd_en,
+         p1_rd_data         => p1_rd_data,
+         p1_rd_full         => p1_rd_full,
+         p1_rd_empty        => p1_rd_empty,
+         p1_rd_count        => p1_rd_count,
+         p1_rd_overflow     => p1_rd_overflow,
+         p1_rd_error        => p1_rd_error,
          
-         DCLK           => dclk,
-         mem_calib_done      => mem_calib_done
+         DCLK               => dclk,
+         mem_calib_done     => mem_calib_done,
+         HIT_COUNT          => open,
+         MISS_COUNT         => open,
+         INVALIDATE_LOW     => open,
+         INVALIDATE_HIGH    => open
     );
 
     fifo_read : FWFT_FIFO port map (
@@ -275,7 +283,6 @@ begin
      hready <= '1';
      -- hreadyout <= will be set later
      -- hrdata <= will be set later
-     hsize <= "100"; -- for now, only 4 byte
 
     -- test read commands
     hwrite <= '0'; -- we want to read in the next cycles
