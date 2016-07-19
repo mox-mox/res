@@ -18,6 +18,7 @@ architecture read_test of AHBL2SDRAM_TB is
 
 	--{{{ Wiring logic
 
+		signal rst               : std_logic;
 		signal HCLK              : std_logic;
 		signal HRESETn           : std_logic;
 		signal HSEL              : std_logic;
@@ -145,6 +146,7 @@ architecture read_test of AHBL2SDRAM_TB is
 
 	--{{{
 	component MEM_CTL_DUMMY is port(
+		rst               : in    std_logic;
 		p1_cmd_clk        : in    std_logic;
 		p1_cmd_instr      : in    std_logic_vector( 2 downto 0);
 		p1_cmd_addr       : in    std_logic_vector(29 downto 0);
@@ -190,6 +192,12 @@ architecture read_test of AHBL2SDRAM_TB is
 	for mem_ctl : mem_ctl_dummy use entity work.mem_ctl_dummy(normal);
 	for misc    : misc_dummy    use entity work.misc_dummy(passive);
 begin
+
+	--{{{ Wiring logic
+
+		rst               <= not HRESETn;
+	--}}}
+
 	--{{{ Port Maps
 
 	--{{{
@@ -263,6 +271,7 @@ begin
 
 	--{{{
 	mem_ctl : MEM_CTL_DUMMY port map(
+		rst               => rst,
 		p1_cmd_clk        => DCLK,
 		p1_cmd_instr      => p1_cmd_instr,
 		p1_cmd_addr       => p1_cmd_addr,
@@ -300,6 +309,8 @@ begin
 		INVALIDATE_HIGH   => INVALIDATE_HIGH);
 	--}}}
 	--}}}
+
+
 
 
 

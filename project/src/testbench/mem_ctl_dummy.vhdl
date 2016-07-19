@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 entity MEM_CTL_DUMMY is
 	port(
+		rst               : in    std_logic;
 -- Command Path -------------------------------------------------------------------------------------------------------
 		p1_cmd_clk        : in    std_logic;                     -- User clock for the command FIFO
 		p1_cmd_instr      : in    std_logic_vector( 2 downto 0); -- Current instruction. 000: Wrtie, 001: Read, 010: Read w. precharge, 011: ...
@@ -35,6 +36,130 @@ entity MEM_CTL_DUMMY is
 end MEM_CTL_DUMMY;
 
 architecture normal of MEM_CTL_DUMMY is
+
+	--{{{ Wiring logic
+
+	signal p1_cmd_instr_addr_concat : std_logic_vector(32 downto 0);
+	signal cmd_readen               : std_logic;
+	signal cmd_instr_addr_concat    : std_logic_vector(32 downto 0);
+	alias cmd_instr                 is cmd_instr_addr_concat( 2 downto 0);
+	alias cmd_addr                  is cmd_instr_addr_concat(29 downto 0);
+
+	signal p1_wr_mask_data_concat   : std_logic_vector(35 downto 0);
+	signal wr_readen                : std_logic;
+	signal wr_mask_data_concat      : std_logic_vector(35 downto 0);
+	alias  wr_mask                  is wr_mask_data_concat(35 downto 32);
+	alias  wr_data                  is wr_mask_data_concat(31 downto  0);
+
+	signal rd_data                  : std_logic_vector(31 downto 0);
+	signal rd_writeen               : std_logic;
+
+	--}}}
+
+	--{{{
+    component CMD_FIFO
+        Generic (
+            constant DATA_WIDTH : positive := 32;
+            constant FIFO_DEPTH : positive := 64
+        );
+        port (
+            CLK     : in std_logic;
+            RST     : in std_logic;
+            DataIn  : in std_logic_vector(32 downto 0);
+            WriteEn : in std_logic;
+            ReadEn  : in std_logic;
+            DataOut : out std_logic_vector(32 downto 0);
+            Full    : out std_logic;
+            Empty   : out std_logic
+        );
+    end component;
+	--}}}
+
+	--{{{
+    component WR_FIFO
+        Generic (
+            constant DATA_WIDTH : positive := 35;
+            constant FIFO_DEPTH : positive := 64
+        );
+        port (
+            CLK     : in std_logic;
+            RST     : in std_logic;
+            DataIn  : in std_logic_vector(35 downto 0);
+            WriteEn : in std_logic;
+            ReadEn  : in std_logic;
+            DataOut : out std_logic_vector(35 downto 0);
+            Full    : out std_logic;
+            Empty   : out std_logic
+        );
+    end component;
+	--}}}
+
+	--{{{
+    component RD_FIFO
+        Generic (
+            constant DATA_WIDTH : positive := 32;
+            constant FIFO_DEPTH : positive := 64
+        );
+        port (
+            CLK     : in std_logic;
+            RST     : in std_logic;
+            DataIn  : in std_logic_vector(31 downto 0);
+            WriteEn : in std_logic;
+            ReadEn  : in std_logic;
+            DataOut : out std_logic_vector(31 downto 0);
+            Full    : out std_logic;
+            Empty   : out std_logic
+        );
+    end component;
+	--}}}
+
+	for fifo_cmd   : CMD_FIFO    use entity work.FWFT_FIFO(Behavioral);
+	for fifo_wr    : WR_FIFO     use entity work.FWFT_FIFO(Behavioral);
+	for fifo_rd    : RD_FIFO     use entity work.FWFT_FIFO(Behavioral);
 begin
+
+	--{{{ Port Maps
+
+	--{{{
+	fifo_cmd : CMD_FIFO port map (
+		CLK     => p1_cmd_clk,
+		DataIn  => p1_cmd_instr_addr_concat,
+		WriteEn => p1_cmd_en,
+		ReadEn  => cmd_readen,
+		DataOut => cmd_instr_addr_concat,
+		Empty   => p1_cmd_empty,
+		Full    => p1_cmd_full,
+		RST     => rst
+	);
+	--}}}
+
+	--{{{
+	fifo_wr : wr_FIFO port map (
+		CLK     => p1_wr_clk,
+		DataIn  => p1_wr_mask_data_concat,
+		WriteEn => p1_wr_en,
+		ReadEn  => wr_readen,
+		DataOut => wr_mask_data_concat,
+		Empty   => p1_wr_empty,
+		Full    => p1_wr_full,
+		RST     => rst
+	);
+	--}}}
+
+	--{{{
+	fifo_rd : RD_FIFO port map (
+		CLK     => p1_rd_clk,
+		DataIn  => rd_data,
+		WriteEn => rd_writeen,
+		ReadEn  => p1_rd_en,
+		DataOut => p1_rd_data,
+		Empty   => p1_rd_empty,
+		Full    => p1_rd_full,
+		RST     => rst
+	);
+	--}}}
+	--}}}
+
+
 end normal;
 

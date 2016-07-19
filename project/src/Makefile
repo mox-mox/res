@@ -1,8 +1,8 @@
 
 WAVE_FILE  := tb.ghw
-TOP_MODULE := cache_tb
+TOP_MODULE := ahbl2sdram_tb
 #SRCS       := rams/tag_sram.vhd rams/data_sram.vhd fsm/write_fsm_pkg.vhdl fsm/read_fsm_pkg.vhdl fsm/write_fsm.vhdl fsm/read_fsm.vhdl ahbl2sdram.vhdl tb_fifo.vhd cache_tb.vhd
-SRCS       := rams/tag_sram.vhd rams/data_sram.vhd fsm/write_fsm_pkg.vhdl fsm/read_fsm_pkg.vhdl fsm/write_fsm.vhdl fsm/read_fsm.vhdl ahbl2sdram.vhdl testbench/ahbl_dummy.vhdl testbench/mem_ctl_dummy.vhdl testbench/misc_dummy.vhdl testbench/ahbl2sdram_tb.vhdl
+SRCS       := rams/tag_sram.vhd rams/data_sram.vhd fsm/write_fsm_pkg.vhdl fsm/read_fsm_pkg.vhdl fsm/write_fsm.vhdl fsm/read_fsm.vhdl ahbl2sdram.vhdl testbench/ahbl_dummy.vhdl testbench/mem_ctl_dummy_fifo.vhdl testbench/mem_ctl_dummy.vhdl testbench/misc_dummy.vhdl testbench/ahbl2sdram_tb.vhdl
 
 
 All: wave
