@@ -16,7 +16,7 @@ end AHBL2SDRAM_TB;
 
 architecture read_test of AHBL2SDRAM_TB is
 
-	--{{{ Wiring logic
+	--{{{ Wiring signal
 
 		signal rst               : std_logic;
 		signal HCLK              : std_logic;
@@ -185,12 +185,15 @@ architecture read_test of AHBL2SDRAM_TB is
 		INVALIDATE_HIGH   : inout std_logic_vector(31 downto 0));
 	end component MISC_DUMMY;
 	--}}}
-	--}}}
 
 	for cache   : ahbl2sdram    use entity work.ahbl2sdram(cache);
 	for ahbl    : ahbl_dummy    use entity work.ahbl_dummy(read_sequence);
 	for mem_ctl : mem_ctl_dummy use entity work.mem_ctl_dummy(normal);
 	for misc    : misc_dummy    use entity work.misc_dummy(passive);
+	--}}}
+
+
+
 begin
 
 	--{{{ Wiring logic
