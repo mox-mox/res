@@ -206,6 +206,8 @@ begin
 	--{{{ Wiring logic
 
 		rst               <= not HRESETn;
+		mem_calib_done    <= '0', '1' after 40 ns;
+
 	--}}}
 
 	--{{{ Create a clock and end the simulation after some time
@@ -226,7 +228,7 @@ begin
 			DCLK <= '1';
 			wait for HCLK_PERIOD/4;
 		else
-			report "Simulation finished normally.";
+			--report "Simulation finished normally.";
 			wait;
 		end if;
 	end process;

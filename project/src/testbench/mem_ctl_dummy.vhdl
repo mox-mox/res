@@ -77,7 +77,7 @@ architecture normal of MEM_CTL_DUMMY is
 	--{{{
     component CMD_FIFO
         Generic (
-            constant DATA_WIDTH : positive := 38;
+            constant DATA_WIDTH : positive := 39;
             constant FIFO_DEPTH : positive := 64
         );
         port (
@@ -96,7 +96,7 @@ architecture normal of MEM_CTL_DUMMY is
 	--{{{
     component WR_FIFO
         Generic (
-            constant DATA_WIDTH : positive := 35;
+            constant DATA_WIDTH : positive := 36;
             constant FIFO_DEPTH : positive := 64
         );
         port (
@@ -131,8 +131,8 @@ architecture normal of MEM_CTL_DUMMY is
     end component;
 	--}}}
 
-	--for fifo_cmd   : CMD_FIFO    use entity work.FWFT_FIFO(Behavioral);
-	--for fifo_wr    : WR_FIFO     use entity work.FWFT_FIFO(Behavioral);
+	for fifo_cmd   : CMD_FIFO    use entity work.FWFT_FIFO(Behavioral);
+	for fifo_wr    : WR_FIFO     use entity work.FWFT_FIFO(Behavioral);
 	for fifo_rd    : RD_FIFO     use entity work.FWFT_FIFO(Behavioral);
 	--}}}
 
