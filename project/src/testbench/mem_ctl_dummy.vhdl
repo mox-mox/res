@@ -131,8 +131,8 @@ architecture normal of MEM_CTL_DUMMY is
     end component;
 	--}}}
 
-	for fifo_cmd   : CMD_FIFO    use entity work.FWFT_FIFO(Behavioral);
-	for fifo_wr    : WR_FIFO     use entity work.FWFT_FIFO(Behavioral);
+	--for fifo_cmd   : CMD_FIFO    use entity work.FWFT_FIFO(Behavioral);
+	--for fifo_wr    : WR_FIFO     use entity work.FWFT_FIFO(Behavioral);
 	for fifo_rd    : RD_FIFO     use entity work.FWFT_FIFO(Behavioral);
 	--}}}
 

@@ -16,7 +16,7 @@ end AHBL2SDRAM_TB;
 
 architecture read_test of AHBL2SDRAM_TB is
 
-	--{{{ Wiring signal
+	--{{{ Wiring signals
 
 		signal rst               : std_logic;
 		signal HCLK              : std_logic;
@@ -59,11 +59,18 @@ architecture read_test of AHBL2SDRAM_TB is
 		signal p1_rd_error       : std_logic;
 
 		signal DCLK              : std_logic;
+		signal p1_cmd_clk        : std_logic;
+		signal p1_wr_clk         : std_logic;
+		signal p1_rd_clk         : std_logic;
+
 		signal mem_calib_done    : std_logic;
 		signal HIT_COUNT         : std_logic_vector(31 downto 0);
 		signal MISS_COUNT        : std_logic_vector(31 downto 0);
 		signal INVALIDATE_LOW    : std_logic_vector(31 downto 0);
 		signal INVALIDATE_HIGH   : std_logic_vector(31 downto 0);
+
+		constant HCLK_period     : time := 20 ns;
+		signal endsim            : boolean;
 	--}}}
 
 	--{{{ Components
@@ -201,6 +208,30 @@ begin
 		rst               <= not HRESETn;
 	--}}}
 
+	--{{{ Create a clock and end the simulation after some time
+
+	ENDSIM <= false, true after 1 us;
+
+	create_clock : process
+	begin
+		if ENDSIM=false then
+			DCLK <= '0';
+			HCLK <= '0';
+			wait for HCLK_PERIOD/4;
+			DCLK <= '1';
+			wait for HCLK_PERIOD/4;
+			DCLK <= '0';
+			HCLK <= '1';
+			wait for HCLK_PERIOD/4;
+			DCLK <= '1';
+			wait for HCLK_PERIOD/4;
+		else
+			report "Simulation finished normally.";
+			wait;
+		end if;
+	end process;
+	--}}}
+
 	--{{{ Port Maps
 
 	--{{{
@@ -220,7 +251,7 @@ begin
 		HREADYOUT         => HREADYOUT,
 		HRESP             => HRESP,
 		HRDATA            => HRDATA,
-		p1_cmd_clk        => DCLK,
+		p1_cmd_clk        => p1_cmd_clk,
 		p1_cmd_instr      => p1_cmd_instr,
 		p1_cmd_addr       => p1_cmd_addr,
 		p1_cmd_bl         => p1_cmd_bl,
@@ -228,7 +259,7 @@ begin
 		p1_cmd_empty      => p1_cmd_empty,
 		p1_cmd_error      => p1_cmd_error,
 		p1_cmd_full       => p1_cmd_full,
-		p1_wr_clk         => DCLK,
+		p1_wr_clk         => p1_wr_clk,
 		p1_wr_data        => p1_wr_data,
 		p1_wr_mask        => p1_wr_mask,
 		p1_wr_en          => p1_wr_en,
@@ -237,7 +268,7 @@ begin
 		p1_wr_error       => p1_wr_error,
 		p1_wr_full        => p1_wr_full,
 		p1_wr_underrun    => p1_wr_underrun,
-		p1_rd_clk         => DCLK,
+		p1_rd_clk         => p1_rd_clk,
 		p1_rd_en          => p1_rd_en,
 		p1_rd_data        => p1_rd_data,
 		p1_rd_full        => p1_rd_full,
@@ -275,7 +306,7 @@ begin
 	--{{{
 	mem_ctl : MEM_CTL_DUMMY port map(
 		rst               => rst,
-		p1_cmd_clk        => DCLK,
+		p1_cmd_clk        => p1_cmd_clk,
 		p1_cmd_instr      => p1_cmd_instr,
 		p1_cmd_addr       => p1_cmd_addr,
 		p1_cmd_bl         => p1_cmd_bl,
@@ -283,7 +314,7 @@ begin
 		p1_cmd_empty      => p1_cmd_empty,
 		p1_cmd_error      => p1_cmd_error,
 		p1_cmd_full       => p1_cmd_full,
-		p1_wr_clk         => DCLK,
+		p1_wr_clk         => p1_wr_clk,
 		p1_wr_data        => p1_wr_data,
 		p1_wr_mask        => p1_wr_mask,
 		p1_wr_en          => p1_wr_en,
@@ -292,7 +323,7 @@ begin
 		p1_wr_error       => p1_wr_error,
 		p1_wr_full        => p1_wr_full,
 		p1_wr_underrun    => p1_wr_underrun,
-		p1_rd_clk         => DCLK,
+		p1_rd_clk         => p1_rd_clk,
 		p1_rd_en          => p1_rd_en,
 		p1_rd_data        => p1_rd_data,
 		p1_rd_full        => p1_rd_full,
@@ -312,9 +343,6 @@ begin
 		INVALIDATE_HIGH   => INVALIDATE_HIGH);
 	--}}}
 	--}}}
-
-
-
 
 
 end read_test;

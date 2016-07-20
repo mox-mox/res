@@ -25,23 +25,48 @@ entity AHBL_DUMMY is
 end AHBL_DUMMY;
 
 architecture read_sequence of AHBL_DUMMY is
+	signal HADDR_sig : std_logic_vector(31 downto 0);
 
 begin
 
+	HRESETn <= '0', '1' after 30 ns;
+	HSEL    <= '1' after 1 ns when HADDR_sig(31 downto 24) = (HADDR_sig(31 downto 24)'range => '0') else '0' after 1 ns;
+	HTRANS  <= "00" after 1 ns when HADDR_sig(31 downto 24) = (HADDR_sig(31 downto 24)'range => '0') else "10" after 1 ns;
+	HADDR   <= HADDR_sig after 1 ns;
+	HREADY  <= HREADYOUT after 2 ns;
+
+--HWRITE
+--HSIZE
+--HWDATA
 
 	drive_bus : process(HCLK)
 		type bus_access_type is record
-			read : std_logic;                               -- 0: write, 1: read
-			addr : natural range 0 to (16 * 1024 * 1024);   -- Where to read or write
-			data : integer range -(2**31-1) to +(2**31-1);  -- For writes, the datum to be written, for reads the datum expected.
+			read  : std_logic;                               -- 0: write, 1: read
+			addr  : natural range 0 to (16 * 1024 * 1024);   -- Where to read or write
+			size  : natural range 1 to 4;                    -- The number of byts to read or write
+			data  : integer range -(2**31-1) to +(2**31-1);  -- For writes, the datum to be written, for reads the datum expected.
+			delay : natural;                                 -- How long to wait before sending this request over the bus.
 		end record;
 		--  The patterns to apply.
 		type bus_access_array is array (natural range <>) of bus_access_type;
-		constant patterns : bus_access_array :=
-			(('1', 16#00beeeef#, 127),
-			 ('0', 16#00caffee#, 0),
-			 ('0', 16#00beeeef#, 127));
+		--constant patterns : bus_access_array :=
+		--	(('0', 4, 16#00beeeef#, 127, 0), -- dummy line
+		--	 ('1', 4, 16#00beeeef#, 127, 0),
+		--	 ('0', 4, 16#00caffee#,   0, 0),
+		--	 ('0', 4, 16#00beeeef#, 127, 0));
+			variable index         : natural := 1;
+			variable delay_counter : natural := 0;
 	begin
+		if(rising_edge(HCLK)) then
+			if(delay_counter = 0) then
+
+				HWRITE <= '0';
+				HSIZE  <= "000";
+				HWDATA <= (others => '0');
+
+			end if;
+		end if;
+
 	end process;
 
 
