@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 entity AHBL_DUMMY is
 	port(
 -- Global signals ---------------------------------------------------------------------------------------------------------------
-		HCLK              : out    std_logic;                     -- Bus clock
+		HCLK              : in     std_logic;                     -- Bus clock
 		HRESETn           : out    std_logic;                     -- Reset
 -- AHB Slave inputs ---------------------------------------------------------------------------------------------------
 		HSEL              : out    std_logic;                     -- Slave select
@@ -29,6 +29,20 @@ architecture read_sequence of AHBL_DUMMY is
 begin
 
 
+	drive_bus : process(HCLK)
+		type bus_access_type is record
+			read : std_logic;                               -- 0: write, 1: read
+			addr : natural range 0 to (16 * 1024 * 1024);   -- Where to read or write
+			data : integer range -(2**31-1) to +(2**31-1);  -- For writes, the datum to be written, for reads the datum expected.
+		end record;
+		--  The patterns to apply.
+		type bus_access_array is array (natural range <>) of bus_access_type;
+		constant patterns : bus_access_array :=
+			(('1', 16#00beeeef#, 127),
+			 ('0', 16#00caffee#, 0),
+			 ('0', 16#00beeeef#, 127));
+	begin
+	end process;
 
 
 

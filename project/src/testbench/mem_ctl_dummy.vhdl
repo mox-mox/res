@@ -61,6 +61,10 @@ architecture normal of MEM_CTL_DUMMY is
 	signal rd_writeen                  : std_logic;
 
 
+	--cmd_readen  <= '0';
+	--wr_readen   <= '0';
+	--rd_writeen  <= '0';
+	--rd_data     <= '0';
 
 
 
@@ -152,6 +156,13 @@ architecture normal of MEM_CTL_DUMMY is
 	--}}}
 
 begin
+	p1_cmd_error   <= '0';
+	p1_wr_error    <= '0';
+	p1_rd_error    <= '0';
+	p1_wr_count    <= "1010101";
+	p1_rd_count    <= "1010101";
+	p1_wr_underrun <= '0';
+	p1_rd_overflow <= '0';
 
 	--{{{ Port Maps
 
@@ -219,14 +230,22 @@ begin
 		variable read          : std_logic;
 		variable addr          : natural;
 
+
 	begin
 		if(rising_edge(p1_cmd_clk)) then
 			if(rst = '1') then
 				delay_counter := random_delay;
+				cmd_readen  <= '0';
+				wr_readen   <= '0';
+				rd_writeen  <= '0';
+				rd_data     <= (others => '0');
 			else
 				--{{{
 				if delay_counter = 1 and cmd_empty = '0' then
 					cmd_readen     <= '1';
+					wr_readen   <= '0';
+					rd_writeen  <= '0';
+					rd_data     <= (others => '0');
 					delay_counter  := delay_counter - 1;
 					if cmd_instr="001" or cmd_instr="011" then
 						read       := '1';
@@ -243,15 +262,24 @@ begin
 				elsif delay_counter = 0 then
 					if burst_length = 0 then
 						delay_counter := random_delay;
+						cmd_readen  <= '0';
+						wr_readen   <= '0';
+						rd_writeen  <= '0';
+						rd_data     <= (others => '0');
 					else
 						if read = '1' then
 							assert rd_full = '0'  report "Read data overflow." severity failure;
-							rd_data    <= RAM(addr);
-							rd_writeen <= '1';
+							cmd_readen  <= '0';
+							wr_readen   <= '0';
+							rd_writeen  <= '1';
+							rd_data     <= RAM(addr);
 						else -- write
 							assert wr_empty = '0'  report "Insufficient write data." severity failure;
 							write_ram(wr_mask, addr, wr_data);
-							wr_readen <= '1';
+							cmd_readen  <= '0';
+							wr_readen   <= '1';
+							rd_writeen  <= '0';
+							rd_data     <= (others => '0');
 						end if;
 						addr := addr+1;
 					end if;
@@ -259,6 +287,10 @@ begin
 
 				else -- Emulate the delay of the real controller, just wait.
 					delay_counter := delay_counter - 1;
+					cmd_readen  <= '0';
+					wr_readen   <= '0';
+					rd_writeen  <= '0';
+					rd_data     <= (others => '0');
 				end if;
 
 

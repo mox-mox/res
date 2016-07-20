@@ -126,7 +126,7 @@ architecture read_test of AHBL2SDRAM_TB is
 
 	--{{{
 	component AHBL_DUMMY is port(
-		HCLK              : out    std_logic;
+		HCLK              : in     std_logic;
 		HRESETn           : out    std_logic;
 		HSEL              : out    std_logic;
 		HADDR             : out    std_logic_vector(31 downto 0);
@@ -138,9 +138,9 @@ architecture read_test of AHBL2SDRAM_TB is
 		-- HMASTLOCK      : out    std_logic;
 		HREADY            : out    std_logic;
 		HWDATA            : out    std_logic_vector(31 downto 0);
-		HREADYOUT         : in    std_logic;
-		HRESP             : in    std_logic;
-		HRDATA            : in    std_logic_vector(31 downto 0));
+		HREADYOUT         : in     std_logic;
+		HRESP             : in     std_logic;
+		HRDATA            : in     std_logic_vector(31 downto 0));
 	end component AHBL_DUMMY;
 	--}}}
 
