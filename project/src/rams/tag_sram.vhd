@@ -27,8 +27,8 @@ end TAG_SRAM;
 
 architecture syn of TAG_SRAM is
 	type ram_type is array (1024 downto 0) of std_logic_vector (15 downto 0);
-	--shared variable RAM : ram_type := (others => "0000000000000000");
-	shared variable RAM : ram_type;
+	shared variable RAM : ram_type := (others => "0000000000000000");
+	--shared variable RAM : ram_type;
 begin
 	process (clk)
 	begin

@@ -149,8 +149,8 @@ architecture normal of MEM_CTL_DUMMY is
 
 	--{{{ The Dummy RAM
 
-	type ram_type is array (4194304 downto 0) of std_logic_vector (31 downto 0);
-	shared variable RAM : ram_type;
+	type ram_type is array (0 to 4194304) of std_logic_vector (31 downto 0);
+	shared variable RAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", others => x"00000000");
 	--}}}
 
 

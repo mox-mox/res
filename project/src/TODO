@@ -1,0 +1,2 @@
+Dinge, die auf jeden Fall noch geschehen sollten:
+- Anpassen, dass die FSMs immer im richtigen Moment loslaufen (Phasenbeziehung zur HCLK)
