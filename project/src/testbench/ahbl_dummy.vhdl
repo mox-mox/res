@@ -41,30 +41,44 @@ begin
 
 	drive_bus : process(HCLK)
 		type bus_access_type is record
-			read  : std_logic;                               -- 0: write, 1: read
-			addr  : natural range 0 to (16 * 1024 * 1024);   -- Where to read or write
+			write : boolean;                                 -- 1: write, 0: read
+			addr  : unsigned(31 downto 0);                   -- Where to read or write
 			size  : natural range 1 to 4;                    -- The number of byts to read or write
-			data  : integer range -(2**31-1) to +(2**31-1);  -- For writes, the datum to be written, for reads the datum expected.
+			data  : unsigned(31 downto 0);                   -- For writes, the datum to be written, for reads the datum expected.
+			--data  : integer range -(2**31-1) to +(2**31-1); -- For writes, the datum to be written, for reads the datum expected.
 			delay : natural;                                 -- How long to wait before sending this request over the bus.
 		end record;
 		--  The patterns to apply.
 		type bus_access_array is array (natural range <>) of bus_access_type;
-		--constant patterns : bus_access_array :=
-		--	(('0', 4, 16#00beeeef#, 127, 0), -- dummy line
-		--	 ('1', 4, 16#00beeeef#, 127, 0),
-		--	 ('0', 4, 16#00caffee#,   0, 0),
-		--	 ('0', 4, 16#00beeeef#, 127, 0));
-			variable index         : natural := 1;
-			variable delay_counter : natural := 0;
+		constant patterns : bus_access_array :=
+			((true, to_unsigned(16#00beeeef#, 32), 4, to_unsigned(127, 32), 0), -- dummy line
+			 (true, to_unsigned(16#00beeeef#, 32), 4, to_unsigned(127, 32), 0),
+			 (true, to_unsigned(16#00caffee#, 32), 4, to_unsigned(  0, 32), 0),
+			 (true, to_unsigned(16#00beeeef#, 32), 4, to_unsigned(127, 32), 0));
+			variable i               : natural := 1;
+			--variable delay_counter : natural := 0;
 	begin
 		if(rising_edge(HCLK)) then
-			if(delay_counter = 0) then
-
+			HADDR_sig <= std_logic_vector(patterns(i).addr);
+			if(patterns(i).write) then
+				HWDATA <= std_logic_vector(patterns(i).data);
+				HWRITE <= '1';
+			else
+				HWDATA <= (others => '-');
 				HWRITE <= '0';
-				HSIZE  <= "000";
-				HWDATA <= (others => '0');
-
 			end if;
+			if not patterns(i-1).write then
+				assert patterns(i).data = unsigned(HRDATA) report "Mismatch between expected and actual read-back value" severity failure;
+			end if;
+			case patterns(i).size is
+				when 1 => HSIZE <= "000";
+				when 2 => HSIZE <= "001";
+				when 3 => assert true report "Trying to send 3 bytes of data over the bus (should be either 1, 2 or 4" severity failure;
+				when 4 => HSIZE <= "010";
+			end case;
+			--if(delay_counter = 0) then
+
+
 		end if;
 
 	end process;
