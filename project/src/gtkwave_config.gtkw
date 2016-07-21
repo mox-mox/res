@@ -1,0 +1,53 @@
+[*]
+[*] GTKWave Analyzer v3.3.72 (w)1999-2016 BSI
+[*] Thu Jul 21 18:54:53 2016
+[*]
+[dumpfile] "/tmp/asd-mox/home/mox/uni/s10/res/project/src/tb.ghw"
+[dumpfile_mtime] "Thu Jul 21 18:35:42 2016"
+[dumpfile_size] 13382
+[savefile] "/tmp/asd-mox/home/mox/uni/s10/res/project/src/gtkwave_save.gtkw"
+[timestart] 0
+[size] 1600 886
+[pos] -1 -1
+*-25.159494 8800000 30000000 50000000 70170000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.ahbl2sdram_tb.
+[treeopen] top.ahbl2sdram_tb.cache.
+[treeopen] top.ahbl2sdram_tb.cache.ts.
+[sst_width] 272
+[signals_width] 198
+[sst_expanded] 1
+[sst_vpaned_height] 256
+@28
+top.ahbl2sdram_tb.ahbl.index
+top.ahbl2sdram_tb.cache.hresetn
+[color] 2
+top.ahbl2sdram_tb.hclk
+top.ahbl2sdram_tb.dclk
+top.ahbl2sdram_tb.cache.read_current_state
+top.ahbl2sdram_tb.cache.read_request
+@22
+#{top.ahbl2sdram_tb.cache.haddr[31:0]} top.ahbl2sdram_tb.cache.haddr[31] top.ahbl2sdram_tb.cache.haddr[30] top.ahbl2sdram_tb.cache.haddr[29] top.ahbl2sdram_tb.cache.haddr[28] top.ahbl2sdram_tb.cache.haddr[27] top.ahbl2sdram_tb.cache.haddr[26] top.ahbl2sdram_tb.cache.haddr[25] top.ahbl2sdram_tb.cache.haddr[24] top.ahbl2sdram_tb.cache.haddr[23] top.ahbl2sdram_tb.cache.haddr[22] top.ahbl2sdram_tb.cache.haddr[21] top.ahbl2sdram_tb.cache.haddr[20] top.ahbl2sdram_tb.cache.haddr[19] top.ahbl2sdram_tb.cache.haddr[18] top.ahbl2sdram_tb.cache.haddr[17] top.ahbl2sdram_tb.cache.haddr[16] top.ahbl2sdram_tb.cache.haddr[15] top.ahbl2sdram_tb.cache.haddr[14] top.ahbl2sdram_tb.cache.haddr[13] top.ahbl2sdram_tb.cache.haddr[12] top.ahbl2sdram_tb.cache.haddr[11] top.ahbl2sdram_tb.cache.haddr[10] top.ahbl2sdram_tb.cache.haddr[9] top.ahbl2sdram_tb.cache.haddr[8] top.ahbl2sdram_tb.cache.haddr[7] top.ahbl2sdram_tb.cache.haddr[6] top.ahbl2sdram_tb.cache.haddr[5] top.ahbl2sdram_tb.cache.haddr[4] top.ahbl2sdram_tb.cache.haddr[3] top.ahbl2sdram_tb.cache.haddr[2] top.ahbl2sdram_tb.cache.haddr[1] top.ahbl2sdram_tb.cache.haddr[0]
+@28
+top.ahbl2sdram_tb.cache.hreadyout
+@800200
+-ts
+@28
+top.ahbl2sdram_tb.cache.ts.we_b
+top.ahbl2sdram_tb.cache.ts.en_b
+top.ahbl2sdram_tb.cache.ts.we_a
+@29
+top.ahbl2sdram_tb.cache.ts.en_a
+@1000200
+-ts
+@800200
+-ds
+@28
+top.ahbl2sdram_tb.cache.ds.we_b
+top.ahbl2sdram_tb.cache.ds.en_b
+top.ahbl2sdram_tb.cache.ds.we_a
+top.ahbl2sdram_tb.cache.ds.en_a
+@1000200
+-ds
+[pattern_trace] 1
+[pattern_trace] 0

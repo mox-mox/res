@@ -25,4 +25,4 @@ work-obj93.cf: ${SRCS} Makefile
 	@echo "<<<<<<<<<<<<<<<<<<<< done with the elaboration >>>>>>>>>>>>>>>>>>>>"
 
 wave: ${WAVE_FILE} Makefile
-	@gtkwave ${WAVE_FILE} &
+	@gtkwave ${WAVE_FILE} -a gtkwave_config.gtkw&
