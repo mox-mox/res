@@ -71,13 +71,13 @@ begin
 		end record;
 		--  The patterns to apply.
 		type bus_access_array is array (natural range <>) of bus_access_type;
-		constant patterns : bus_access_array := (
+		constant patterns : bus_access_array := ( --{{{
 			(false, to_unsigned(16#7fffffff#, 32), 4, to_unsigned(16#00000000#, 32), 0), -- dummy line
 			(false, to_unsigned(16#00000000#, 32), 4, to_unsigned(16#00000000#, 32), 0),
 			(false, to_unsigned(16#00111111#, 32), 4, to_unsigned(16#00000000#, 32), 0),
 			(false, to_unsigned(16#00222222#, 32), 4, to_unsigned(16#00000000#, 32), 0),
 			(false, to_unsigned(16#00333333#, 32), 4, to_unsigned(16#00000000#, 32), 0),
-			(true,  to_unsigned(16#7fffffff#, 32), 4, to_unsigned(16#00000000#, 32), 0));
+			(true,  to_unsigned(16#7fffffff#, 32), 4, to_unsigned(16#00000000#, 32), 0)); --}}}
 		variable delay_counter : natural := 0;
 	begin
 		if(rising_edge(HCLK)) then
@@ -88,11 +88,7 @@ begin
 				HSIZE_sig  <= (others => '0');
 				delay_counter := patterns(0).delay;
 			else
-
 				if delay_counter = 0 then
-
-
-
 					if(HREADYOUT = '1') then
 						HADDR_sig <= std_logic_vector(patterns(index).addr);
 						delay_counter := patterns(index).delay;
@@ -114,32 +110,32 @@ begin
 						end if;
 					end if;
 					if not patterns(index-1).write then
-				--assert patterns(index).data = unsigned(HRDATA) report "Mismatch between expected and actual read-back value" severity failure;
-						end if;
-						case patterns(index).size is
-							when 1 =>
-								HSIZE_sig <= "000";
-							when 2 =>
-								HSIZE_sig <= "001";
-							when 3 =>
-						--HSIZE_sig <= "000";
-								assert true report "Trying to send 3 bytes of data over the bus (should be either 1, 2 or 4" severity failure;
-							when 4 =>
-								HSIZE_sig <= "010";
-							when others => -- shouldn't happen
-								assert true report "Invalid HSIZE" severity failure;
-						end case;
+						assert patterns(index).data = unsigned(HRDATA) report "Mismatch between expected and actual read-back value" severity failure;
+					end if;
+					case patterns(index).size is
+						when 1 =>
+							HSIZE_sig <= "000";
+						when 2 =>
+							HSIZE_sig <= "001";
+						when 3 =>
+								--HSIZE_sig <= "000";
+							assert true report "Trying to send 3 bytes of data over the bus (should be either 1, 2 or 4" severity failure;
+						when 4 =>
+							HSIZE_sig <= "010";
+						when others => -- shouldn't happen
+							assert true report "Invalid HSIZE" severity failure;
+					end case;
 
-				--report "patterns'length" &  integer'image(integer(patterns'length));
-						if(HREADYOUT = '1') then
-							if patterns'length = index+1 then
-								index <= patterns'length - 1;
-								ENDSIM <= true;
-							else
-								index <= index+1;
-								ENDSIM <= false;
-							end if;
+						--report "patterns'length" &  integer'image(integer(patterns'length));
+					if(HREADYOUT = '1') then
+						if patterns'length = index+1 then
+							index <= patterns'length - 1;
+							ENDSIM <= true;
+						else
+							index <= index+1;
+							ENDSIM <= false;
 						end if;
+					end if;
 				else
 					delay_counter := delay_counter - 1;
 				end if;
