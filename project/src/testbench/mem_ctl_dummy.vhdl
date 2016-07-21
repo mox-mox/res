@@ -150,7 +150,7 @@ architecture normal of MEM_CTL_DUMMY is
 	--{{{ The Dummy RAM
 
 	type ram_type is array (0 to 4194304) of std_logic_vector (31 downto 0);
-	shared variable RAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", others => x"00000000");
+	shared variable RAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AFAFAFAF", x"BFBFBFBF", x"CFCFCFCF", x"DFDFDFDF", x"EFEFEFEF", x"FFFFFFFF", others => x"00000000");
 	--}}}
 
 
@@ -277,9 +277,9 @@ begin
 				--{{{
 				if delay_counter = 1 and cmd_empty = '0' then
 					cmd_readen     <= '1';
-					wr_readen   <= '0';
-					rd_writeen  <= '0';
-					rd_data     <= (others => '0');
+					wr_readen      <= '0';
+					rd_writeen     <= '0';
+					rd_data        <= (others => '0');
 					delay_counter  := delay_counter - 1;
 					if cmd_instr="001" or cmd_instr="011" then
 						read       := '1';

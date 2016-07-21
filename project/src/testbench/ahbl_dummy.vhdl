@@ -72,14 +72,14 @@ begin
 		--  The patterns to apply.
 		type bus_access_array is array (natural range <>) of bus_access_type;
 		constant patterns : bus_access_array := ( --{{{
-			(false, to_unsigned(16#7fffffff#, 32), 4, to_unsigned(16#00000000#, 32), 0), -- dummy line
-			(false, to_unsigned(16#0000000C#, 32), 4, to_unsigned(16#00000000#, 32), 0),
-			(false, to_unsigned(16#00000004#, 32), 4, to_unsigned(16#00000000#, 32), 0),
-			(false, to_unsigned(16#00000005#, 32), 4, to_unsigned(16#00000000#, 32), 0),
-			(false, to_unsigned(16#7f111111#, 32), 4, to_unsigned(16#00000000#, 32), 0),
-			(false, to_unsigned(16#00222222#, 32), 4, to_unsigned(16#00000000#, 32), 0),
-			(false, to_unsigned(16#00333333#, 32), 4, to_unsigned(16#00000000#, 32), 0),
-			(true,  to_unsigned(16#7fffffff#, 32), 4, to_unsigned(16#00000000#, 32), 0)); --}}}
+			(false, to_unsigned(16#7fffffff#, 32), 1, to_unsigned(16#00000000#, 32), 0), -- dummy line
+			(false, to_unsigned(16#00000000#, 32), 4, to_unsigned(16#00000000#, 32), 0),
+			(false, to_unsigned(16#00000004#, 32), 1, to_unsigned(16#00000000#, 32), 0),
+			(false, to_unsigned(16#00000005#, 32), 1, to_unsigned(16#00000000#, 32), 0),
+			(false, to_unsigned(16#7f111111#, 32), 1, to_unsigned(16#00000000#, 32), 0),
+			(false, to_unsigned(16#00222222#, 32), 1, to_unsigned(16#00000000#, 32), 0),
+			(false, to_unsigned(16#00333333#, 32), 1, to_unsigned(16#00000000#, 32), 0),
+			(true,  to_unsigned(16#7fffffff#, 32), 1, to_unsigned(16#00000000#, 32), 0)); --}}}
 		variable delay_counter : natural := 0;
 	begin
 		if(rising_edge(HCLK)) then

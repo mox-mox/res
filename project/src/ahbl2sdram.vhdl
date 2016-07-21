@@ -275,25 +275,23 @@ architecture cache of AHBL2SDRAM is
 	--{{{
 	function align_output_data (BS : std_logic_vector(1 downto 0); HSIZE : std_logic_vector(2 downto 0); DATA : std_logic_vector(31 downto 0); res_n : std_logic) return std_logic_vector is
 	variable result: std_logic_vector(31 downto 0);
-	--variable real_size : natural := hsize_2_real_size(HSIZE, res_n);
 	variable real_size : natural := hsize_2_real_size(HSIZE, res_n);
 	begin
-		--report "HSIZE value is";
-		--for i in 0 to HSIZE'LENGTH-1 loop
-		--	report  std_logic'image(HSIZE(i));
-		--end loop;
 		if(res_n = '1') then
-			--result := std_logic_vector(shift_right(unsigned(DATA), to_integer(unsigned(BS))*8)); TODO
+			result := std_logic_vector(shift_right(unsigned(DATA), to_integer(unsigned(BS))*8));
 			case real_size is
-				when 1 => result := "000000000000000000000000" & result( 7 downto 0);
-				when 2 => result := "0000000000000000"         & result(15 downto 0);
-				when 3 => result := "00000000"                 & result(23 downto 0);
-				when 4 => result :=                              result(31 downto 0);
+				when 1 =>
+					return "000000000000000000000000" & result( 7 downto 0);
+				when 2 =>
+					assert BS(0) = '0' report "Unaligned half word read" severity failure;
+					return "0000000000000000"         & result(15 downto 0);
+				when 4 =>
+					assert BS = "00" report "Unaligned word read" severity failure;
+					return                              result(31 downto 0);
 				when others => -- shouldn't happen
 					assert true report "Invalid size requested" severity failure;
 					return X"DEADBEEF";
 			end case;
-			return result;
 		else
 			return X"DEADBEEF";
 		end if;
@@ -307,9 +305,9 @@ architecture cache of AHBL2SDRAM is
 	begin
 		if(res_n = '1') then
 			for i in 0 to 3 loop
-				--if ( i >= to_integer(unsigned(BS)) and i < to_integer(unsigned(BS) + real_size)) then TODO
+				if ( i >= to_integer(unsigned(BS)) and i < to_integer(unsigned(BS) + real_size)) then
 					result(i) := '0';
-				--end if; TODO
+				end if;
 			end loop;
 		end if;
 		return result;
@@ -382,6 +380,10 @@ begin
 	                  align_output_data(read_SAVE1_HADDR_BS, read_SAVE1_HSIZE, p1_rd_data         , HRESETn)  when (read_current_state=rd0)     else
 	                  align_output_data(read_SAVE1_HADDR_BS, read_SAVE1_HSIZE, read_keep_dram_data, HRESETn)  when (read_current_state=rd1_keep) else
 	                  (others => '-') ;
+	--HRDATA         <= data_sram_b_do       when (read_current_state=cmp_dlv) else
+	--                  p1_rd_data           when (read_current_state=rd0)     else
+	--                  read_keep_dram_data  when (read_current_state=rd1_keep) else
+	--                  (others => '-') ;
 	--}}}
 	--{{{
 	p1_cmd_instr   <= DRAM_CMD_READ    when ((read_current_state=cmp_dlv or read_current_state=req0 or read_current_state=req1) and hit='0') else
