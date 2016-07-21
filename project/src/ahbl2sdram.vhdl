@@ -390,11 +390,11 @@ begin
 	--}}}
 	--{{{
 	p1_cmd_addr    <= SAVE0_HADDR(31 downto 2)                                       when (read_current_state=cmp_dlv and hit='0') else
-	                  read_SAVE1_HADDR(31 downto 2)                                  when (read_current_state=req0)                 else
-	                  read_SAVE1_HADDR(31 downto 5)&"000"                            when (read_current_state=req1)                 else
+	                  read_SAVE1_HADDR(31 downto 2)                                  when (read_current_state=req0)                else
+	                  read_SAVE1_HADDR(31 downto 5)&"000"                            when (read_current_state=req1)                else
 	                  SAVE0_HADDR(31 downto 2)                                       when (write_current_state=cmp_sto)            else
 	                  write_SAVE1_HADDR(31 downto 2)                                 when (write_current_state=wait_sto)           else
-	                  (others => '-')                                               ;
+	                  (others => '-');
 	--}}}
 	--{{{
 	p1_cmd_bl      <= "000" & std_logic_vector(7 - unsigned(     SAVE0_HADDR( 4 downto 2)))  when (read_current_state=cmp_dlv and hit='0') else
@@ -485,9 +485,9 @@ begin
 
 	read_request     <= HSEL and HREADY and not HWRITE ;
 	--{{{
-	read_ws_zero     <= '1'  when (read_current_state=cmp_dlv and HADDR_WS = "00") else
-	                    '1'  when (read_current_state=req0 and read_SAVE1_HADDR_WS = "00") else
-	                    '0' ;
+	read_ws_zero     <= '1'  when (read_current_state=cmp_dlv and SAVE0_HADDR_WS = "000") else
+	                    '1'  when (read_current_state=req0 and read_SAVE1_HADDR_WS = "000") else
+	                    '0' after 10 ns;
 	--}}}
 	--{{{
 	read_busy        <= '0'  when (read_current_state=idl_rdt or read_current_state=cmp_dlv or read_current_state=req0 or read_current_state=req1 or read_current_state=rd0 or read_current_state=rd1_keep or read_current_state=sync) else

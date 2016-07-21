@@ -26,7 +26,7 @@ architecture syn of READ_FSM is
 begin
 	state <= current_state;
 	--{{{
-	calculate_next_state: process(current_state, REQUEST, HIT, DRAM_BUSY, DRAM_EMPTY, HCLK)
+	calculate_next_state: process(current_state, REQUEST, HIT, DRAM_BUSY, DRAM_EMPTY, WS_ZERO, HCLK)
 	begin
 		next_state        <= current_state        after 1 ns; -- default assignement
 
@@ -83,7 +83,11 @@ begin
 				end if;
 
 			when rd1_keep =>
+				if( DRAM_EMPTY = '1' ) then
 					next_state <= rd1 after 1 ns;
+				else
+					next_state       <= rd2 after 1 ns;
+				end if;
 
 			when rd1 =>
 				if( DRAM_EMPTY = '1' ) then
