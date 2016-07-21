@@ -60,17 +60,28 @@ architecture normal of MEM_CTL_DUMMY is
 	signal rd_data                     : std_logic_vector(31 downto 0);
 	signal rd_writeen                  : std_logic;
 
+	signal p1_cmd_empty_sig      : std_logic;
+	signal p1_cmd_error_sig      : std_logic;
+	signal p1_cmd_full_sig       : std_logic;
 
-	--cmd_readen  <= '0';
-	--wr_readen   <= '0';
-	--rd_writeen  <= '0';
-	--rd_data     <= '0';
+	signal p1_wr_count_sig       : std_logic_vector( 6 downto 0);
+	signal p1_wr_empty_sig       : std_logic;
+	signal p1_wr_error_sig       : std_logic;
+	signal p1_wr_full_sig        : std_logic;
+	signal p1_wr_underrun_sig    : std_logic;
 
-
-
+	signal p1_rd_data_sig        : std_logic_vector(31 downto 0);
+	signal p1_rd_full_sig        : std_logic;
+	signal p1_rd_empty_sig       : std_logic;
+	signal p1_rd_count_sig       : std_logic_vector( 6 downto 0);
+	signal p1_rd_overflow_sig    : std_logic;
+	signal p1_rd_error_sig       : std_logic;
 
 
 	--}}}
+
+	signal random_delay : natural;
+	constant wire_delay : time := 1 ns;
 
 	--{{{ Components
 
@@ -142,7 +153,6 @@ architecture normal of MEM_CTL_DUMMY is
 	shared variable RAM : ram_type;
 	--}}}
 
-	signal random_delay : natural;
 
 	--{{{
 	procedure write_ram (mask : std_logic_vector(3 downto 0); addr : natural; data : std_logic_vector(31 downto 0)) is
@@ -156,13 +166,37 @@ architecture normal of MEM_CTL_DUMMY is
 	--}}}
 
 begin
-	p1_cmd_error   <= '0';
-	p1_wr_error    <= '0';
-	p1_rd_error    <= '0';
-	p1_wr_count    <= "1010101";
-	p1_rd_count    <= "1010101";
-	p1_wr_underrun <= '0';
-	p1_rd_overflow <= '0';
+
+	--{{{ Constant values not simulated
+
+	p1_cmd_error_sig   <= '0';
+	p1_wr_error_sig    <= '0';
+	p1_rd_error_sig    <= '0';
+	p1_wr_count_sig    <= "1010101";
+	p1_rd_count_sig    <= "1010101";
+	p1_wr_underrun_sig <= '0';
+	p1_rd_overflow_sig <= '0';
+	--}}}
+
+	--{{{ Wire the internal signals to the outputs with wire_delays
+
+	p1_cmd_empty   <= p1_cmd_empty_sig   after wire_delay;
+	p1_cmd_error   <= p1_cmd_error_sig   after wire_delay;
+	p1_cmd_full    <= p1_cmd_full_sig    after wire_delay;
+
+	p1_wr_count    <= p1_wr_count_sig    after wire_delay;
+	p1_wr_empty    <= p1_wr_empty_sig    after wire_delay;
+	p1_wr_error    <= p1_wr_error_sig    after wire_delay;
+	p1_wr_full     <= p1_wr_full_sig     after wire_delay;
+	p1_wr_underrun <= p1_wr_underrun_sig after wire_delay;
+
+	p1_rd_data     <= p1_rd_data_sig     after wire_delay;
+	p1_rd_full     <= p1_rd_full_sig     after wire_delay;
+	p1_rd_empty    <= p1_rd_empty_sig    after wire_delay;
+	p1_rd_count    <= p1_rd_count_sig    after wire_delay;
+	p1_rd_overflow <= p1_rd_overflow_sig after wire_delay;
+	p1_rd_error    <= p1_rd_error_sig    after wire_delay;
+	--}}}
 
 	--{{{ Port Maps
 
@@ -174,11 +208,11 @@ begin
 		ReadEn  => cmd_readen,
 		DataOut => cmd_instr_bl_addr_concat,
 		Empty   => cmd_empty,
-		Full    => p1_cmd_full,
+		Full    => p1_cmd_full_sig,
 		RST     => rst
 	);
 	p1_cmd_instr_bl_addr_concat <= p1_cmd_instr & p1_cmd_bl & p1_cmd_addr;
-	p1_cmd_empty <= cmd_empty;
+	p1_cmd_empty_sig <= cmd_empty;
 	--}}}
 
 	--{{{
@@ -189,11 +223,11 @@ begin
 		ReadEn  => wr_readen,
 		DataOut => wr_mask_data_concat,
 		Empty   => wr_empty,
-		Full    => p1_wr_full,
+		Full    => p1_wr_full_sig,
 		RST     => rst
 	);
 	p1_wr_mask_data_concat <= p1_wr_mask & p1_wr_data;
-	p1_wr_empty <= wr_empty;
+	p1_wr_empty_sig <= wr_empty;
 	--}}}
 
 	--{{{
@@ -202,12 +236,12 @@ begin
 		DataIn  => rd_data,
 		WriteEn => rd_writeen,
 		ReadEn  => p1_rd_en,
-		DataOut => p1_rd_data,
-		Empty   => p1_rd_empty,
+		DataOut => p1_rd_data_sig,
+		Empty   => p1_rd_empty_sig,
 		Full    => rd_full,
 		RST     => rst
 	);
-	p1_rd_full <= rd_full;
+	p1_rd_full_sig <= rd_full;
 	--}}}
 	--}}}
 
@@ -219,26 +253,26 @@ begin
 	begin
 		if(rising_edge(p1_cmd_clk)) then
 			uniform (seed1,seed2,helper);
-			random_delay <= integer(helper * real(8));
+			--random_delay <= integer(helper * real(3));
+			random_delay <= 1; -- TODO
 		end if;
 	end process;
 	--}}}
 
+	--{{{
 	perform_work : process(p1_cmd_clk)
 		variable delay_counter : natural;
 		variable burst_length  : natural;
 		variable read          : std_logic;
 		variable addr          : natural;
-
-
 	begin
 		if(rising_edge(p1_cmd_clk)) then
-			if(rst = '1') then
+			if(rst = '1') then --{{{
 				delay_counter := random_delay;
 				cmd_readen  <= '0';
 				wr_readen   <= '0';
 				rd_writeen  <= '0';
-				rd_data     <= (others => '0');
+				rd_data     <= (others => '0'); --}}}
 			else
 				--{{{
 				if delay_counter = 1 and cmd_empty = '0' then
@@ -254,8 +288,8 @@ begin
 					else
 						assert true report "Invalid cmd." severity failure;
 					end if;
-					burst_length   := to_integer(unsigned(cmd_bl))+1;
-					addr           := to_integer(unsigned(cmd_addr));
+					burst_length   := to_integer(unsigned(cmd_bl))+1; --TODO
+					addr           := to_integer(unsigned(cmd_addr)); --TODO
 				--}}}
 
 				--{{{
@@ -268,13 +302,13 @@ begin
 						rd_data     <= (others => '0');
 					else
 						if read = '1' then
-							assert rd_full = '0'  report "Read data overflow." severity failure;
+							--assert rd_full = '0'  report "Read data overflow." severity failure;
 							cmd_readen  <= '0';
 							wr_readen   <= '0';
 							rd_writeen  <= '1';
 							rd_data     <= RAM(addr);
 						else -- write
-							assert wr_empty = '0'  report "Insufficient write data." severity failure;
+							--assert wr_empty = '0'  report "Insufficient write data." severity failure;
 							write_ram(wr_mask, addr, wr_data);
 							cmd_readen  <= '0';
 							wr_readen   <= '1';
@@ -297,10 +331,7 @@ begin
 			end if;
 		end if;
 	end process;
-
-
-
-
+	--}}}
 
 end normal;
 

@@ -36,16 +36,13 @@ begin
 		if clk'event and clk = '1' then
 			if en_A = '1' then
 				if we_A = '1' then
-					-- RAM(conv_integer(addr_A)) <= di_A;
 					for i in 0 to 3 loop
 						if wr_mask_A(i) = '1' then
 							RAM(to_integer(unsigned(addr_A)))(((i+1)*8)-1 downto (i*8)) := di_A(((i+1)*8)-1 downto (i*8));
 						end if;
 					end loop;
-					--RAM(to_integer(unsigned(addr_A))) := di_A;
 					do_A <= di_A;
 				else
-					--do_A <= RAM( conv_integer(addr_A));
 					do_A <= RAM(to_integer(unsigned(addr_A)));
 				end if;
 			end if;
@@ -57,16 +54,13 @@ begin
 		if clk'event and clk = '1' then
 			if en_B = '1' then
 				if we_B = '1' then
-					-- RAM(conv_integer(addr_B)) <= di_B;
 					for i in 0 to 3 loop
 						if wr_mask_B(i) = '1' then
 							RAM(to_integer(unsigned(addr_B)))(((i+1)*8)-1 downto (i*8)) := di_B(((i+1)*8)-1 downto (i*8));
 						end if;
 					end loop;
-					--RAM(to_integer(unsigned(addr_B))) <= di_B;
 					do_B <= di_B;
 				else
-					--do_B <= RAM( conv_integer(addr_B));
 					do_B <= RAM(to_integer(unsigned(addr_B)));
 				end if;
 			end if;

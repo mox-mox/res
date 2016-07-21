@@ -27,6 +27,7 @@ end TAG_SRAM;
 
 architecture syn of TAG_SRAM is
 	type ram_type is array (1024 downto 0) of std_logic_vector (15 downto 0);
+	--shared variable RAM : ram_type := (others => "0000000000000000");
 	shared variable RAM : ram_type;
 begin
 	process (clk)
@@ -34,9 +35,10 @@ begin
 		if clk'event and clk = '1' then
 			if en_A = '1' then
 				if we_A = '1' then
-					RAM(to_integer(unsigned(addr_A))) := di_A;
+					 RAM(to_integer(unsigned(addr_A))) := di_A;
 					do_A <= di_A;
 				else
+					--report "addr_A" &  integer'image(to_integer(unsigned(addr_A)));
 					do_A <= RAM(to_integer(unsigned(addr_A)));
 				end if;
 			end if;

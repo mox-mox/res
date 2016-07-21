@@ -30,7 +30,7 @@ begin
 
 		case current_state is
 			when idl_rdt =>
-				if( REQUEST = '1' ) then
+				if( REQUEST = '1' and HCLK = '0' ) then
 					next_state        <= cmp_sto after 1 ns;
 				end if;
 

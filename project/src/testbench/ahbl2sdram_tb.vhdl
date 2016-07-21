@@ -19,7 +19,7 @@ architecture read_test of AHBL2SDRAM_TB is
 	--{{{ Wiring signals
 
 		signal rst               : std_logic;
-		signal HCLK              : std_logic;
+		signal HCLK              : std_logic := '0';
 		signal HRESETn           : std_logic;
 		signal HSEL              : std_logic;
 		signal HADDR             : std_logic_vector(31 downto 0);
@@ -58,7 +58,7 @@ architecture read_test of AHBL2SDRAM_TB is
 		signal p1_rd_overflow    : std_logic;
 		signal p1_rd_error       : std_logic;
 
-		signal DCLK              : std_logic;
+		signal DCLK              : std_logic := '1';
 		signal p1_cmd_clk        : std_logic;
 		signal p1_wr_clk         : std_logic;
 		signal p1_rd_clk         : std_logic;
@@ -133,6 +133,7 @@ architecture read_test of AHBL2SDRAM_TB is
 
 	--{{{
 	component AHBL_DUMMY is port(
+		ENDSIM            : out    boolean;
 		HCLK              : in     std_logic;
 		HRESETn           : out    std_logic;
 		HSEL              : out    std_logic;
@@ -212,23 +213,30 @@ begin
 
 	--{{{ Create a clock and end the simulation after some time
 
-	ENDSIM <= false, true after 1 us;
+	--ENDSIM <= false, true after 1 us;
+	--ENDSIM <= false, true after 1 us;
+
+
+
+		--HCLK <= not HCLK after HCLK_PERIOD/2 when ENDSIM=false else '0';
+		--DCLK <= not DCLK after HCLK_PERIOD/4 when ENDSIM=false else '0';
+
 
 	create_clock : process
 	begin
 		if ENDSIM=false then
-			DCLK <= '0';
+			DCLK <= '1';
 			HCLK <= '0';
 			wait for HCLK_PERIOD/4;
-			DCLK <= '1';
-			wait for HCLK_PERIOD/4;
 			DCLK <= '0';
+			wait for HCLK_PERIOD/4;
+			DCLK <= '1';
 			HCLK <= '1';
 			wait for HCLK_PERIOD/4;
-			DCLK <= '1';
+			DCLK <= '0';
 			wait for HCLK_PERIOD/4;
 		else
-			--report "Simulation finished normally.";
+			--report "Simulation finished normally." severity note;
 			wait;
 		end if;
 	end process;
@@ -288,6 +296,7 @@ begin
 
 	--{{{
 	ahbl :  AHBL_DUMMY port map(
+		ENDSIM            => ENDSIM,
 		HCLK              => HCLK,
 		HRESETn           => HRESETn,
 		HSEL              => HSEL,
