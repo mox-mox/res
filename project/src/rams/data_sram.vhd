@@ -29,7 +29,8 @@ end DATA_SRAM;
 
 architecture syn of DATA_SRAM is
 	type ram_type is array (1024 downto 0) of std_logic_vector (31 downto 0); -- Let's see if the synthesis can create a ram consisting of two BRAMs.
-	shared variable RAM : ram_type;
+	shared variable RAM : ram_type := (others => "00000000000000000000000000000000");
+	--shared variable RAM : ram_type;
 begin
 	process (clk)
 	begin
