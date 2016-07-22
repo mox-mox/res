@@ -70,7 +70,7 @@ architecture read_test of AHBL2SDRAM_TB is
 		signal INVALIDATE_HIGH   : std_logic_vector(31 downto 0);
 
 		constant HCLK_period     : time := 20 ns;
-		signal endsim            : boolean;
+		--signal endsim            : boolean;
 	--}}}
 
 	--{{{ Components
@@ -133,7 +133,7 @@ architecture read_test of AHBL2SDRAM_TB is
 
 	--{{{
 	component AHBL_DUMMY is port(
-		ENDSIM            : out    boolean;
+		--ENDSIM            : out    boolean;
 		HCLK              : in     std_logic;
 		HRESETn           : out    std_logic;
 		HSEL              : out    std_logic;
@@ -224,7 +224,7 @@ begin
 
 	create_clock : process
 	begin
-		if ENDSIM=false then
+		--if ENDSIM=false then
 			DCLK <= '1';
 			HCLK <= '0';
 			wait for HCLK_PERIOD/4;
@@ -235,10 +235,10 @@ begin
 			wait for HCLK_PERIOD/4;
 			DCLK <= '0';
 			wait for HCLK_PERIOD/4;
-		else
+		--else
 			--report "Simulation finished normally." severity note;
-			wait;
-		end if;
+		--	wait;
+		--end if;
 	end process;
 	--}}}
 
@@ -296,7 +296,7 @@ begin
 
 	--{{{
 	ahbl :  AHBL_DUMMY port map(
-		ENDSIM            => ENDSIM,
+		--ENDSIM            => ENDSIM,
 		HCLK              => HCLK,
 		HRESETn           => HRESETn,
 		HSEL              => HSEL,

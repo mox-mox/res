@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 entity AHBL_DUMMY is
 	port(
-		ENDSIM            : out    boolean;                       -- Stop the simulation when patterns run out
+		--ENDSIM            : out    boolean;                       -- Stop the simulation when patterns run out
 -- Global signals ---------------------------------------------------------------------------------------------------------------
 		HCLK              : in     std_logic;                     -- Bus clock
 		HRESETn           : out    std_logic;                     -- Reset
@@ -33,15 +33,16 @@ end AHBL_DUMMY;
 --{{{
 architecture read_sequence of AHBL_DUMMY is
 
+	type HTRANS_type is (idle, busy, nonseq, seq);
 	constant HTRANS_idle     : std_logic_vector( 1 downto 0) := "00";
+	constant HTRANS_busy     : std_logic_vector( 1 downto 0)  := "01";
 	constant HTRANS_nonseq   : std_logic_vector( 1 downto 0) := "10";
+	constant HTRANS_seq      : std_logic_vector( 1 downto 0)  := "11";
 	constant zeros           : std_logic_vector( 7 downto 0) := "00000000";
 	constant HSIZE1          : std_logic_vector( 2 downto 0) := "000";
 	constant HSIZE2          : std_logic_vector( 2 downto 0) := "001";
 	constant HSIZE4          : std_logic_vector( 2 downto 0) := "010";
 
-	--constant HTRANS_busy     : std_logic_vector( 1 downto 0)  := "01";
-	--constant HTRANS_seq      : std_logic_vector( 1 downto 0)  := "11";
 
 	--{{{ Logic wiring
 
@@ -51,7 +52,7 @@ architecture read_sequence of AHBL_DUMMY is
 	--signal   HADDR_sig       : std_logic_vector(31 downto 0)  := (others => '-');
 	signal   HWRITE_sig      : std_logic                      := '-';
 	signal   HSIZE_sig       : std_logic_vector( 2 downto 0)  := (others => '-');
-	signal   HTRANS_sig      : std_logic_vector( 1 downto 0)  := (others => '-');
+	signal   HTRANS_sig      : htrans_type                    := idle;
 	signal   HWDATA_sig      : std_logic_vector(31 downto 0)  := (others => '-');
 	--}}}
 
@@ -119,7 +120,6 @@ architecture read_sequence of AHBL_DUMMY is
 		(0, read,  to_addr("00000004"), to_data("00000000"), 1),
 		(0, read,  to_addr("00000005"), to_data("00000000"), 1),
 		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1)); -- dummy line
-	signal delay_counter : natural := 0;
 	--}}}
 
 	type ahbl_dummy_state is (idle, write, write_stall, read, read_stall);
@@ -131,7 +131,7 @@ begin
 
 	--{{{ Output signals
 
-	ENDSIM <= false, true after 80 ns;
+	--ENDSIM <= false, true after 80 ns;
 
 	reset_sig  <= true, false after 12 ns;
 	HRESETn    <= '0' when reset_sig else '1';
@@ -155,9 +155,22 @@ begin
 				   HSIZE4 after wire_delay when bus_sequence(current_index+1).size=4 and current_delay_count=0 else
 				   (others => '-') after wire_delay;
 
-	HTRANS      <= HTRANS_idle when reset_sig else
-				   HTRANS_nonseq after wire_delay when current_delay_count=0 else
-				   HTRANS_idle   after wire_delay;
+	HTRANS_sig  <= idle when reset_sig else
+                   nonseq after wire_delay when current_delay_count=0 else
+                   idle   after wire_delay;
+
+
+	HTRANS      <= HTRANS_idle   when HTRANS_sig=idle else
+				   HTRANS_busy   when HTRANS_sig=busy else
+				   HTRANS_nonseq when HTRANS_sig=nonseq else
+				   HTRANS_seq    when HTRANS_sig=seq;
+
+
+
+
+	--HTRANS      <= HTRANS_idle when reset_sig else
+	--			   HTRANS_nonseq after wire_delay when current_delay_count=0 else
+	--			   HTRANS_idle   after wire_delay;
 
 	HREADY     <= '0' when reset_sig else HREADYOUT after wire_delay;
 
