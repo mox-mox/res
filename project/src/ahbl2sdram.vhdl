@@ -244,6 +244,10 @@ architecture cache of AHBL2SDRAM is
 	signal miss_counter : std_logic_vector(31 downto 0) := (others => '0');
 	---}}}
 
+	---{{{
+	signal HCLK_PHASE : std_logic := '0';
+	---}}}
+	
 	--{{{ Helper functions
 
 	--{{{
@@ -333,13 +337,13 @@ begin
 		);
 
 	w_fsm:  WRITE_FSM port map (dclk => DCLK, res_n => HRESETn,
-			request => write_request, hit => hit, dram_busy => write_dram_busy, hclk => HCLK, -- The input variables to the state machine
+			request => write_request, hit => hit, dram_busy => write_dram_busy, HCLK => HCLK_PHASE, -- The input variables to the state machine
 			state   => write_current_state                                                    -- The state register
 			);
 
 	r_fsm : read_fsm port map(dclk => DCLK, res_n => HRESETn,
 			request    => read_request, hit     => hit,          dram_busy => p1_cmd_full, -- The input variables to the state machine
-			dram_empty => p1_rd_empty,  ws_zero => read_ws_zero, hclk      => HCLK,
+			dram_empty => p1_rd_empty,  ws_zero => read_ws_zero, HCLK      => HCLK_PHASE,
 			state => read_current_state -- The state register
 		);
 	--}}}
@@ -451,6 +455,16 @@ begin
 		end if;
 	end process latch_bus;
 	--}}}
+	
+	---{{{
+	-- toggle flip-flop to route HCLK into the state-machines
+	process
+	begin
+		wait until rising_edge(DCLK);
+		HCLK_PHASE <= not HCLK_PHASE;
+	end process;
+	---}}}
+	
 	--}}}
 
 	--{{{ Write FSM signals
