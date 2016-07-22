@@ -32,3 +32,8 @@ wave: ${WAVE_FILE} Makefile
 linecount:
 	@# testbench/mem_ctl_dummy_fifo.vhdl is not written by us, so let's not count it.
 	@echo $(shell wc -l $(filter-out testbench/mem_ctl_dummy_fifo.vhdl,$(SRCS)) ${NON_SRCS} | tail -n 1)
+
+
+.PHONY: clean
+clean:
+	rm -f ${WAVE_FILE} work-obj93.cf
