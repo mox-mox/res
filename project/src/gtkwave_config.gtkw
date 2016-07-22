@@ -1,25 +1,23 @@
 [*]
 [*] GTKWave Analyzer v3.3.72 (w)1999-2016 BSI
-[*] Fri Jul 22 11:02:59 2016
+[*] Fri Jul 22 20:04:05 2016
 [*]
 [dumpfile] "/tmp/asd-mox/home/mox/uni/s10/res/project/src/tb.ghw"
-[dumpfile_mtime] "Fri Jul 22 10:57:58 2016"
-[dumpfile_size] 328042
+[dumpfile_mtime] "Fri Jul 22 20:02:31 2016"
+[dumpfile_size] 327500
 [savefile] "/tmp/asd-mox/home/mox/uni/s10/res/project/src/gtkwave_config.gtkw"
 [timestart] 0
 [size] 1600 886
 [pos] -1 -1
-*-25.561979 66100000 66100000 50000000 70170000 130000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-25.561979 29200000 66100000 50000000 70170000 130000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.ahbl2sdram_tb.
-[treeopen] top.ahbl2sdram_tb.mem_ctl.
-[treeopen] top.ahbl2sdram_tb.mem_ctl.dram.
+[treeopen] top.ahbl2sdram_tb.ahbl.
 [sst_width] 313
-[signals_width] 299
+[signals_width] 292
 [sst_expanded] 1
 [sst_vpaned_height] 350
 @28
-top.ahbl2sdram_tb.ahbl.index
 top.ahbl2sdram_tb.cache.hresetn
 [color] 2
 top.ahbl2sdram_tb.hclk
@@ -174,9 +172,8 @@ top.ahbl2sdram_tb.cache.ds.data_ram[8][0]
 @1401200
 -group_end
 -ds
-@c00201
--mem_ctl
 @c00200
+-mem_ctl
 -cmd
 @28
 #{top.ahbl2sdram_tb.mem_ctl.p1_cmd_instr[2:0]} top.ahbl2sdram_tb.mem_ctl.p1_cmd_instr[2] top.ahbl2sdram_tb.mem_ctl.p1_cmd_instr[1] top.ahbl2sdram_tb.mem_ctl.p1_cmd_instr[0]
@@ -332,7 +329,6 @@ top.ahbl2sdram_tb.mem_ctl.p1_rd_empty
 #{top.ahbl2sdram_tb.mem_ctl.dram[31][31:0]} top.ahbl2sdram_tb.mem_ctl.dram[31][31] top.ahbl2sdram_tb.mem_ctl.dram[31][30] top.ahbl2sdram_tb.mem_ctl.dram[31][29] top.ahbl2sdram_tb.mem_ctl.dram[31][28] top.ahbl2sdram_tb.mem_ctl.dram[31][27] top.ahbl2sdram_tb.mem_ctl.dram[31][26] top.ahbl2sdram_tb.mem_ctl.dram[31][25] top.ahbl2sdram_tb.mem_ctl.dram[31][24] top.ahbl2sdram_tb.mem_ctl.dram[31][23] top.ahbl2sdram_tb.mem_ctl.dram[31][22] top.ahbl2sdram_tb.mem_ctl.dram[31][21] top.ahbl2sdram_tb.mem_ctl.dram[31][20] top.ahbl2sdram_tb.mem_ctl.dram[31][19] top.ahbl2sdram_tb.mem_ctl.dram[31][18] top.ahbl2sdram_tb.mem_ctl.dram[31][17] top.ahbl2sdram_tb.mem_ctl.dram[31][16] top.ahbl2sdram_tb.mem_ctl.dram[31][15] top.ahbl2sdram_tb.mem_ctl.dram[31][14] top.ahbl2sdram_tb.mem_ctl.dram[31][13] top.ahbl2sdram_tb.mem_ctl.dram[31][12] top.ahbl2sdram_tb.mem_ctl.dram[31][11] top.ahbl2sdram_tb.mem_ctl.dram[31][10] top.ahbl2sdram_tb.mem_ctl.dram[31][9] top.ahbl2sdram_tb.mem_ctl.dram[31][8] top.ahbl2sdram_tb.mem_ctl.dram[31][7] top.ahbl2sdram_tb.mem_ctl.dram[31][6] top.ahbl2sdram_tb.mem_ctl.dram[31][5] top.ahbl2sdram_tb.mem_ctl.dram[31][4] top.ahbl2sdram_tb.mem_ctl.dram[31][3] top.ahbl2sdram_tb.mem_ctl.dram[31][2] top.ahbl2sdram_tb.mem_ctl.dram[31][1] top.ahbl2sdram_tb.mem_ctl.dram[31][0]
 @1401200
 -group_end
-@1401201
 -mem_ctl
 @c00200
 -r_fsm
@@ -354,5 +350,24 @@ top.ahbl2sdram_tb.cache.w_fsm.hit
 top.ahbl2sdram_tb.cache.w_fsm.request
 @1401200
 -w_fsm
+@800200
+-ahbl
+@28
+top.ahbl2sdram_tb.ahbl.current_index
+top.ahbl2sdram_tb.ahbl.current_delay_count
+top.ahbl2sdram_tb.ahbl.current_state
+top.ahbl2sdram_tb.ahbl.hready
+top.ahbl2sdram_tb.ahbl.hwrite
+top.ahbl2sdram_tb.ahbl.hsel
+@22
+#{top.ahbl2sdram_tb.ahbl.hrdata[31:0]} top.ahbl2sdram_tb.ahbl.hrdata[31] top.ahbl2sdram_tb.ahbl.hrdata[30] top.ahbl2sdram_tb.ahbl.hrdata[29] top.ahbl2sdram_tb.ahbl.hrdata[28] top.ahbl2sdram_tb.ahbl.hrdata[27] top.ahbl2sdram_tb.ahbl.hrdata[26] top.ahbl2sdram_tb.ahbl.hrdata[25] top.ahbl2sdram_tb.ahbl.hrdata[24] top.ahbl2sdram_tb.ahbl.hrdata[23] top.ahbl2sdram_tb.ahbl.hrdata[22] top.ahbl2sdram_tb.ahbl.hrdata[21] top.ahbl2sdram_tb.ahbl.hrdata[20] top.ahbl2sdram_tb.ahbl.hrdata[19] top.ahbl2sdram_tb.ahbl.hrdata[18] top.ahbl2sdram_tb.ahbl.hrdata[17] top.ahbl2sdram_tb.ahbl.hrdata[16] top.ahbl2sdram_tb.ahbl.hrdata[15] top.ahbl2sdram_tb.ahbl.hrdata[14] top.ahbl2sdram_tb.ahbl.hrdata[13] top.ahbl2sdram_tb.ahbl.hrdata[12] top.ahbl2sdram_tb.ahbl.hrdata[11] top.ahbl2sdram_tb.ahbl.hrdata[10] top.ahbl2sdram_tb.ahbl.hrdata[9] top.ahbl2sdram_tb.ahbl.hrdata[8] top.ahbl2sdram_tb.ahbl.hrdata[7] top.ahbl2sdram_tb.ahbl.hrdata[6] top.ahbl2sdram_tb.ahbl.hrdata[5] top.ahbl2sdram_tb.ahbl.hrdata[4] top.ahbl2sdram_tb.ahbl.hrdata[3] top.ahbl2sdram_tb.ahbl.hrdata[2] top.ahbl2sdram_tb.ahbl.hrdata[1] top.ahbl2sdram_tb.ahbl.hrdata[0]
+#{top.ahbl2sdram_tb.ahbl.hwdata[31:0]} top.ahbl2sdram_tb.ahbl.hwdata[31] top.ahbl2sdram_tb.ahbl.hwdata[30] top.ahbl2sdram_tb.ahbl.hwdata[29] top.ahbl2sdram_tb.ahbl.hwdata[28] top.ahbl2sdram_tb.ahbl.hwdata[27] top.ahbl2sdram_tb.ahbl.hwdata[26] top.ahbl2sdram_tb.ahbl.hwdata[25] top.ahbl2sdram_tb.ahbl.hwdata[24] top.ahbl2sdram_tb.ahbl.hwdata[23] top.ahbl2sdram_tb.ahbl.hwdata[22] top.ahbl2sdram_tb.ahbl.hwdata[21] top.ahbl2sdram_tb.ahbl.hwdata[20] top.ahbl2sdram_tb.ahbl.hwdata[19] top.ahbl2sdram_tb.ahbl.hwdata[18] top.ahbl2sdram_tb.ahbl.hwdata[17] top.ahbl2sdram_tb.ahbl.hwdata[16] top.ahbl2sdram_tb.ahbl.hwdata[15] top.ahbl2sdram_tb.ahbl.hwdata[14] top.ahbl2sdram_tb.ahbl.hwdata[13] top.ahbl2sdram_tb.ahbl.hwdata[12] top.ahbl2sdram_tb.ahbl.hwdata[11] top.ahbl2sdram_tb.ahbl.hwdata[10] top.ahbl2sdram_tb.ahbl.hwdata[9] top.ahbl2sdram_tb.ahbl.hwdata[8] top.ahbl2sdram_tb.ahbl.hwdata[7] top.ahbl2sdram_tb.ahbl.hwdata[6] top.ahbl2sdram_tb.ahbl.hwdata[5] top.ahbl2sdram_tb.ahbl.hwdata[4] top.ahbl2sdram_tb.ahbl.hwdata[3] top.ahbl2sdram_tb.ahbl.hwdata[2] top.ahbl2sdram_tb.ahbl.hwdata[1] top.ahbl2sdram_tb.ahbl.hwdata[0]
+@28
+top.ahbl2sdram_tb.ahbl.htrans_sig
+#{top.ahbl2sdram_tb.ahbl.hsize[2:0]} top.ahbl2sdram_tb.ahbl.hsize[2] top.ahbl2sdram_tb.ahbl.hsize[1] top.ahbl2sdram_tb.ahbl.hsize[0]
+@22
+#{top.ahbl2sdram_tb.ahbl.haddr[31:0]} top.ahbl2sdram_tb.ahbl.haddr[31] top.ahbl2sdram_tb.ahbl.haddr[30] top.ahbl2sdram_tb.ahbl.haddr[29] top.ahbl2sdram_tb.ahbl.haddr[28] top.ahbl2sdram_tb.ahbl.haddr[27] top.ahbl2sdram_tb.ahbl.haddr[26] top.ahbl2sdram_tb.ahbl.haddr[25] top.ahbl2sdram_tb.ahbl.haddr[24] top.ahbl2sdram_tb.ahbl.haddr[23] top.ahbl2sdram_tb.ahbl.haddr[22] top.ahbl2sdram_tb.ahbl.haddr[21] top.ahbl2sdram_tb.ahbl.haddr[20] top.ahbl2sdram_tb.ahbl.haddr[19] top.ahbl2sdram_tb.ahbl.haddr[18] top.ahbl2sdram_tb.ahbl.haddr[17] top.ahbl2sdram_tb.ahbl.haddr[16] top.ahbl2sdram_tb.ahbl.haddr[15] top.ahbl2sdram_tb.ahbl.haddr[14] top.ahbl2sdram_tb.ahbl.haddr[13] top.ahbl2sdram_tb.ahbl.haddr[12] top.ahbl2sdram_tb.ahbl.haddr[11] top.ahbl2sdram_tb.ahbl.haddr[10] top.ahbl2sdram_tb.ahbl.haddr[9] top.ahbl2sdram_tb.ahbl.haddr[8] top.ahbl2sdram_tb.ahbl.haddr[7] top.ahbl2sdram_tb.ahbl.haddr[6] top.ahbl2sdram_tb.ahbl.haddr[5] top.ahbl2sdram_tb.ahbl.haddr[4] top.ahbl2sdram_tb.ahbl.haddr[3] top.ahbl2sdram_tb.ahbl.haddr[2] top.ahbl2sdram_tb.ahbl.haddr[1] top.ahbl2sdram_tb.ahbl.haddr[0]
+@1000200
+-ahbl
 [pattern_trace] 1
 [pattern_trace] 0
