@@ -50,7 +50,7 @@ architecture read_sequence of AHBL_DUMMY is
 	constant wire_delay      : time := 17 ns;
 	signal   reset_sig       : boolean                        := true;
 	signal   HSEL_sig        : std_logic                      := '0';
-	signal   HADDR_sig       : std_logic_vector(31 downto 0)  := (others => '-');
+	--signal   HADDR_sig       : std_logic_vector(31 downto 0)  := (others => '-');
 	signal   HWRITE_sig      : std_logic                      := '-';
 	signal   HSIZE_sig       : std_logic_vector( 2 downto 0)  := (others => '-');
 	signal   HTRANS_sig      : std_logic_vector( 1 downto 0)  := (others => '-');
@@ -133,13 +133,18 @@ architecture read_sequence of AHBL_DUMMY is
 
 
 begin
+	ENDSIM <= false, true after 80 ns;
+
 	reset_sig  <= true, false after 12 ns;
 	HRESETn    <= '0' when reset_sig else '1';
 
 	HSEL       <= '0' when reset_sig else
 				  '1' after wire_delay when bus_sequence(current_index+1).addr(31 downto 24) = zeros and current_delay_count=0 else -- TODO: not sure if good
 	              '0' after wire_delay;
-	HADDR       <= (others => '-') when reset_sig else HADDR_sig after wire_delay;
+
+	HADDR       <= (others => '-') when reset_sig else
+				   bus_sequence(current_index+1).addr after wire_delay when current_delay_count=0 else
+	               x"0000BEEF" after wire_delay;
 	HWRITE      <= '-' when reset_sig else
 				   '1' after wire_delay when bus_sequence(current_index+1).rw=write and current_delay_count=0 else
 				   '0' after wire_delay when bus_sequence(current_index+1).rw=read  and current_delay_count=0 else
@@ -156,12 +161,13 @@ begin
 				   HTRANS_idle   after wire_delay;
 
 	HREADY     <= '0' when reset_sig else HREADYOUT after wire_delay;
+
 	HWDATA     <= (others => '-') when reset_sig else
 				  bus_sequence(current_index).data after wire_delay when current_delay_count=0 and (current_state=read or current_state=read_stall) else
 				  (others => '-') after wire_delay;
 
 	--{{{
-	calculate_next_state : process (current_delay_count) --TODO
+	calculate_next_state : process (current_delay_count, current_index, hreadyout) --TODO
 	begin
 		next_state        <= current_state        after wire_delay; -- default assignement
 		next_delay_count  <= current_delay_count  after wire_delay;

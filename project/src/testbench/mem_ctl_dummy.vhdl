@@ -263,7 +263,7 @@ begin
 	--{{{ Do the actual work
 
 	--{{{
-	calculate_next_state : process (current_delay_count, p1_cmd_empty_sig, cmd_instr) --TODO
+	calculate_next_state : process (current_delay_count, p1_cmd_empty_sig, cmd_instr, current_burst_length) --TODO
 	begin
 		next_state        <= current_state        after wire_delay; -- default assignement
 		next_delay_count  <= current_delay_count  after wire_delay;

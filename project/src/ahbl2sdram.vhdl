@@ -286,7 +286,7 @@ architecture cache of AHBL2SDRAM is
 					assert BS(0) = '0' report "Unaligned half word read" severity failure;
 					return "0000000000000000"         & result(15 downto 0);
 				when 4 =>
-					assert BS = "00" report "Unaligned word read" severity failure;
+					assert BS = "00" report "Unaligned word read" severity error;
 					return                              result(31 downto 0);
 				when others => -- shouldn't happen
 					assert true report "Invalid size requested" severity failure;
