@@ -47,14 +47,13 @@ architecture read_sequence of AHBL_DUMMY is
 
 	--{{{ Logic wiring
 
-	constant wire_delay       : time := 17 ns;
+	constant wire_delay      : time := 17 ns;
 	signal   reset_sig       : boolean                        := true;
 	signal   HSEL_sig        : std_logic                      := '0';
 	signal   HADDR_sig       : std_logic_vector(31 downto 0)  := (others => '-');
 	signal   HWRITE_sig      : std_logic                      := '-';
 	signal   HSIZE_sig       : std_logic_vector( 2 downto 0)  := (others => '-');
 	signal   HTRANS_sig      : std_logic_vector( 1 downto 0)  := (others => '-');
-	--signal   HREADY_sig      : std_logic                      := '0';
 	signal   HWDATA_sig      : std_logic_vector(31 downto 0)  := (others => '-');
 	--}}}
 
@@ -68,22 +67,22 @@ architecture read_sequence of AHBL_DUMMY is
 		for string_pos in data'range loop
 			sum := resize(sum * 16, 32);
 			case data(string_pos) is
-				when '0' => tmp := 0;
-				when '1' => tmp := 1;
-				when '2' => tmp := 2;
-				when '3' => tmp := 3;
-				when '4' => tmp := 4;
-				when '5' => tmp := 5;
-				when '6' => tmp := 6;
-				when '7' => tmp := 7;
-				when '8' => tmp := 8;
-				when '9' => tmp := 9;
-				when 'A' => tmp := 10;
-				when 'B' => tmp := 11;
-				when 'C' => tmp := 12;
-				when 'D' => tmp := 13;
-				when 'E' => tmp := 14;
-				when 'F' => tmp := 15;
+				when '0'     => tmp := 0;
+				when '1'     => tmp := 1;
+				when '2'     => tmp := 2;
+				when '3'     => tmp := 3;
+				when '4'     => tmp := 4;
+				when '5'     => tmp := 5;
+				when '6'     => tmp := 6;
+				when '7'     => tmp := 7;
+				when '8'     => tmp := 8;
+				when '9'     => tmp := 9;
+				when 'a'|'A' => tmp := 10;
+				when 'b'|'B' => tmp := 11;
+				when 'c'|'C' => tmp := 12;
+				when 'd'|'D' => tmp := 13;
+				when 'e'|'E' => tmp := 14;
+				when 'f'|'F' => tmp := 15;
 				when others => report("hex_to_unsigned_32bit: Illegal digit: " & data(string_pos)) severity failure;
 			end case;
 			sum := sum + tmp;
