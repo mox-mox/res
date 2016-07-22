@@ -521,15 +521,15 @@ begin
 	                    '0' ;
 	--}}}
 	--{{{
-	data_sram_b_we   <= '1'  when (p1_rd_empty = '1' and read_current_state=rd0) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd1_keep) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd1) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd2) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd3) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd4) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd5) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd6) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd7) else
+	data_sram_b_we   <= '1'  when (p1_rd_empty = '0' and read_current_state=rd0) or
+	                              (p1_rd_empty = '0' and read_current_state=rd1_keep) or
+	                              (p1_rd_empty = '0' and read_current_state=rd1) or
+	                              (p1_rd_empty = '0' and read_current_state=rd2) or
+	                              (p1_rd_empty = '0' and read_current_state=rd3) or
+	                              (p1_rd_empty = '0' and read_current_state=rd4) or
+	                              (p1_rd_empty = '0' and read_current_state=rd5) or
+	                              (p1_rd_empty = '0' and read_current_state=rd6) or
+	                              (p1_rd_empty = '0' and read_current_state=rd7) else
 	                    '0' ;
 	--}}}
 	--{{{

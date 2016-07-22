@@ -39,24 +39,35 @@ end MEM_CTL_DUMMY;
 
 architecture normal of MEM_CTL_DUMMY is
 
+	type mem_ctl_dummy_state_type is (idle, read, write);
+	signal current_state,        next_state        : mem_ctl_dummy_state_type := idle;
+	signal current_delay_count,  next_delay_count  : natural                  := 0;
+	signal current_burst_length, next_burst_length : natural                  := 0;
+	signal current_addr,         next_addr         : natural                  := 0;
+
+	signal random_delay : natural;
+	constant wire_delay : time := 1 ns;
+
 	--{{{ Wiring logic
 
-	signal cmd_empty                   : std_logic;
 	signal p1_cmd_instr_bl_addr_concat : std_logic_vector(38 downto 0);
 	signal cmd_readen                  : std_logic;
 	signal cmd_instr_bl_addr_concat    : std_logic_vector(38 downto 0);
 	alias  cmd_instr                   is cmd_instr_bl_addr_concat(38 downto 36);
 	alias  cmd_bl                      is cmd_instr_bl_addr_concat(35 downto 30);
 	alias  cmd_addr                    is cmd_instr_bl_addr_concat(29 downto 0);
+	constant cmd_write_normal          : std_logic_vector( 2 downto 0) := "000";
+	constant cmd_write_precharge       : std_logic_vector( 2 downto 0) := "010";
+	constant cmd_read_normal           : std_logic_vector( 2 downto 0) := "001";
+	constant cmd_read_precharge        : std_logic_vector( 2 downto 0) := "011";
+	--constant cmd_refresh               : std_logic_vector( 2 downto 0) := "100";
 
-	signal wr_empty                    : std_logic;
 	signal p1_wr_mask_data_concat      : std_logic_vector(35 downto 0);
 	signal wr_readen                   : std_logic;
 	signal wr_mask_data_concat         : std_logic_vector(35 downto 0);
 	alias  wr_mask                     is wr_mask_data_concat(35 downto 32);
 	alias  wr_data                     is wr_mask_data_concat(31 downto  0);
 
-	signal rd_full                     : std_logic;
 	signal rd_data                     : std_logic_vector(31 downto 0);
 	signal rd_writeen                  : std_logic;
 
@@ -79,9 +90,6 @@ architecture normal of MEM_CTL_DUMMY is
 
 
 	--}}}
-
-	signal random_delay : natural;
-	constant wire_delay : time := 1 ns;
 
 	--{{{ Components
 
@@ -153,7 +161,6 @@ architecture normal of MEM_CTL_DUMMY is
 	shared variable RAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AFAFAFAF", x"BFBFBFBF", x"CFCFCFCF", x"DFDFDFDF", x"EFEFEFEF", x"FFFFFFFF", others => x"00000000");
 	--}}}
 
-
 	--{{{
 	procedure write_ram (mask : std_logic_vector(3 downto 0); addr : natural; data : std_logic_vector(31 downto 0)) is
 	begin
@@ -167,6 +174,9 @@ architecture normal of MEM_CTL_DUMMY is
 
 begin
 
+
+	--{{{ Wire the internal signals to the outputs with wire_delays
+
 	--{{{ Constant values not simulated
 
 	p1_cmd_error_sig   <= '0';
@@ -177,8 +187,6 @@ begin
 	p1_wr_underrun_sig <= '0';
 	p1_rd_overflow_sig <= '0';
 	--}}}
-
-	--{{{ Wire the internal signals to the outputs with wire_delays
 
 	p1_cmd_empty   <= p1_cmd_empty_sig   after wire_delay;
 	p1_cmd_error   <= p1_cmd_error_sig   after wire_delay;
@@ -207,12 +215,12 @@ begin
 		WriteEn => p1_cmd_en,
 		ReadEn  => cmd_readen,
 		DataOut => cmd_instr_bl_addr_concat,
-		Empty   => cmd_empty,
+		Empty   => p1_cmd_empty_sig,
 		Full    => p1_cmd_full_sig,
 		RST     => rst
 	);
+	--assert p1_cmd_instr(2)='0' report "The cache controller issued a refresh command" severity failure;
 	p1_cmd_instr_bl_addr_concat <= p1_cmd_instr & p1_cmd_bl & p1_cmd_addr;
-	p1_cmd_empty_sig <= cmd_empty;
 	--}}}
 
 	--{{{
@@ -222,12 +230,11 @@ begin
 		WriteEn => p1_wr_en,
 		ReadEn  => wr_readen,
 		DataOut => wr_mask_data_concat,
-		Empty   => wr_empty,
+		Empty   => p1_wr_empty_sig,
 		Full    => p1_wr_full_sig,
 		RST     => rst
 	);
 	p1_wr_mask_data_concat <= p1_wr_mask & p1_wr_data;
-	p1_wr_empty_sig <= wr_empty;
 	--}}}
 
 	--{{{
@@ -238,10 +245,9 @@ begin
 		ReadEn  => p1_rd_en,
 		DataOut => p1_rd_data_sig,
 		Empty   => p1_rd_empty_sig,
-		Full    => rd_full,
+		Full    => p1_rd_full_sig,
 		RST     => rst
 	);
-	p1_rd_full_sig <= rd_full;
 	--}}}
 	--}}}
 
@@ -253,85 +259,190 @@ begin
 	begin
 		if(rising_edge(p1_cmd_clk)) then
 			uniform (seed1,seed2,helper);
-			--random_delay <= integer(helper * real(3));
-			random_delay <= 1; -- TODO
+			random_delay <= integer(helper * real(3));
+			--random_delay <= 1; -- TODO
 		end if;
+	end process;
+	--}}}
+
+
+
+
+	--{{{
+	generate_next_state : process (current_delay_count, p1_cmd_empty_sig, cmd_instr) --TODO
+	begin
+		next_state        <= current_state        after wire_delay; -- default assignement
+		next_delay_count  <= current_delay_count  after wire_delay;
+		next_burst_length <= current_burst_length after wire_delay;
+		next_addr         <= current_addr         after wire_delay;
+		case current_state is
+			when idle =>
+				if current_delay_count = 0 then
+					if p1_cmd_empty_sig = '0' then -- If there are commands waiting
+						next_burst_length <= to_integer(unsigned(cmd_bl))+1; -- TODO: Is the +1 really needed?
+						next_addr         <= to_integer(unsigned(cmd_addr));
+						if cmd_instr=cmd_read_normal or cmd_instr=cmd_read_precharge then
+							next_state <= read after wire_delay;
+						else --cmd_instr=cmd_write_normal or cmd_instr=cmd_write_precharge then
+							next_state <= write after wire_delay;
+						end if; -- Refresh command is excluded via assertion.
+					else
+						next_state       <= idle         after wire_delay;
+						next_delay_count <= random_delay after wire_delay;
+					end if;
+				else
+					next_state        <= idle                    after wire_delay;
+					next_delay_count  <= current_delay_count - 1 after wire_delay;
+				end if;
+			when read =>
+				if current_burst_length = 0 then -- When the current command is done
+					next_state        <= idle                     after wire_delay;
+					next_delay_count  <= random_delay             after wire_delay;
+				else
+					next_state        <= read                     after wire_delay;
+					next_burst_length <= current_burst_length - 1 after wire_delay;
+					next_addr         <= current_addr + 1         after wire_delay;
+				end if;
+
+			when write =>
+				if current_burst_length = 0 then -- When the current command is done
+					next_state        <= idle                     after wire_delay;
+					next_delay_count  <= random_delay             after wire_delay;
+				else
+					next_state        <= write                    after wire_delay;
+					next_burst_length <= current_burst_length - 1 after wire_delay;
+					next_addr         <= current_addr + 1         after wire_delay;
+				end if;
+		end case;
 	end process;
 	--}}}
 
 	--{{{
-	perform_work : process(p1_cmd_clk)
-		variable delay_counter : natural;
-		variable burst_length  : natural;
-		variable read          : std_logic;
-		variable addr          : natural;
+	adopt_next_state : process (p1_cmd_clk)
 	begin
 		if(rising_edge(p1_cmd_clk)) then
-			if(rst = '1') then --{{{
-				delay_counter := random_delay;
-				cmd_readen  <= '0';
-				wr_readen   <= '0';
-				rd_writeen  <= '0';
-				rd_data     <= (others => '0'); --}}}
+			if rst = '1' then
+				current_state         <= idle;
+				current_delay_count   <= random_delay;
+				current_burst_length  <= 0;
+				current_addr          <= 0;
 			else
-				--{{{
-				if delay_counter = 1 and cmd_empty = '0' then
-					cmd_readen     <= '1';
-					wr_readen      <= '0';
-					rd_writeen     <= '0';
-					rd_data        <= (others => '0');
-					delay_counter  := delay_counter - 1;
-					if cmd_instr="001" or cmd_instr="011" then
-						read       := '1';
-					elsif cmd_instr="000" or cmd_instr="010" then
-						read       := '0';
-					else
-						assert true report "Invalid cmd." severity failure;
-					end if;
-					burst_length   := to_integer(unsigned(cmd_bl))+1; --TODO
-					addr           := to_integer(unsigned(cmd_addr)); --TODO
-				--}}}
-
-				--{{{
-				elsif delay_counter = 0 then
-					if burst_length = 0 then
-						delay_counter := random_delay;
-						cmd_readen  <= '0';
-						wr_readen   <= '0';
-						rd_writeen  <= '0';
-						rd_data     <= (others => '0');
-					else
-						if read = '1' then
-							--assert rd_full = '0'  report "Read data overflow." severity failure;
-							cmd_readen  <= '0';
-							wr_readen   <= '0';
-							rd_writeen  <= '1';
-							rd_data     <= RAM(addr);
-						else -- write
-							--assert wr_empty = '0'  report "Insufficient write data." severity failure;
-							write_ram(wr_mask, addr, wr_data);
-							cmd_readen  <= '0';
-							wr_readen   <= '1';
-							rd_writeen  <= '0';
-							rd_data     <= (others => '0');
-						end if;
-						addr := addr+1;
-					end if;
-				--}}}
-
-				else -- Emulate the delay of the real controller, just wait.
-					delay_counter := delay_counter - 1;
-					cmd_readen  <= '0';
-					wr_readen   <= '0';
-					rd_writeen  <= '0';
-					rd_data     <= (others => '0');
-				end if;
-
-
+				current_state        <= next_state;
+				current_delay_count  <= next_delay_count;
+				current_burst_length <= next_burst_length;
+				current_addr         <= next_addr;
 			end if;
 		end if;
 	end process;
 	--}}}
+
+
+	--{{{ Drive FIFOs
+
+	cmd_readen <= '0'               after wire_delay when rst = '1' else
+				  '1'               after wire_delay when current_state=idle and current_delay_count=0 and p1_cmd_empty_sig='0' else
+				  '0'               after wire_delay;
+
+	wr_readen  <= '0'               after wire_delay when rst = '1' else
+	              '1'               after wire_delay when current_state=write else
+	              '0'               after wire_delay;
+
+	rd_writeen <= '0'               after wire_delay when rst = '1' else
+	              '1'               after wire_delay when current_state=read else
+	              '0'               after wire_delay;
+
+	rd_data    <= (others => '-')   after wire_delay when rst = '1' else
+	              RAM(current_addr) after wire_delay when current_state=read else
+	              (others => '-')   after wire_delay;
+	--}}}
+
+
+	drive_ram : process(p1_cmd_clk)
+	begin
+		if(rising_edge(p1_cmd_clk)) then
+			if(rst='0' and current_state=write) then
+				write_ram(wr_mask, current_addr, wr_data);
+			end if;
+		end if;
+	end process;
+
+
+
+--
+--	--{{{
+--	perform_work : process(p1_cmd_clk)
+--		variable delay_counter : natural;
+--		variable burst_length  : natural;
+--		variable read          : std_logic;
+--		variable addr          : natural;
+--	begin
+--		if(rising_edge(p1_cmd_clk)) then
+--			if(rst = '1') then --{{{
+--				delay_counter := random_delay;
+--				cmd_readen  <= '0';
+--				wr_readen   <= '0';
+--				rd_writeen  <= '0';
+--				rd_data     <= (others => '0'); --}}}
+--			else
+--				--{{{
+--				if delay_counter = 1 and p1_cmd_empty_sig = '0' then
+--					cmd_readen     <= '1';
+--					wr_readen      <= '0';
+--					rd_writeen     <= '0';
+--					rd_data        <= (others => '0');
+--					delay_counter  := delay_counter - 1;
+--					if cmd_instr="001" or cmd_instr="011" then
+--						read       := '1';
+--					elsif cmd_instr="000" or cmd_instr="010" then
+--						read       := '0';
+--					else
+--						assert true report "Invalid cmd." severity failure;
+--					end if;
+--					burst_length   := to_integer(unsigned(cmd_bl))+1; --TODO
+--					addr           := to_integer(unsigned(cmd_addr)); --TODO
+--				--}}}
+--
+--				--{{{
+--				elsif delay_counter = 0 then
+--					if burst_length = 0 then
+--						delay_counter := random_delay;
+--						cmd_readen  <= '0';
+--						wr_readen   <= '0';
+--						rd_writeen  <= '0';
+--						rd_data     <= (others => '0');
+--					else
+--						if read = '1' then
+--							--assert p1_rd_full_sig = '0'  report "Read data overflow." severity failure;
+--							cmd_readen  <= '0';
+--							wr_readen   <= '0';
+--							rd_writeen  <= '1';
+--							rd_data     <= RAM(addr);
+--						else -- write
+--							--assert p1_wr_empty_sig = '0'  report "Insufficient write data." severity failure;
+--							write_ram(wr_mask, addr, wr_data);
+--							cmd_readen  <= '0';
+--							wr_readen   <= '1';
+--							rd_writeen  <= '0';
+--							rd_data     <= (others => '0');
+--						end if;
+--						addr := addr+1;
+--					end if;
+--				--}}}
+--
+--				else -- Emulate the delay of the real controller, just wait.
+--					delay_counter := delay_counter - 1;
+--					cmd_readen  <= '0';
+--					wr_readen   <= '0';
+--					rd_writeen  <= '0';
+--					rd_data     <= (others => '0');
+--				end if;
+--
+--
+--			end if;
+--		end if;
+--	end process;
+--	--}}}
+--
 
 end normal;
 

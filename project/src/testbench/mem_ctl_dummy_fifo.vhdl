@@ -42,9 +42,7 @@ begin
 			if RST = '1' then
 				Head := 0;
 				Tail := 0;
-
 				Looped := false;
-
 				Full  <= '0';
 				Empty <= '1';
 			else
@@ -53,47 +51,45 @@ begin
 						-- Update Tail pointer as needed
 						if (Tail = FIFO_DEPTH - 1) then
 							Tail := 0;
-
 							Looped := false;
-							else
-								Tail := Tail + 1;
-							end if;
-						end if;
-					end if;
-
-					if (WriteEn = '1') then
-						if ((Looped = false) or (Head /= Tail)) then
-						-- Write Data to Memory
-							Memory(Head) := DataIn;
-
-						-- Increment Head pointer as needed
-							if (Head = FIFO_DEPTH - 1) then
-								Head := 0;
-
-								Looped := true;
-								else
-									Head := Head + 1;
-								end if;
-							end if;
-						end if;
-
-				-- Update data output
-						DataOut <= Memory(Tail);
-
-				-- Update Empty and Full flags
-						if (Head = Tail) then
-							if Looped then
-								Full <= '1';
-							else
-								Empty <= '1';
-							end if;
 						else
-							Empty   <= '0';
-							Full    <= '0';
+							Tail := Tail + 1;
 						end if;
 					end if;
 				end if;
-			end process;
 
-		end Behavioral;
+				if (WriteEn = '1') then
+					if ((Looped = false) or (Head /= Tail)) then
+						-- Write Data to Memory
+						Memory(Head) := DataIn;
+
+						-- Increment Head pointer as needed
+						if (Head = FIFO_DEPTH - 1) then
+							Head := 0;
+							Looped := true;
+						else
+							Head := Head + 1;
+						end if;
+					end if;
+				end if;
+
+				-- Update data output
+				DataOut <= Memory(Tail);
+
+				-- Update Empty and Full flags
+				if (Head = Tail) then
+					if Looped then
+						Full <= '1';
+					else
+						Empty <= '1';
+					end if;
+				else
+					Empty   <= '0';
+					Full    <= '0';
+				end if;
+			end if;
+		end if;
+	end process;
+
+end Behavioral;
 
