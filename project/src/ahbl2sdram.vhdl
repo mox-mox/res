@@ -384,10 +384,6 @@ begin
 	                  align_output_data(read_SAVE1_HADDR_BS, read_SAVE1_HSIZE, p1_rd_data         , HRESETn)  when (read_current_state=rd0)     else
 	                  align_output_data(read_SAVE1_HADDR_BS, read_SAVE1_HSIZE, read_keep_dram_data, HRESETn)  when (read_current_state=rd1_keep) else
 	                  (others => '-') ;
-	--HRDATA         <= data_sram_b_do       when (read_current_state=cmp_dlv) else
-	--                  p1_rd_data           when (read_current_state=rd0)     else
-	--                  read_keep_dram_data  when (read_current_state=rd1_keep) else
-	--                  (others => '-') ;
 	--}}}
 	--{{{
 	p1_cmd_instr   <= DRAM_CMD_READ    when ((read_current_state=cmp_dlv or read_current_state=req0 or read_current_state=req1) and hit='0') else

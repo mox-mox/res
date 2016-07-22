@@ -165,14 +165,7 @@ begin
 				   HTRANS_nonseq when HTRANS_sig=nonseq else
 				   HTRANS_seq    when HTRANS_sig=seq;
 
-
-
-
-	--HTRANS      <= HTRANS_idle when reset_sig else
-	--			   HTRANS_nonseq after wire_delay when current_delay_count=0 else
-	--			   HTRANS_idle   after wire_delay;
-
-	HREADY     <= '0' when reset_sig else HREADYOUT after wire_delay;
+	HREADY     <= '0' when reset_sig else HREADYOUT after 1 ns;
 
 	HWDATA     <= (others => '-') when reset_sig else
 				  bus_sequence(current_index).data after wire_delay when current_delay_count=0 and (current_state=read or current_state=read_stall) else
