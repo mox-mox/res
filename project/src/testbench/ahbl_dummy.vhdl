@@ -33,17 +33,103 @@ end AHBL_DUMMY;
 --{{{
 architecture read_sequence of AHBL_DUMMY is
 
-		signal reset_sig         : boolean                        := true;
-		signal HSEL_sig          : std_logic                      := '0';
-		signal HADDR_sig         : std_logic_vector(31 downto 0)  := (others => '-');
-		signal HWRITE_sig        : std_logic                      := '-';
-		signal HSIZE_sig         : std_logic_vector( 2 downto 0)  := (others => '-');
-		signal HTRANS_sig        : std_logic_vector( 1 downto 0)  := (others => '-');
-		signal HREADY_sig        : std_logic                      := '0';
-		signal HWDATA_sig        : std_logic_vector(31 downto 0)  := (others => '-');
+	constant HTRANS_idle     : std_logic_vector( 1 downto 0)  := "00";
+	--constant HTRANS_busy     : std_logic_vector( 1 downto 0)  := "01";
+	constant HTRANS_nonseq   : std_logic_vector( 1 downto 0)  := "10";
+	--constant HTRANS_seq      : std_logic_vector( 1 downto 0)  := "11";
 
+
+	constant wiredelay       : time := 17 ns;
+	signal   reset_sig       : boolean                        := true;
+	signal   HSEL_sig        : std_logic                      := '0';
+	signal   HADDR_sig       : unsigned(31 downto 0)          := (others => '-');
+	signal   HWRITE_sig      : std_logic                      := '-';
+	signal   HSIZE_sig       : std_logic_vector( 2 downto 0)  := (others => '-');
+	signal   HTRANS_sig      : std_logic_vector( 1 downto 0)  := (others => '-');
+	signal   HREADY_sig      : std_logic                      := '0';
+	signal   HWDATA_sig      : unsigned(31 downto 0)          := (others => '-');
+
+	--{{{ addr and data conversion functions
+
+	--{{{
+	function hex_to_unsigned_32bit(data: string) return unsigned is
+	variable sum: unsigned(31 downto 0) := (others => '0');
+	variable tmp: integer;
+	begin
+		for string_pos in data'range loop
+			sum := resize(sum * 16, 32);
+			case data(string_pos) is
+				when '0' => tmp := 0;
+				when '1' => tmp := 1;
+				when '2' => tmp := 2;
+				when '3' => tmp := 3;
+				when '4' => tmp := 4;
+				when '5' => tmp := 5;
+				when '6' => tmp := 6;
+				when '7' => tmp := 7;
+				when '8' => tmp := 8;
+				when '9' => tmp := 9;
+				when 'A' => tmp := 10;
+				when 'B' => tmp := 11;
+				when 'C' => tmp := 12;
+				when 'D' => tmp := 13;
+				when 'E' => tmp := 14;
+				when 'F' => tmp := 15;
+				when others => report("hex_to_unsigned_32bit: Illegal digit: " & data(string_pos)) severity failure;
+			end case;
+			sum := sum + tmp;
+		end loop;
+		return sum;
+	end hex_to_unsigned_32bit;
+	--}}}
+
+	function to_addr (addr : string) return std_logic_vector is
+	begin
+		return std_logic_vector(hex_to_unsigned_32bit(addr));
+	end to_addr;
+
+	function to_data (data : string) return std_logic_vector is
+	begin
+		return std_logic_vector(hex_to_unsigned_32bit(data));
+	end to_data;
+	--}}}
+
+	type read_write is (read, write);
+
+	type ahbl_command_type is record
+		delay      : natural;
+		read_write : read_write;
+		addr       : std_logic_vector(31 downto 0);
+		data       : std_logic_vector(31 downto 0);           -- For writes, the datum to be written, for reads the datum expected.
+		size       : positive range 1 to 4;                   -- The number of byts to read or write
+	end record;
+
+	type bus_access_array is array (natural range <>) of ahbl_command_type;
+	constant patterns : bus_access_array := (
+		(0, write, to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
+		(0, read,  to_addr("00000004"), to_data("00000000"), 4),
+		(0, read,  to_addr("00000004"), to_data("00000000"), 1),
+		(0, read,  to_addr("00000005"), to_data("00000000"), 1),
+		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1)); -- dummy line
+	signal delay_counter : natural := 0;
 
 begin
+	reset_sig        <= true, false after 12 ns;
+
+	--HRESETn          <= '0' when reset_sig else '1';
+	--HSEL             <= 
+	--HADDR            <=
+	--HWRITE           <= 
+	--HSIZE            <= 
+	--HTRANS           <= 
+	--HREADY           <= 
+	--HWDATA           <= 
+
+
+
+
+
+
 
 end read_sequence;
 --}}}
