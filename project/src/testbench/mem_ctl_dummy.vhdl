@@ -19,7 +19,7 @@ entity MEM_CTL_DUMMY is
 -- Write Datapath -----------------------------------------------------------------------------------------------------
 		p1_wr_clk         : in  std_logic;                     -- Clock for the write data FIFO
 		p1_wr_data        : in  std_logic_vector(31 downto 0); -- Data to be stored in the FIFO and be written to the DDR2-DRAM.
-		p1_wr_mask        : in  std_logic_vector( 3 downto 0); -- Mask write data. A high bit means corresponding byte is not written to the RAM.
+		p1_wr_mask        : in  std_logic_vector( 3 downto 0); -- Mask write data. A high bit means corresponding byte is not written to the DDR2-DRAM.
 		p1_wr_en          : in  std_logic;                     -- Write enable for the write data FIFO
 		p1_wr_count       : out std_logic_vector( 6 downto 0); -- Write data FIFO fill level: 0: empty. Note longer latency than p1_wr_empty!
 		p1_wr_empty       : out std_logic;                     -- Write data FIFO empty bit: 0: Not empty, 1: Empty
@@ -29,7 +29,7 @@ entity MEM_CTL_DUMMY is
 -- Read Datapath ------------------------------------------------------------------------------------------------------
 		p1_rd_clk         : in  std_logic;                     -- Clock for the read data FIFO
 		p1_rd_en          : in  std_logic;                     -- Read enable bit for the read data FIFO: 0: Diabled, 1: Enabled
-		p1_rd_data        : out std_logic_vector(31 downto 0); -- Data read from the RAM
+		p1_rd_data        : out std_logic_vector(31 downto 0); -- Data read from the DDR2-DRAM
 		p1_rd_full        : out std_logic;                     -- Read data FIFO full bit: 0: All ok, 1: Full. Data will be discarded.
 		p1_rd_empty       : out std_logic;                     -- Read data FIFO empty bit: 0: Not empty, 1: Empty. Cannot read data from FIFO.
 		p1_rd_count       : out std_logic_vector( 6 downto 0); -- Read data FIFO fill level: 0: empty. Note longer latency than p1_rd_full!
@@ -155,15 +155,15 @@ architecture normal of MEM_CTL_DUMMY is
 	for fifo_rd    : RD_FIFO     use entity work.FWFT_FIFO(Behavioral);
 	--}}}
 
-	--{{{ The Dummy RAM
+	--{{{ The Dummy DRAM
 
 		-- Use either the full sized 16 MB DRAM as a shared variable...
 	--type ram_type is array (0 to 4194304) of std_logic_vector (31 downto 0);
-	--shared variable RAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AFAFAFAF", x"BFBFBFBF", x"CFCFCFCF", x"DFDFDFDF", x"EFEFEFEF", x"FFFFFFFF", others => x"00000000");
+	--shared variable DRAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AFAFAFAF", x"BFBFBFBF", x"CFCFCFCF", x"DFDFDFDF", x"EFEFEFEF", x"FFFFFFFF", others => x"00000000");
 
 		-- ... or define it as signal, enabling viewing it in gtkwave, but reduce the size.
 	type ram_type is array (0 to 1024) of std_logic_vector (31 downto 0);
-	signal RAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AFAFAFAF", x"BFBFBFBF", x"CFCFCFCF", x"DFDFDFDF", x"EFEFEFEF", x"FFFFFFFF", others => x"00000000");
+	signal DRAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AFAFAFAF", x"BFBFBFBF", x"CFCFCFCF", x"DFDFDFDF", x"EFEFEFEF", x"FFFFFFFF", others => x"00000000");
 	--}}}
 
 
@@ -347,7 +347,7 @@ begin
 	              '0'               after wire_delay;
 
 	rd_data    <= (others => '-')   after wire_delay when rst = '1' else
-	              RAM(current_addr) after wire_delay when current_state=read else
+	              DRAM(current_addr) after wire_delay when current_state=read else
 	              (others => '-')   after wire_delay;
 	--}}}
 
@@ -359,7 +359,7 @@ begin
 			if(rst='0' and current_state=write) then
 				for i in 0 to 3 loop
 					if wr_mask(i) = '1' then
-						RAM(current_addr)(((i+1)*8)-1 downto (i*8)) <= wr_data(((i+1)*8)-1 downto (i*8));
+						DRAM(current_addr)(((i+1)*8)-1 downto (i*8)) <= wr_data(((i+1)*8)-1 downto (i*8));
 					end if;
 				end loop;
 			end if;

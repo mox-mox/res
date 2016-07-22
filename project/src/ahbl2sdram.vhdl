@@ -42,7 +42,7 @@ entity AHBL2SDRAM is
 -- Write Datapath -----------------------------------------------------------------------------------------------------
 		p1_wr_clk         : out   std_logic;                     -- Clock for the write data FIFO
 		p1_wr_data        : out   std_logic_vector(31 downto 0); -- Data to be stored in the FIFO and be written to the DDR2-DRAM.
-		p1_wr_mask        : out   std_logic_vector( 3 downto 0); -- Mask write data. A high bit means corresponding byte is not written to the RAM.
+		p1_wr_mask        : out   std_logic_vector( 3 downto 0); -- Mask write data. A high bit means corresponding byte is not written to the DDR2-DRAM.
 		p1_wr_en          : out   std_logic;                     -- Write enable for the write data FIFO
 		p1_wr_count       : in    std_logic_vector( 6 downto 0); -- Write data FIFO fill level: 0: empty. Note longer latency than p1_wr_empty!
 		p1_wr_empty       : in    std_logic;                     -- Write data FIFO empty bit: 0: Not empty, 1: Empty
@@ -52,7 +52,7 @@ entity AHBL2SDRAM is
 -- Read Datapath ------------------------------------------------------------------------------------------------------
 		p1_rd_clk         : out   std_logic;                     -- Clock for the read data FIFO
 		p1_rd_en          : out   std_logic;                     -- Read enable bit for the read data FIFO: 0: Diabled, 1: Enabled
-		p1_rd_data        : in    std_logic_vector(31 downto 0); -- Data read from the RAM
+		p1_rd_data        : in    std_logic_vector(31 downto 0); -- Data read from the DDR2-DRAM
 		p1_rd_full        : in    std_logic;                     -- Read data FIFO full bit: 0: All ok, 1: Full. Data will be discarded.
 		p1_rd_empty       : in    std_logic;                     -- Read data FIFO empty bit: 0: Not empty, 1: Empty. Cannot read data from FIFO.
 		p1_rd_count       : in    std_logic_vector( 6 downto 0); -- Read data FIFO fill level: 0: empty. Note longer latency than p1_rd_full!
