@@ -33,21 +33,30 @@ end AHBL_DUMMY;
 --{{{
 architecture read_sequence of AHBL_DUMMY is
 
-	constant HTRANS_idle     : std_logic_vector( 1 downto 0)  := "00";
+	constant HTRANS_idle     : std_logic_vector( 1 downto 0) := "00";
+	constant HTRANS_nonseq   : std_logic_vector( 1 downto 0) := "10";
+	constant zeros           : std_logic_vector( 7 downto 0) := "00000000";
+	constant HSIZE1          : std_logic_vector( 2 downto 0) := "000";
+	constant HSIZE2          : std_logic_vector( 2 downto 0) := "001";
+	constant HSIZE4          : std_logic_vector( 2 downto 0) := "010";
+
+
+
 	--constant HTRANS_busy     : std_logic_vector( 1 downto 0)  := "01";
-	constant HTRANS_nonseq   : std_logic_vector( 1 downto 0)  := "10";
 	--constant HTRANS_seq      : std_logic_vector( 1 downto 0)  := "11";
 
+	--{{{ Logic wiring
 
-	constant wiredelay       : time := 17 ns;
+	constant wire_delay       : time := 17 ns;
 	signal   reset_sig       : boolean                        := true;
 	signal   HSEL_sig        : std_logic                      := '0';
-	signal   HADDR_sig       : unsigned(31 downto 0)          := (others => '-');
+	signal   HADDR_sig       : std_logic_vector(31 downto 0)  := (others => '-');
 	signal   HWRITE_sig      : std_logic                      := '-';
 	signal   HSIZE_sig       : std_logic_vector( 2 downto 0)  := (others => '-');
 	signal   HTRANS_sig      : std_logic_vector( 1 downto 0)  := (others => '-');
-	signal   HREADY_sig      : std_logic                      := '0';
-	signal   HWDATA_sig      : unsigned(31 downto 0)          := (others => '-');
+	--signal   HREADY_sig      : std_logic                      := '0';
+	signal   HWDATA_sig      : std_logic_vector(31 downto 0)  := (others => '-');
+	--}}}
 
 	--{{{ addr and data conversion functions
 
@@ -94,38 +103,167 @@ architecture read_sequence of AHBL_DUMMY is
 	end to_data;
 	--}}}
 
+	--{{{ Sequence
+
 	type read_write is (read, write);
 
 	type ahbl_command_type is record
 		delay      : natural;
-		read_write : read_write;
+		rw         : read_write;
 		addr       : std_logic_vector(31 downto 0);
 		data       : std_logic_vector(31 downto 0);           -- For writes, the datum to be written, for reads the datum expected.
 		size       : positive range 1 to 4;                   -- The number of byts to read or write
 	end record;
 
 	type bus_access_array is array (natural range <>) of ahbl_command_type;
-	constant patterns : bus_access_array := (
+	constant bus_sequence : bus_access_array := (
 		(0, write, to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
 		(0, read,  to_addr("00000004"), to_data("00000000"), 4),
 		(0, read,  to_addr("00000004"), to_data("00000000"), 1),
 		(0, read,  to_addr("00000005"), to_data("00000000"), 1),
 		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1)); -- dummy line
 	signal delay_counter : natural := 0;
+	--}}}
+
+
+
+	type ahbl_dummy_state is (idle, write, write_stall, read, read_stall);
+	signal current_state,       next_state        : ahbl_dummy_state := idle;
+	signal current_delay_count, next_delay_count  : natural          := 0;
+	signal current_index,       next_index        : natural          := 0;
+
 
 begin
-	reset_sig        <= true, false after 12 ns;
+	reset_sig  <= true, false after 12 ns;
+	HRESETn    <= '0' when reset_sig else '1';
 
-	--HRESETn          <= '0' when reset_sig else '1';
-	--HSEL             <= 
-	--HADDR            <=
-	--HWRITE           <= 
-	--HSIZE            <= 
-	--HTRANS           <= 
-	--HREADY           <= 
-	--HWDATA           <= 
+	HSEL       <= '0' when reset_sig else
+				  '1' after wire_delay when bus_sequence(current_index+1).addr(31 downto 24) = zeros and current_delay_count=0 else -- TODO: not sure if good
+	              '0' after wire_delay;
+	HADDR       <= (others => '-') when reset_sig else HADDR_sig after wire_delay;
+	HWRITE      <= '-' when reset_sig else
+				   '1' after wire_delay when bus_sequence(current_index+1).rw=write and current_delay_count=0 else
+				   '0' after wire_delay when bus_sequence(current_index+1).rw=read  and current_delay_count=0 else
+				   '-' after wire_delay;
 
+	HSIZE       <= (others => '-') when reset_sig else
+				   HSIZE1 after wire_delay when bus_sequence(current_index+1).size=1 and current_delay_count=0 else
+				   HSIZE2 after wire_delay when bus_sequence(current_index+1).size=2 and current_delay_count=0 else
+				   HSIZE4 after wire_delay when bus_sequence(current_index+1).size=4 and current_delay_count=0 else
+				   (others => '-') after wire_delay;
 
+	HTRANS      <= HTRANS_idle when reset_sig else
+				   HTRANS_nonseq after wire_delay when current_delay_count=0 else
+				   HTRANS_idle   after wire_delay;
+
+	HREADY     <= '0' when reset_sig else HREADYOUT after wire_delay;
+	HWDATA     <= (others => '-') when reset_sig else
+				  bus_sequence(current_index).data after wire_delay when current_delay_count=0 and (current_state=read or current_state=read_stall) else
+				  (others => '-') after wire_delay;
+
+	--{{{
+	calculate_next_state : process (current_delay_count) --TODO
+	begin
+		next_state        <= current_state        after wire_delay; -- default assignement
+		next_delay_count  <= current_delay_count  after wire_delay;
+		next_index        <= current_index        after wire_delay;
+		case current_state is
+			when idle =>
+				if current_delay_count = 0 then
+					next_index <= current_index + 1 after wire_delay;
+					if bus_sequence(current_index).rw=read then
+						next_state <= read after wire_delay;
+					else
+						next_state <= write after wire_delay;
+					end if;
+				else
+					next_delay_count <= current_delay_count - 1;
+				end if;
+			when write =>
+				if hreadyout = '0' then
+					next_state <= write_stall after wire_delay;
+				else
+					if bus_sequence(current_index + 1).delay = 0 then
+						next_index <= current_index + 1 after wire_delay;
+						if bus_sequence(current_index).rw=read then
+							next_state <= read after wire_delay;
+						else
+							next_state <= write after wire_delay;
+						end if;
+					else
+						next_state <= idle;
+						next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+					end if;
+				end if;
+			when write_stall =>
+				if hreadyout = '0' then
+					next_state <= write_stall after wire_delay;
+				else
+					if bus_sequence(current_index + 1).delay = 0 then
+						next_index <= current_index + 1 after wire_delay;
+						if bus_sequence(current_index).rw=read then
+							next_state <= read after wire_delay;
+						else
+							next_state <= write after wire_delay;
+						end if;
+					else
+						next_state <= idle;
+						next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+					end if;
+				end if;
+
+			when read =>
+				if hreadyout = '0' then
+					next_state <= read_stall after wire_delay;
+				else
+					if bus_sequence(current_index + 1).delay = 0 then
+						next_index <= current_index + 1 after wire_delay;
+						if bus_sequence(current_index).rw=read then
+							next_state <= read after wire_delay;
+						else
+							next_state <= write after wire_delay;
+						end if;
+					else
+						next_state <= idle;
+						next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+					end if;
+				end if;
+			when read_stall =>
+				if hreadyout = '0' then
+					next_state <= read_stall after wire_delay;
+				else
+					if bus_sequence(current_index + 1).delay = 0 then
+						next_index <= current_index + 1 after wire_delay;
+						if bus_sequence(current_index).rw=read then
+							next_state <= read after wire_delay;
+						else
+							next_state <= write after wire_delay;
+						end if;
+					else
+						next_state <= idle;
+						next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+					end if;
+				end if;
+		end case;
+	end process;
+	--}}}
+
+	--{{{
+	adopt_next_state : process (HCLK)
+	begin
+		if(rising_edge(HCLK)) then
+			if  reset_sig then
+				current_state         <= idle;
+				current_delay_count   <= 0;
+				current_index         <= 0;
+			else
+				current_state        <= next_state;
+				current_delay_count  <= next_delay_count;
+				current_index         <= next_index;
+			end if;
+		end if;
+	end process;
+	--}}}
 
 
 

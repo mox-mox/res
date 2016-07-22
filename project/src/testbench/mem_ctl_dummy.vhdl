@@ -39,7 +39,7 @@ end MEM_CTL_DUMMY;
 
 architecture normal of MEM_CTL_DUMMY is
 
-	--{{{ Wiring logic
+	--{{{ Logic wiring
 
 	constant wire_delay : time := 1 ns;
 	signal p1_cmd_instr_bl_addr_concat : std_logic_vector(38 downto 0);
@@ -263,7 +263,7 @@ begin
 	--{{{ Do the actual work
 
 	--{{{
-	generate_next_state : process (current_delay_count, p1_cmd_empty_sig, cmd_instr) --TODO
+	calculate_next_state : process (current_delay_count, p1_cmd_empty_sig, cmd_instr) --TODO
 	begin
 		next_state        <= current_state        after wire_delay; -- default assignement
 		next_delay_count  <= current_delay_count  after wire_delay;
