@@ -11,7 +11,7 @@ All: ${WAVE_FILE}
 
 ${WAVE_FILE}: work-obj93.cf Makefile
 	@echo ">>>>>>>>>>>>>>>>>>>> Starting the simulation <<<<<<<<<<<<<<<<<<<<"
-	@ghdl -r --ieee=standard ${TOP_MODULE} --wave=${WAVE_FILE} --stop-time=200ns
+	@ghdl -r --ieee=standard ${TOP_MODULE} --wave=${WAVE_FILE} --stop-time=500ns
 	@echo "<<<<<<<<<<<<<<<<<<<< finished the simulation >>>>>>>>>>>>>>>>>>>>"
 
 compile: work-obj93.cf Makefile

@@ -46,7 +46,8 @@ architecture read_sequence of AHBL_DUMMY is
 
 	--{{{ Logic wiring
 
-	constant wire_delay      : time := 17 ns;
+	--constant wire_delay      : time := 17 ns;
+	constant wire_delay      : time := 3 ns;
 	signal   reset_sig       : boolean                        := true;
 	signal   HSEL_sig        : std_logic                      := '0';
 	--signal   HADDR_sig       : std_logic_vector(31 downto 0)  := (others => '-');
@@ -119,6 +120,7 @@ architecture read_sequence of AHBL_DUMMY is
 		(0, read,  to_addr("00000004"), to_data("00000000"), 4),
 		(0, read,  to_addr("00000004"), to_data("00000000"), 1),
 		(0, read,  to_addr("00000005"), to_data("00000000"), 1),
+		(0, read,  to_addr("00000006"), to_data("00000000"), 1),
 		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
 		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1)); -- dummy line
 	--}}}
@@ -134,7 +136,7 @@ begin
 
 	--ENDSIM <= false, true after 80 ns;
 
-	reset_sig  <= true, false after 12 ns;
+	reset_sig  <= true, false after 16 ns;
 	HRESETn    <= '0' when reset_sig else
                     '0' when current_state = end_state else
                     '1';
