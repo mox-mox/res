@@ -157,20 +157,15 @@ architecture normal of MEM_CTL_DUMMY is
 
 	--{{{ The Dummy RAM
 
-	type ram_type is array (0 to 4194304) of std_logic_vector (31 downto 0);
-	shared variable RAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AFAFAFAF", x"BFBFBFBF", x"CFCFCFCF", x"DFDFDFDF", x"EFEFEFEF", x"FFFFFFFF", others => x"00000000");
+		-- Use either the full sized 16 MB DRAM as a shared variable...
+	--type ram_type is array (0 to 4194304) of std_logic_vector (31 downto 0);
+	--shared variable RAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AFAFAFAF", x"BFBFBFBF", x"CFCFCFCF", x"DFDFDFDF", x"EFEFEFEF", x"FFFFFFFF", others => x"00000000");
+
+		-- ... or define it as signal, enabling viewing it in gtkwave, but reduce the size.
+	type ram_type is array (0 to 1024) of std_logic_vector (31 downto 0);
+	signal RAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AFAFAFAF", x"BFBFBFBF", x"CFCFCFCF", x"DFDFDFDF", x"EFEFEFEF", x"FFFFFFFF", others => x"00000000");
 	--}}}
 
-	--{{{
-	procedure write_ram (mask : std_logic_vector(3 downto 0); addr : natural; data : std_logic_vector(31 downto 0)) is
-	begin
-		for i in 0 to 3 loop
-			if mask(i) = '1' then
-				RAM(addr)(((i+1)*8)-1 downto (i*8)) := data(((i+1)*8)-1 downto (i*8));
-			end if;
-		end loop;
-	end;
-	--}}}
 
 begin
 
@@ -357,92 +352,23 @@ begin
 	--}}}
 
 
-	drive_ram : process(p1_cmd_clk)
+	--{{{
+	write_ram : process(p1_cmd_clk)
 	begin
 		if(rising_edge(p1_cmd_clk)) then
 			if(rst='0' and current_state=write) then
-				write_ram(wr_mask, current_addr, wr_data);
+				for i in 0 to 3 loop
+					if wr_mask(i) = '1' then
+						RAM(current_addr)(((i+1)*8)-1 downto (i*8)) <= wr_data(((i+1)*8)-1 downto (i*8));
+					end if;
+				end loop;
 			end if;
 		end if;
 	end process;
+	--}}}
 
 
 
---
---	--{{{
---	perform_work : process(p1_cmd_clk)
---		variable delay_counter : natural;
---		variable burst_length  : natural;
---		variable read          : std_logic;
---		variable addr          : natural;
---	begin
---		if(rising_edge(p1_cmd_clk)) then
---			if(rst = '1') then --{{{
---				delay_counter := random_delay;
---				cmd_readen  <= '0';
---				wr_readen   <= '0';
---				rd_writeen  <= '0';
---				rd_data     <= (others => '0'); --}}}
---			else
---				--{{{
---				if delay_counter = 1 and p1_cmd_empty_sig = '0' then
---					cmd_readen     <= '1';
---					wr_readen      <= '0';
---					rd_writeen     <= '0';
---					rd_data        <= (others => '0');
---					delay_counter  := delay_counter - 1;
---					if cmd_instr="001" or cmd_instr="011" then
---						read       := '1';
---					elsif cmd_instr="000" or cmd_instr="010" then
---						read       := '0';
---					else
---						assert true report "Invalid cmd." severity failure;
---					end if;
---					burst_length   := to_integer(unsigned(cmd_bl))+1; --TODO
---					addr           := to_integer(unsigned(cmd_addr)); --TODO
---				--}}}
---
---				--{{{
---				elsif delay_counter = 0 then
---					if burst_length = 0 then
---						delay_counter := random_delay;
---						cmd_readen  <= '0';
---						wr_readen   <= '0';
---						rd_writeen  <= '0';
---						rd_data     <= (others => '0');
---					else
---						if read = '1' then
---							--assert p1_rd_full_sig = '0'  report "Read data overflow." severity failure;
---							cmd_readen  <= '0';
---							wr_readen   <= '0';
---							rd_writeen  <= '1';
---							rd_data     <= RAM(addr);
---						else -- write
---							--assert p1_wr_empty_sig = '0'  report "Insufficient write data." severity failure;
---							write_ram(wr_mask, addr, wr_data);
---							cmd_readen  <= '0';
---							wr_readen   <= '1';
---							rd_writeen  <= '0';
---							rd_data     <= (others => '0');
---						end if;
---						addr := addr+1;
---					end if;
---				--}}}
---
---				else -- Emulate the delay of the real controller, just wait.
---					delay_counter := delay_counter - 1;
---					cmd_readen  <= '0';
---					wr_readen   <= '0';
---					rd_writeen  <= '0';
---					rd_data     <= (others => '0');
---				end if;
---
---
---			end if;
---		end if;
---	end process;
---	--}}}
---
 
 end normal;
 
