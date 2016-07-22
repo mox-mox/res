@@ -40,8 +40,6 @@ architecture read_sequence of AHBL_DUMMY is
 	constant HSIZE2          : std_logic_vector( 2 downto 0) := "001";
 	constant HSIZE4          : std_logic_vector( 2 downto 0) := "010";
 
-
-
 	--constant HTRANS_busy     : std_logic_vector( 1 downto 0)  := "01";
 	--constant HTRANS_seq      : std_logic_vector( 1 downto 0)  := "11";
 
@@ -116,7 +114,7 @@ architecture read_sequence of AHBL_DUMMY is
 
 	type bus_access_array is array (natural range <>) of ahbl_command_type;
 	constant bus_sequence : bus_access_array := (
-		(0, write, to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
+		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
 		(0, read,  to_addr("00000004"), to_data("00000000"), 4),
 		(0, read,  to_addr("00000004"), to_data("00000000"), 1),
 		(0, read,  to_addr("00000005"), to_data("00000000"), 1),
@@ -124,15 +122,15 @@ architecture read_sequence of AHBL_DUMMY is
 	signal delay_counter : natural := 0;
 	--}}}
 
-
-
 	type ahbl_dummy_state is (idle, write, write_stall, read, read_stall);
 	signal current_state,       next_state        : ahbl_dummy_state := idle;
 	signal current_delay_count, next_delay_count  : natural          := 0;
 	signal current_index,       next_index        : natural          := 0;
 
-
 begin
+
+	--{{{ Output signals
+
 	ENDSIM <= false, true after 80 ns;
 
 	reset_sig  <= true, false after 12 ns;
@@ -144,7 +142,8 @@ begin
 
 	HADDR       <= (others => '-') when reset_sig else
 				   bus_sequence(current_index+1).addr after wire_delay when current_delay_count=0 else
-	               x"0000BEEF" after wire_delay;
+	               x"0000BEEF" after wire_delay; -- TODO
+
 	HWRITE      <= '-' when reset_sig else
 				   '1' after wire_delay when bus_sequence(current_index+1).rw=write and current_delay_count=0 else
 				   '0' after wire_delay when bus_sequence(current_index+1).rw=read  and current_delay_count=0 else
@@ -165,6 +164,7 @@ begin
 	HWDATA     <= (others => '-') when reset_sig else
 				  bus_sequence(current_index).data after wire_delay when current_delay_count=0 and (current_state=read or current_state=read_stall) else
 				  (others => '-') after wire_delay;
+	--}}}
 
 	--{{{
 	calculate_next_state : process (current_delay_count, current_index, hreadyout) --TODO
@@ -269,10 +269,6 @@ begin
 		end if;
 	end process;
 	--}}}
-
-
-
-
 
 end read_sequence;
 --}}}
