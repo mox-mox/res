@@ -1,8 +1,8 @@
 
 WAVE_FILE  := tb.ghw
 TOP_MODULE := ahbl2sdram_tb
-#SRCS       := rams/tag_sram.vhd rams/data_sram.vhd fsm/write_fsm_pkg.vhdl fsm/read_fsm_pkg.vhdl fsm/write_fsm.vhdl fsm/read_fsm.vhdl ahbl2sdram.vhdl tb_fifo.vhd cache_tb.vhd
 SRCS       := rams/tag_sram.vhd rams/data_sram.vhd fsm/write_fsm_pkg.vhdl fsm/read_fsm_pkg.vhdl fsm/write_fsm.vhdl fsm/read_fsm.vhdl ahbl2sdram.vhdl testbench/ahbl_dummy.vhdl testbench/mem_ctl_dummy_fifo.vhdl testbench/mem_ctl_dummy.vhdl testbench/misc_dummy.vhdl testbench/ahbl2sdram_tb.vhdl
+NON_SRCS   := Makefile TODO
 
 
 #All: wave
@@ -26,3 +26,9 @@ work-obj93.cf: ${SRCS} Makefile
 
 wave: ${WAVE_FILE} Makefile
 	@gtkwave ${WAVE_FILE} -a gtkwave_config.gtkw&
+
+
+.PHONY: linecount
+linecount:
+	@# testbench/mem_ctl_dummy_fifo.vhdl is not written by us, so let's not count it.
+	@echo $(shell wc -l $(filter-out testbench/mem_ctl_dummy_fifo.vhdl,$(SRCS)) ${NON_SRCS} | tail -n 1)

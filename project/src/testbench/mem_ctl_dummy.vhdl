@@ -39,17 +39,9 @@ end MEM_CTL_DUMMY;
 
 architecture normal of MEM_CTL_DUMMY is
 
-	type mem_ctl_dummy_state_type is (idle, read, write);
-	signal current_state,        next_state        : mem_ctl_dummy_state_type := idle;
-	signal current_delay_count,  next_delay_count  : natural                  := 0;
-	signal current_burst_length, next_burst_length : natural                  := 0;
-	signal current_addr,         next_addr         : natural                  := 0;
-
-	signal random_delay : natural;
-	constant wire_delay : time := 1 ns;
-
 	--{{{ Wiring logic
 
+	constant wire_delay : time := 1 ns;
 	signal p1_cmd_instr_bl_addr_concat : std_logic_vector(38 downto 0);
 	signal cmd_readen                  : std_logic;
 	signal cmd_instr_bl_addr_concat    : std_logic_vector(38 downto 0);
@@ -166,9 +158,18 @@ architecture normal of MEM_CTL_DUMMY is
 	signal DRAM : ram_type := (x"AAAAAAAA", x"BBBBBBBB", x"CCCCCCCC", x"DDDDDDDD", x"EEEEEEEE", x"FFFFFFFF", x"AFAFAFAF", x"BFBFBFBF", x"CFCFCFCF", x"DFDFDFDF", x"EFEFEFEF", x"FFFFFFFF", others => x"00000000");
 	--}}}
 
+	--{{{ State machine states
+
+	type mem_ctl_dummy_state_type is (idle, read, write);
+	signal current_state,        next_state        : mem_ctl_dummy_state_type := idle;
+	signal current_delay_count,  next_delay_count  : natural                  := 0;
+	signal current_burst_length, next_burst_length : natural                  := 0;
+	signal current_addr,         next_addr         : natural                  := 0;
+
+	signal random_delay : natural;
+	--}}}
 
 begin
-
 
 	--{{{ Wire the internal signals to the outputs with wire_delays
 
@@ -255,13 +256,11 @@ begin
 		if(rising_edge(p1_cmd_clk)) then
 			uniform (seed1,seed2,helper);
 			random_delay <= integer(helper * real(3));
-			--random_delay <= 1; -- TODO
 		end if;
 	end process;
 	--}}}
 
-
-
+	--{{{ Do the actual work
 
 	--{{{
 	generate_next_state : process (current_delay_count, p1_cmd_empty_sig, cmd_instr) --TODO
@@ -331,7 +330,6 @@ begin
 	end process;
 	--}}}
 
-
 	--{{{ Drive FIFOs
 
 	cmd_readen <= '0'               after wire_delay when rst = '1' else
@@ -351,7 +349,6 @@ begin
 	              (others => '-')   after wire_delay;
 	--}}}
 
-
 	--{{{
 	write_ram : process(p1_cmd_clk)
 	begin
@@ -366,9 +363,7 @@ begin
 		end if;
 	end process;
 	--}}}
-
-
-
+	--}}}
 
 end normal;
 
