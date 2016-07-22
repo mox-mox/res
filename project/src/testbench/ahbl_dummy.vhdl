@@ -119,10 +119,11 @@ architecture read_sequence of AHBL_DUMMY is
 		(0, read,  to_addr("00000004"), to_data("00000000"), 4),
 		(0, read,  to_addr("00000004"), to_data("00000000"), 1),
 		(0, read,  to_addr("00000005"), to_data("00000000"), 1),
+		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
 		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1)); -- dummy line
 	--}}}
 
-	type ahbl_dummy_state is (idle, write, write_stall, read, read_stall);
+	type ahbl_dummy_state is (idle, write, write_stall, read, read_stall, end_state);
 	signal current_state,       next_state        : ahbl_dummy_state := idle;
 	signal current_delay_count, next_delay_count  : natural          := 0;
 	signal current_index,       next_index        : natural          := 0;
@@ -134,7 +135,9 @@ begin
 	--ENDSIM <= false, true after 80 ns;
 
 	reset_sig  <= true, false after 12 ns;
-	HRESETn    <= '0' when reset_sig else '1';
+	HRESETn    <= '0' when reset_sig else
+                    '0' when current_state = end_state else
+                    '1';
 
 	HSEL       <= '0' when reset_sig else
 				  '1' after wire_delay when bus_sequence(current_index+1).addr(31 downto 24) = zeros and current_delay_count=0 else -- TODO: not sure if good
@@ -181,45 +184,57 @@ begin
 		case current_state is
 			when idle =>
 				if current_delay_count = 0 then
-					next_index <= current_index + 1 after wire_delay;
-					if bus_sequence(current_index).rw=read then
-						next_state <= read after wire_delay;
+					if current_index = bus_sequence'length-2 then
+						next_state <= end_state; 
 					else
-						next_state <= write after wire_delay;
-					end if;
-				else
-					next_delay_count <= current_delay_count - 1;
-				end if;
-			when write =>
-				if hreadyout = '0' then
-					next_state <= write_stall after wire_delay;
-				else
-					if bus_sequence(current_index + 1).delay = 0 then
 						next_index <= current_index + 1 after wire_delay;
 						if bus_sequence(current_index).rw=read then
 							next_state <= read after wire_delay;
 						else
 							next_state <= write after wire_delay;
 						end if;
+					end if;
+				else
+						next_delay_count <= current_delay_count - 1;
+				end if;
+			when write =>
+				if hreadyout = '0' then
+					next_state <= write_stall after wire_delay;
+				else
+					if current_index = bus_sequence'length-2 then
+						next_state <= end_state; 
 					else
-						next_state <= idle;
-						next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+						if bus_sequence(current_index + 1).delay = 0 then
+							next_index <= current_index + 1 after wire_delay;
+							if bus_sequence(current_index).rw=read then
+								next_state <= read after wire_delay;
+							else
+								next_state <= write after wire_delay;
+							end if;
+						else
+							next_state <= idle;
+							next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+						end if;
 					end if;
 				end if;
 			when write_stall =>
 				if hreadyout = '0' then
 					next_state <= write_stall after wire_delay;
 				else
-					if bus_sequence(current_index + 1).delay = 0 then
-						next_index <= current_index + 1 after wire_delay;
-						if bus_sequence(current_index).rw=read then
-							next_state <= read after wire_delay;
-						else
-							next_state <= write after wire_delay;
-						end if;
+					if current_index = bus_sequence'length-2 then
+						next_state <= end_state; 
 					else
-						next_state <= idle;
-						next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+						if bus_sequence(current_index + 1).delay = 0 then
+							next_index <= current_index + 1 after wire_delay;
+							if bus_sequence(current_index).rw=read then
+								next_state <= read after wire_delay;
+							else
+								next_state <= write after wire_delay;
+							end if;
+						else
+							next_state <= idle;
+							next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+						end if;
 					end if;
 				end if;
 
@@ -227,35 +242,45 @@ begin
 				if hreadyout = '0' then
 					next_state <= read_stall after wire_delay;
 				else
-					if bus_sequence(current_index + 1).delay = 0 then
-						next_index <= current_index + 1 after wire_delay;
-						if bus_sequence(current_index).rw=read then
-							next_state <= read after wire_delay;
-						else
-							next_state <= write after wire_delay;
-						end if;
+					if current_index = bus_sequence'length-2 then
+						next_state <= end_state; 
 					else
-						next_state <= idle;
-						next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+						if bus_sequence(current_index + 1).delay = 0 then
+						    next_index <= current_index + 1 after wire_delay;
+						    if bus_sequence(current_index).rw=read then
+						        next_state <= read after wire_delay;
+						    else
+						        next_state <= write after wire_delay;
+						    end if;
+						else
+						    next_state <= idle;
+						    next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+						end if;
 					end if;
 				end if;
 			when read_stall =>
 				if hreadyout = '0' then
 					next_state <= read_stall after wire_delay;
 				else
-					if bus_sequence(current_index + 1).delay = 0 then
-						next_index <= current_index + 1 after wire_delay;
-						if bus_sequence(current_index).rw=read then
-							next_state <= read after wire_delay;
-						else
-							next_state <= write after wire_delay;
-						end if;
+					if current_index = bus_sequence'length-2 then
+						next_state <= end_state; 
 					else
-						next_state <= idle;
-						next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+						if bus_sequence(current_index + 1).delay = 0 then
+							next_index <= current_index + 1 after wire_delay;
+							if bus_sequence(current_index).rw=read then
+								next_state <= read after wire_delay;
+							else
+								next_state <= write after wire_delay;
+							end if;
+						else
+							next_state <= idle;
+							next_delay_count <= bus_sequence(current_index + 1).delay after wire_delay;
+						end if;
 					end if;
 				end if;
-		end case;
+			when end_state =>
+				next_state <= current_state;
+			end case;
 	end process;
 	--}}}
 
