@@ -158,7 +158,7 @@ architecture cache of AHBL2SDRAM is
 	end component DATA_SRAM;
 	--}}}
 
-	--{{{ Address and Data save registers
+	--{{{ Address and data save registers
 
 	signal SAVE0_HADDR   : std_logic_vector(31 downto  0) := (others => '-');
 	alias  Save0_HADDR_TAG         is HADDR(23 downto 12);
@@ -167,9 +167,13 @@ architecture cache of AHBL2SDRAM is
 	alias  Save0_HADDR_BS          is HADDR( 1 downto  0);
 	signal SAVE0_HSIZE   : std_logic_vector( 2 downto  0) := (others => '-');
 	signal SAVE0_HWRITE  : std_logic                      := '-';
+	signal SAVE1_HWRITE  : std_logic                      := '-';
+	--}}}
 
+	--{{{ Common signals
 	signal hit           : std_logic;
 	signal HCLK_PHASE    : std_logic := '0';
+	signal HREADYOUT_sig : std_logic := '1';
 
 	--}}}
 
@@ -343,7 +347,7 @@ begin
 	                  '0' ; -- TODO: Verfify if this is correct.
 	--}}}
 	--{{{
-	HREADYOUT      <= '1'              when (HRESETn = '0')                                                                          else
+	HREADYOUT_sig  <= '1'              when (HRESETn = '0')                                                                          else
 	                  '0'              when (mem_calib_done = '0' and HSEL = '1')                   else
 	                  --'0'              when (mem_calib_done = '0' and (read_request = '1' or write_request = '1'))                   else
 	                  --'0'              when ((read_request = '1' and read_busy = '1') or (write_request = '1' and write_busy = '1')) else
@@ -354,6 +358,7 @@ begin
 	                  '1'              when (read_current_state=rd1_keep)                                                            else
 	                  '1'              when (write_current_state=cmp_sto)                                                            else
 	                  '1'             ; -- Signal readiness on reset and all conditions where the cache is not not ready.
+	HREADYOUT      <= HREADYOUT_sig;
 	--}}}
 	--{{{
 	HRDATA         <= data_sram_b_do      when (read_current_state=cmp_dlv) else
@@ -419,16 +424,31 @@ begin
 			if(HRESETn = '0') then
 				SAVE0_HADDR  <= (others => '0');
 				SAVE0_HSIZE  <= (others => '0');
-				SAVE0_HWRITE <= '-';
 			elsif ( HSEL = '1' and HREADY = '1' ) then
 			--else
 				SAVE0_HADDR  <= HADDR;
 				SAVE0_HSIZE  <= HSIZE;
-				SAVE0_HWRITE <= HWRITE;
 			end if;
 		end if;
 	end process latch_bus;
 	--}}}
+
+	--{{{
+	latch_HWRITE : process(HCLK) -- Using HCLK is intended here!
+	begin
+		if(rising_edge(HCLK)) then
+			if(HRESETn = '0') then
+				SAVE0_HWRITE <= '-';
+				SAVE1_HWRITE <= '-';
+			elsif ( HREADYOUT_sig = '1' ) then
+			--else
+				SAVE0_HWRITE <= HWRITE;
+				SAVE1_HWRITE <= SAVE0_HWRITE;
+			end if;
+		end if;
+	end process latch_hwrite;
+	--}}}
+
 
 	--{{{
 	-- toggle flip-flop to route HCLK into the state-machines
