@@ -160,15 +160,15 @@ architecture cache of AHBL2SDRAM is
 
 	--{{{ Address and Data save registers
 
-	signal SAVE0_HADDR   : std_logic_vector(31 downto  0);
+	signal SAVE0_HADDR   : std_logic_vector(31 downto  0) := (others => '-');
 	alias  Save0_HADDR_TAG         is HADDR(23 downto 12);
 	alias  Save0_HADDR_IDX         is HADDR(11 downto  5);
 	alias  Save0_HADDR_WS          is HADDR( 4 downto  2);
 	alias  Save0_HADDR_BS          is HADDR( 1 downto  0);
-	signal SAVE0_HSIZE   : std_logic_vector( 2 downto  0);
+	signal SAVE0_HSIZE   : std_logic_vector( 2 downto  0) := (others => '-');
 
-	signal hit                       : std_logic;
-	signal HCLK_PHASE : std_logic := '0';
+	signal hit           : std_logic;
+	signal HCLK_PHASE    : std_logic := '0';
 
 	--}}}
 
@@ -178,12 +178,10 @@ architecture cache of AHBL2SDRAM is
 	signal write_dram_busy           :  std_logic;
 	signal write_current_state       :  write_fsm_state_type;
 
-	signal write_SAVE1_HADDR         :   std_logic_vector(31 downto  0);
-	--alias  write_SAVE1_HADDR_TAG     is write_SAVE1_HADDR(23 downto 12);
-	--alias  write_SAVE1_HADDR_IDX     is write_SAVE1_HADDR(11 downto  5);
+	signal write_SAVE1_HADDR         :   std_logic_vector(31 downto  0) := (others => '-');
 	alias  write_SAVE1_HADDR_BS      is write_SAVE1_HADDR( 1 downto  0);
-	signal write_SAVE1_HWDATA        :   std_logic_vector(31 downto  0);
-	signal write_SAVE1_HSIZE         :   std_logic_vector( 2 downto  0);
+	signal write_SAVE1_HWDATA        :   std_logic_vector(31 downto  0) := (others => '-');
+	signal write_SAVE1_HSIZE         :   std_logic_vector( 2 downto  0) := (others => '-');
 	signal write_busy                :   std_logic;
 
 	component WRITE_FSM is
@@ -209,13 +207,13 @@ architecture cache of AHBL2SDRAM is
 	signal read_ws_zero              :  std_logic;
 	signal read_current_state        :  read_fsm_state_type;
 
-	signal read_SAVE1_HADDR          :  std_logic_vector(31 downto  0);
+	signal read_SAVE1_HADDR          :  std_logic_vector(31 downto  0) := (others => '-');
 	alias  read_SAVE1_HADDR_TAG      is read_SAVE1_HADDR(23 downto 12);
 	alias  read_SAVE1_HADDR_WS       is read_SAVE1_HADDR( 4 downto  2);
 	alias  read_SAVE1_HADDR_IDX      is read_SAVE1_HADDR(11 downto  5);
 	alias  read_SAVE1_HADDR_BS       is read_SAVE1_HADDR( 1 downto  0);
-	signal read_SAVE1_HSIZE          :  std_logic_vector( 2 downto  0);
-	signal read_keep_dram_data       :  std_logic_vector(31 downto  0);
+	signal read_SAVE1_HSIZE          :  std_logic_vector( 2 downto  0) := (others => '-');
+	signal read_keep_dram_data       :  std_logic_vector(31 downto  0) := (others => '-');
 	signal read_busy                 :  std_logic;
 
 	component READ_FSM is
@@ -274,32 +272,6 @@ architecture cache of AHBL2SDRAM is
 	--}}}
 
 	--{{{
-	function align_output_data (BS : std_logic_vector(1 downto 0); HSIZE : std_logic_vector(2 downto 0); DATA : std_logic_vector(31 downto 0); res_n : std_logic) return std_logic_vector is
-	variable result: std_logic_vector(31 downto 0);
-	variable real_size : natural := hsize_2_real_size(HSIZE, res_n);
-	begin
-		if(res_n = '1') then
-			result := std_logic_vector(shift_right(unsigned(DATA), to_integer(unsigned(BS))*8));
-			case real_size is
-				when 1 =>
-					return "000000000000000000000000" & result( 7 downto 0);
-				when 2 =>
-					assert BS(0) = '0' report "Unaligned half word read" severity failure;
-					return "0000000000000000"         & result(15 downto 0);
-				when 4 =>
-					assert BS = "00" report "Unaligned word read" severity error;
-					return                              result(31 downto 0);
-				when others => -- shouldn't happen
-					assert true report "Invalid size requested" severity failure;
-					return X"DEADBEEF";
-			end case;
-		else
-			return X"DEADBEEF";
-		end if;
-	end;
-	--}}}
-
-	--{{{
 	function write_mask (BS : std_logic_vector(1 downto 0); HSIZE : std_logic_vector(2 downto 0); res_n : std_logic) return std_logic_vector is
 	variable result: std_logic_vector(3 downto 0) := "1111";
 	variable real_size : natural := hsize_2_real_size(HSIZE, res_n);
@@ -315,7 +287,6 @@ architecture cache of AHBL2SDRAM is
 	end;
 	--}}}
 	--}}}
-
 
 begin
 
@@ -384,9 +355,9 @@ begin
 	                  '1'             ; -- Signal readiness on reset and all conditions where the cache is not not ready.
 	--}}}
 	--{{{
-	HRDATA         <= align_output_data(           HADDR_BS,            HSIZE, data_sram_b_do     , HRESETn)  when (read_current_state=cmp_dlv) else
-	                  align_output_data(read_SAVE1_HADDR_BS, read_SAVE1_HSIZE, p1_rd_data         , HRESETn)  when (read_current_state=rd0)     else
-	                  align_output_data(read_SAVE1_HADDR_BS, read_SAVE1_HSIZE, read_keep_dram_data, HRESETn)  when (read_current_state=rd1_keep) else
+	HRDATA         <= data_sram_b_do      when (read_current_state=cmp_dlv) else
+	                  p1_rd_data          when (read_current_state=rd0)     else
+	                  read_keep_dram_data when (read_current_state=rd1_keep) else
 	                  (others => '-') ;
 	--}}}
 	--{{{
@@ -455,16 +426,16 @@ begin
 		end if;
 	end process latch_bus;
 	--}}}
-	
-	---{{{
+
+	--{{{
 	-- toggle flip-flop to route HCLK into the state-machines
 	process
 	begin
 		wait until rising_edge(DCLK);
 		HCLK_PHASE <= not HCLK_PHASE;
 	end process;
-	---}}}
-	
+	--}}}
+
 	--}}}
 
 	--{{{ Write FSM signals
