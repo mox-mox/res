@@ -49,12 +49,7 @@ architecture read_sequence of AHBL_DUMMY is
 	--constant wire_delay      : time := 17 ns;
 	constant wire_delay      : time := 3 ns;
 	signal   reset_sig       : boolean                        := true;
-	signal   HSEL_sig        : std_logic                      := '0';
-	--signal   HADDR_sig       : std_logic_vector(31 downto 0)  := (others => '-');
-	signal   HWRITE_sig      : std_logic                      := '-';
-	signal   HSIZE_sig       : std_logic_vector( 2 downto 0)  := (others => '-');
 	signal   HTRANS_sig      : htrans_type                    := idle;
-	signal   HWDATA_sig      : std_logic_vector(31 downto 0)  := (others => '-');
 	--}}}
 
 	--{{{ addr and data conversion functions
@@ -118,10 +113,10 @@ architecture read_sequence of AHBL_DUMMY is
 	constant bus_sequence : bus_access_array := (
 		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
 		(0, read,  to_addr("00000004"), to_data("00000000"), 4),
-		(0, read,  to_addr("00000004"), to_data("00000000"), 1),
-		(0, read,  to_addr("00000005"), to_data("00000000"), 1),
-		(0, read,  to_addr("00000006"), to_data("00000000"), 1),
-		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
+		(4, read,  to_addr("00000006"), to_data("00000000"), 2),
+--		(0, read,  to_addr("00000005"), to_data("00000000"), 1),
+--		(0, read,  to_addr("00000006"), to_data("00000000"), 1),
+--		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
 		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1)); -- dummy line
 	--}}}
 
@@ -138,8 +133,8 @@ begin
 
 	reset_sig  <= true, false after 16 ns;
 	HRESETn    <= '0' when reset_sig else
-                    '0' when current_state = end_state else
-                    '1';
+	              '0' when current_state = end_state else
+	              '1';
 
 	HSEL       <= '0' when reset_sig else
 				  '1' after wire_delay when bus_sequence(current_index+1).addr(31 downto 24) = zeros and current_delay_count=0 else -- TODO: not sure if good
@@ -187,7 +182,7 @@ begin
 			when idle =>
 				if current_delay_count = 0 then
 					if current_index = bus_sequence'length-2 then
-						next_state <= end_state; 
+						next_state <= end_state;
 					else
 						next_index <= current_index + 1 after wire_delay;
 						if bus_sequence(current_index).rw=read then
@@ -204,7 +199,7 @@ begin
 					next_state <= write_stall after wire_delay;
 				else
 					if current_index = bus_sequence'length-2 then
-						next_state <= end_state; 
+						next_state <= end_state;
 					else
 						if bus_sequence(current_index + 1).delay = 0 then
 							next_index <= current_index + 1 after wire_delay;
@@ -224,7 +219,7 @@ begin
 					next_state <= write_stall after wire_delay;
 				else
 					if current_index = bus_sequence'length-2 then
-						next_state <= end_state; 
+						next_state <= end_state;
 					else
 						if bus_sequence(current_index + 1).delay = 0 then
 							next_index <= current_index + 1 after wire_delay;
@@ -245,7 +240,7 @@ begin
 					next_state <= read_stall after wire_delay;
 				else
 					if current_index = bus_sequence'length-2 then
-						next_state <= end_state; 
+						next_state <= end_state;
 					else
 						if bus_sequence(current_index + 1).delay = 0 then
 						    next_index <= current_index + 1 after wire_delay;
@@ -265,7 +260,7 @@ begin
 					next_state <= read_stall after wire_delay;
 				else
 					if current_index = bus_sequence'length-2 then
-						next_state <= end_state; 
+						next_state <= end_state;
 					else
 						if bus_sequence(current_index + 1).delay = 0 then
 							next_index <= current_index + 1 after wire_delay;

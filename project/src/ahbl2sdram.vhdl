@@ -324,6 +324,11 @@ begin
 
 	--{{{ Port Maps
 
+--	ts : tag_sram port map ( clk => DCLK,
+--			en_A => tag_sram_a_en, we_A => '0',           addr_A => tag_sram_a_idx, di_A => (others => '-'), do_A => tag_sram_a_do, -- Port A
+--			en_B => '1', we_B => '1', addr_B => "0000000010", di_B => x"aa55",   do_B => open           -- Port B
+--		);
+
 	ts : tag_sram port map ( clk => DCLK,
 			en_A => tag_sram_a_en, we_A => '0',           addr_A => tag_sram_a_idx, di_A => (others => '-'), do_A => tag_sram_a_do, -- Port A
 			en_B => tag_sram_b_en, we_B => tag_sram_b_en, addr_B => tag_sram_b_idx, di_B => tag_sram_b_di,   do_B => open           -- Port B
@@ -517,7 +522,7 @@ begin
 	--}}}
 	--{{{
 	tag_sram_b_di    <= "111" & '1' & read_SAVE1_HADDR_TAG  when (read_current_state=rd1_keep) else
-	                    (others => '-')                     ;
+	                    (others => '-') after 1 ns;
 	--}}}
 	--{{{
 	data_sram_b_en   <= '1'  when (read_current_state=cmp_dlv) or

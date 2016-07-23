@@ -79,8 +79,6 @@ architecture normal of MEM_CTL_DUMMY is
 	signal p1_rd_count_sig       : std_logic_vector( 6 downto 0);
 	signal p1_rd_overflow_sig    : std_logic;
 	signal p1_rd_error_sig       : std_logic;
-
-
 	--}}}
 
 	--{{{ Components

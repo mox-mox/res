@@ -186,9 +186,9 @@ architecture read_test of AHBL2SDRAM_TB is
 	--{{{
 	component MISC_DUMMY is port(
 		HCLK              : in    std_logic;
-		mem_calib_done    : in    std_logic;
-		HIT_COUNT         : out   std_logic_vector(31 downto 0);
-		MISS_COUNT        : out   std_logic_vector(31 downto 0);
+		mem_calib_done    : out   std_logic;
+		HIT_COUNT         : in    std_logic_vector(31 downto 0);
+		MISS_COUNT        : in    std_logic_vector(31 downto 0);
 		INVALIDATE_LOW    : inout std_logic_vector(31 downto 0);
 		INVALIDATE_HIGH   : inout std_logic_vector(31 downto 0));
 	end component MISC_DUMMY;
@@ -207,7 +207,6 @@ begin
 	--{{{ Wiring logic
 
 		rst               <= not HRESETn;
-		mem_calib_done    <= '0', '1' after 40 ns;
 
 	--}}}
 
