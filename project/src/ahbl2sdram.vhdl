@@ -168,6 +168,7 @@ architecture cache of AHBL2SDRAM is
 	signal SAVE0_HSIZE   : std_logic_vector( 2 downto  0);
 
 	signal hit                       : std_logic;
+	signal HCLK_PHASE : std_logic := '0';
 
 	--}}}
 
@@ -242,10 +243,6 @@ architecture cache of AHBL2SDRAM is
 	--signal miss_counter : unsigned (31 downto 0) := (others => '0');
 	signal hit_counter  : std_logic_vector(31 downto 0) := (others => '0');
 	signal miss_counter : std_logic_vector(31 downto 0) := (others => '0');
-	---}}}
-
-	---{{{
-	signal HCLK_PHASE : std_logic := '0';
 	---}}}
 
 	--{{{ Helper functions
