@@ -426,12 +426,15 @@ begin
 				SAVE0_HSIZE  <= (others => '0');
 				SAVE0_HWRITE <= '-';
 				SAVE1_HWRITE <= '-';
-			elsif ( HSEL = '1' and HREADY = '1' ) then
-			--else
-				SAVE0_HADDR  <= HADDR;
-				SAVE0_HSIZE  <= HSIZE;
-				SAVE0_HWRITE <= HWRITE;
-				SAVE1_HWRITE <= SAVE0_HWRITE;
+			else
+				if ( HSEL = '1' and HREADY = '1' ) then
+					SAVE0_HADDR  <= HADDR;
+					SAVE0_HSIZE  <= HSIZE;
+				end if;
+				if ( HREADY = '1' ) then
+					SAVE0_HWRITE <= HWRITE;
+					SAVE1_HWRITE <= SAVE0_HWRITE;
+				end if;
 			end if;
 		end if;
 	end process latch_bus;
