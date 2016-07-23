@@ -247,7 +247,7 @@ architecture cache of AHBL2SDRAM is
 	---{{{
 	signal HCLK_PHASE : std_logic := '0';
 	---}}}
-	
+
 	--{{{ Helper functions
 
 	--{{{

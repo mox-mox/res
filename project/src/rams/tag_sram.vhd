@@ -28,7 +28,7 @@ end TAG_SRAM;
 architecture syn of TAG_SRAM is
 	type ram_type is array (0 to 1024) of std_logic_vector (15 downto 0);
 	--shared variable TAG_RAM : ram_type;
-	shared variable TAG_RAM : ram_type := (others => "0000000000000000"); -- TODO: Change this back
+	shared variable TAG_RAM : ram_type := (x"f000", others => x"ffff"); -- TODO: Change this back
 begin
 	process (clk)
 	begin

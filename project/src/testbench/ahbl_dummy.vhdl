@@ -120,7 +120,7 @@ architecture read_sequence of AHBL_DUMMY is
 		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1)); -- dummy line
 	--}}}
 
-	type ahbl_dummy_state is (idle, write, write_stall, read, read_stall, end_state);
+	type ahbl_dummy_state is (reset, idle, write, write_stall, read, read_stall, end_state);
 	signal current_state,       next_state        : ahbl_dummy_state := idle;
 	signal current_delay_count, next_delay_count  : natural          := 0;
 	signal current_index,       next_index        : natural          := 0;
@@ -133,29 +133,29 @@ begin
 
 	reset_sig  <= true, false after 16 ns;
 	HRESETn    <= '0' when reset_sig else
-	              '0' when current_state = end_state else
+	              '0' when current_state=end_state else
 	              '1';
 
-	HSEL       <= '0' when reset_sig else
+	HSEL       <= '0' when reset_sig or current_state=reset else
 				  '1' after wire_delay when bus_sequence(current_index+1).addr(31 downto 24) = zeros and current_delay_count=0 else -- TODO: not sure if good
 	              '0' after wire_delay;
 
-	HADDR       <= (others => '-') when reset_sig else
+	HADDR       <= (others => '-') when reset_sig or current_state=reset else
 				   bus_sequence(current_index+1).addr after wire_delay when current_delay_count=0 else
 	               x"0000BEEF" after wire_delay; -- TODO
 
-	HWRITE      <= '-' when reset_sig else
+	HWRITE      <= '-' when reset_sig or current_state=reset else
 				   '1' after wire_delay when bus_sequence(current_index+1).rw=write and current_delay_count=0 else
 				   '0' after wire_delay when bus_sequence(current_index+1).rw=read  and current_delay_count=0 else
 				   '-' after wire_delay;
 
-	HSIZE       <= (others => '-') when reset_sig else
+	HSIZE       <= (others => '-') when reset_sig or current_state=reset else
 				   HSIZE1 after wire_delay when bus_sequence(current_index+1).size=1 and current_delay_count=0 else
 				   HSIZE2 after wire_delay when bus_sequence(current_index+1).size=2 and current_delay_count=0 else
 				   HSIZE4 after wire_delay when bus_sequence(current_index+1).size=4 and current_delay_count=0 else
 				   (others => '-') after wire_delay;
 
-	HTRANS_sig  <= idle when reset_sig else
+	HTRANS_sig  <= idle when reset_sig or current_state=reset else
                    nonseq after wire_delay when current_delay_count=0 else
                    idle   after wire_delay;
 
@@ -165,9 +165,9 @@ begin
 				   HTRANS_nonseq when HTRANS_sig=nonseq else
 				   HTRANS_seq    when HTRANS_sig=seq;
 
-	HREADY     <= '0' when reset_sig else HREADYOUT after 1 ns;
+	HREADY     <= '0' when reset_sig or current_state=reset else HREADYOUT after 1 ns;
 
-	HWDATA     <= (others => '-') when reset_sig else
+	HWDATA     <= (others => '-') when reset_sig or current_state=reset else
 				  bus_sequence(current_index).data after wire_delay when current_delay_count=0 and (current_state=read or current_state=read_stall) else
 				  (others => '-') after wire_delay;
 	--}}}
@@ -179,6 +179,8 @@ begin
 		next_delay_count  <= current_delay_count  after wire_delay;
 		next_index        <= current_index        after wire_delay;
 		case current_state is
+			when reset =>
+				next_state <= idle;
 			when idle =>
 				if current_delay_count = 0 then
 					if current_index = bus_sequence'length-2 then
@@ -286,7 +288,7 @@ begin
 	begin
 		if(rising_edge(HCLK)) then
 			if  reset_sig then
-				current_state         <= idle;
+				current_state         <= reset;
 				current_delay_count   <= 0;
 				current_index         <= 0;
 			else
