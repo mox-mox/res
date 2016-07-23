@@ -166,6 +166,7 @@ architecture cache of AHBL2SDRAM is
 	alias  Save0_HADDR_WS          is HADDR( 4 downto  2);
 	alias  Save0_HADDR_BS          is HADDR( 1 downto  0);
 	signal SAVE0_HSIZE   : std_logic_vector( 2 downto  0) := (others => '-');
+	signal SAVE0_HWRITE  : std_logic                      := '-';
 
 	signal hit           : std_logic;
 	signal HCLK_PHASE    : std_logic := '0';
@@ -416,12 +417,14 @@ begin
 	begin
 		if(rising_edge(HCLK)) then
 			if(HRESETn = '0') then
-				SAVE0_HADDR <= (others => '0');
-				SAVE0_HSIZE <= (others => '0');
+				SAVE0_HADDR  <= (others => '0');
+				SAVE0_HSIZE  <= (others => '0');
+				SAVE0_HWRITE <= '-';
 			elsif ( HSEL = '1' and HREADY = '1' ) then
 			--else
-				SAVE0_HADDR <= HADDR;
-				SAVE0_HSIZE <= HSIZE;
+				SAVE0_HADDR  <= HADDR;
+				SAVE0_HSIZE  <= HSIZE;
+				SAVE0_HWRITE <= HWRITE;
 			end if;
 		end if;
 	end process latch_bus;
