@@ -424,31 +424,18 @@ begin
 			if(HRESETn = '0') then
 				SAVE0_HADDR  <= (others => '0');
 				SAVE0_HSIZE  <= (others => '0');
+				SAVE0_HWRITE <= '-';
+				SAVE1_HWRITE <= '-';
 			elsif ( HSEL = '1' and HREADY = '1' ) then
 			--else
 				SAVE0_HADDR  <= HADDR;
 				SAVE0_HSIZE  <= HSIZE;
-			end if;
-		end if;
-	end process latch_bus;
-	--}}}
-
-	--{{{
-	latch_HWRITE : process(HCLK) -- Using HCLK is intended here!
-	begin
-		if(rising_edge(HCLK)) then
-			if(HRESETn = '0') then
-				SAVE0_HWRITE <= '-';
-				SAVE1_HWRITE <= '-';
-			elsif ( HREADYOUT_sig = '1' ) then
-			--else
 				SAVE0_HWRITE <= HWRITE;
 				SAVE1_HWRITE <= SAVE0_HWRITE;
 			end if;
 		end if;
-	end process latch_hwrite;
+	end process latch_bus;
 	--}}}
-
 
 	--{{{
 	-- toggle flip-flop to route HCLK into the state-machines
