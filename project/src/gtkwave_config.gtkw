@@ -1,21 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.72 (w)1999-2016 BSI
-[*] Sat Jul 23 11:14:53 2016
+[*] Sat Jul 23 12:59:05 2016
 [*]
 [dumpfile] "/tmp/asd-mox/home/mox/uni/s10/res/project/src/tb.ghw"
-[dumpfile_mtime] "Sat Jul 23 10:55:55 2016"
-[dumpfile_size] 133334
+[dumpfile_mtime] "Sat Jul 23 11:49:46 2016"
+[dumpfile_size] 133358
 [savefile] "/tmp/asd-mox/home/mox/uni/s10/res/project/src/gtkwave_config.gtkw"
 [timestart] 0
 [size] 1600 886
 [pos] -1 -1
-*-25.000000 11000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-26.000000 33000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.ahbl2sdram_tb.
-[treeopen] top.ahbl2sdram_tb.mem_ctl.
-[treeopen] top.ahbl2sdram_tb.mem_ctl.dram.
-[sst_width] 210
-[signals_width] 142
+[treeopen] top.ahbl2sdram_tb.cache.
+[sst_width] 323
+[signals_width] 230
 [sst_expanded] 1
 [sst_vpaned_height] 256
 @c00200
@@ -25,109 +24,12 @@
 #{top.ahbl2sdram_tb.misc.invalidate_low[31:0]} top.ahbl2sdram_tb.misc.invalidate_low[31] top.ahbl2sdram_tb.misc.invalidate_low[30] top.ahbl2sdram_tb.misc.invalidate_low[29] top.ahbl2sdram_tb.misc.invalidate_low[28] top.ahbl2sdram_tb.misc.invalidate_low[27] top.ahbl2sdram_tb.misc.invalidate_low[26] top.ahbl2sdram_tb.misc.invalidate_low[25] top.ahbl2sdram_tb.misc.invalidate_low[24] top.ahbl2sdram_tb.misc.invalidate_low[23] top.ahbl2sdram_tb.misc.invalidate_low[22] top.ahbl2sdram_tb.misc.invalidate_low[21] top.ahbl2sdram_tb.misc.invalidate_low[20] top.ahbl2sdram_tb.misc.invalidate_low[19] top.ahbl2sdram_tb.misc.invalidate_low[18] top.ahbl2sdram_tb.misc.invalidate_low[17] top.ahbl2sdram_tb.misc.invalidate_low[16] top.ahbl2sdram_tb.misc.invalidate_low[15] top.ahbl2sdram_tb.misc.invalidate_low[14] top.ahbl2sdram_tb.misc.invalidate_low[13] top.ahbl2sdram_tb.misc.invalidate_low[12] top.ahbl2sdram_tb.misc.invalidate_low[11] top.ahbl2sdram_tb.misc.invalidate_low[10] top.ahbl2sdram_tb.misc.invalidate_low[9] top.ahbl2sdram_tb.misc.invalidate_low[8] top.ahbl2sdram_tb.misc.invalidate_low[7] top.ahbl2sdram_tb.misc.invalidate_low[6] top.ahbl2sdram_tb.misc.invalidate_low[5] top.ahbl2sdram_tb.misc.invalidate_low[4] top.ahbl2sdram_tb.misc.invalidate_low[3] top.ahbl2sdram_tb.misc.invalidate_low[2] top.ahbl2sdram_tb.misc.invalidate_low[1] top.ahbl2sdram_tb.misc.invalidate_low[0]
 #{top.ahbl2sdram_tb.misc.miss_count[31:0]} top.ahbl2sdram_tb.misc.miss_count[31] top.ahbl2sdram_tb.misc.miss_count[30] top.ahbl2sdram_tb.misc.miss_count[29] top.ahbl2sdram_tb.misc.miss_count[28] top.ahbl2sdram_tb.misc.miss_count[27] top.ahbl2sdram_tb.misc.miss_count[26] top.ahbl2sdram_tb.misc.miss_count[25] top.ahbl2sdram_tb.misc.miss_count[24] top.ahbl2sdram_tb.misc.miss_count[23] top.ahbl2sdram_tb.misc.miss_count[22] top.ahbl2sdram_tb.misc.miss_count[21] top.ahbl2sdram_tb.misc.miss_count[20] top.ahbl2sdram_tb.misc.miss_count[19] top.ahbl2sdram_tb.misc.miss_count[18] top.ahbl2sdram_tb.misc.miss_count[17] top.ahbl2sdram_tb.misc.miss_count[16] top.ahbl2sdram_tb.misc.miss_count[15] top.ahbl2sdram_tb.misc.miss_count[14] top.ahbl2sdram_tb.misc.miss_count[13] top.ahbl2sdram_tb.misc.miss_count[12] top.ahbl2sdram_tb.misc.miss_count[11] top.ahbl2sdram_tb.misc.miss_count[10] top.ahbl2sdram_tb.misc.miss_count[9] top.ahbl2sdram_tb.misc.miss_count[8] top.ahbl2sdram_tb.misc.miss_count[7] top.ahbl2sdram_tb.misc.miss_count[6] top.ahbl2sdram_tb.misc.miss_count[5] top.ahbl2sdram_tb.misc.miss_count[4] top.ahbl2sdram_tb.misc.miss_count[3] top.ahbl2sdram_tb.misc.miss_count[2] top.ahbl2sdram_tb.misc.miss_count[1] top.ahbl2sdram_tb.misc.miss_count[0]
 #{top.ahbl2sdram_tb.misc.hit_count[31:0]} top.ahbl2sdram_tb.misc.hit_count[31] top.ahbl2sdram_tb.misc.hit_count[30] top.ahbl2sdram_tb.misc.hit_count[29] top.ahbl2sdram_tb.misc.hit_count[28] top.ahbl2sdram_tb.misc.hit_count[27] top.ahbl2sdram_tb.misc.hit_count[26] top.ahbl2sdram_tb.misc.hit_count[25] top.ahbl2sdram_tb.misc.hit_count[24] top.ahbl2sdram_tb.misc.hit_count[23] top.ahbl2sdram_tb.misc.hit_count[22] top.ahbl2sdram_tb.misc.hit_count[21] top.ahbl2sdram_tb.misc.hit_count[20] top.ahbl2sdram_tb.misc.hit_count[19] top.ahbl2sdram_tb.misc.hit_count[18] top.ahbl2sdram_tb.misc.hit_count[17] top.ahbl2sdram_tb.misc.hit_count[16] top.ahbl2sdram_tb.misc.hit_count[15] top.ahbl2sdram_tb.misc.hit_count[14] top.ahbl2sdram_tb.misc.hit_count[13] top.ahbl2sdram_tb.misc.hit_count[12] top.ahbl2sdram_tb.misc.hit_count[11] top.ahbl2sdram_tb.misc.hit_count[10] top.ahbl2sdram_tb.misc.hit_count[9] top.ahbl2sdram_tb.misc.hit_count[8] top.ahbl2sdram_tb.misc.hit_count[7] top.ahbl2sdram_tb.misc.hit_count[6] top.ahbl2sdram_tb.misc.hit_count[5] top.ahbl2sdram_tb.misc.hit_count[4] top.ahbl2sdram_tb.misc.hit_count[3] top.ahbl2sdram_tb.misc.hit_count[2] top.ahbl2sdram_tb.misc.hit_count[1] top.ahbl2sdram_tb.misc.hit_count[0]
-@1401200
--misc
 @28
 top.ahbl2sdram_tb.misc.mem_calib_done
-top.ahbl2sdram_tb.ahbl.reset_sig
-[color] 3
-top.ahbl2sdram_tb.dclk
-[color] 3
-top.ahbl2sdram_tb.hclk
-@800200
--r_fsm
-@28
-top.ahbl2sdram_tb.cache.r_fsm.request
-@29
-top.ahbl2sdram_tb.cache.r_fsm.hit
-@28
-top.ahbl2sdram_tb.cache.r_fsm.dram_busy
-top.ahbl2sdram_tb.cache.r_fsm.dram_empty
-top.ahbl2sdram_tb.cache.r_fsm.ws_zero
-top.ahbl2sdram_tb.cache.r_fsm.current_state
-@1000200
--r_fsm
-@c00200
--w_fsm
-@28
-top.ahbl2sdram_tb.cache.w_fsm.request
-top.ahbl2sdram_tb.cache.w_fsm.hit
-top.ahbl2sdram_tb.cache.w_fsm.dram_busy
-top.ahbl2sdram_tb.cache.w_fsm.current_state
 @1401200
--w_fsm
+-misc
 @c00200
--ds
-@28
-top.ahbl2sdram_tb.cache.ds.en_a
-top.ahbl2sdram_tb.cache.ds.we_a
-@22
-#{top.ahbl2sdram_tb.cache.ds.addr_a[9:0]} top.ahbl2sdram_tb.cache.ds.addr_a[9] top.ahbl2sdram_tb.cache.ds.addr_a[8] top.ahbl2sdram_tb.cache.ds.addr_a[7] top.ahbl2sdram_tb.cache.ds.addr_a[6] top.ahbl2sdram_tb.cache.ds.addr_a[5] top.ahbl2sdram_tb.cache.ds.addr_a[4] top.ahbl2sdram_tb.cache.ds.addr_a[3] top.ahbl2sdram_tb.cache.ds.addr_a[2] top.ahbl2sdram_tb.cache.ds.addr_a[1] top.ahbl2sdram_tb.cache.ds.addr_a[0]
-#{top.ahbl2sdram_tb.cache.ds.di_a[31:0]} top.ahbl2sdram_tb.cache.ds.di_a[31] top.ahbl2sdram_tb.cache.ds.di_a[30] top.ahbl2sdram_tb.cache.ds.di_a[29] top.ahbl2sdram_tb.cache.ds.di_a[28] top.ahbl2sdram_tb.cache.ds.di_a[27] top.ahbl2sdram_tb.cache.ds.di_a[26] top.ahbl2sdram_tb.cache.ds.di_a[25] top.ahbl2sdram_tb.cache.ds.di_a[24] top.ahbl2sdram_tb.cache.ds.di_a[23] top.ahbl2sdram_tb.cache.ds.di_a[22] top.ahbl2sdram_tb.cache.ds.di_a[21] top.ahbl2sdram_tb.cache.ds.di_a[20] top.ahbl2sdram_tb.cache.ds.di_a[19] top.ahbl2sdram_tb.cache.ds.di_a[18] top.ahbl2sdram_tb.cache.ds.di_a[17] top.ahbl2sdram_tb.cache.ds.di_a[16] top.ahbl2sdram_tb.cache.ds.di_a[15] top.ahbl2sdram_tb.cache.ds.di_a[14] top.ahbl2sdram_tb.cache.ds.di_a[13] top.ahbl2sdram_tb.cache.ds.di_a[12] top.ahbl2sdram_tb.cache.ds.di_a[11] top.ahbl2sdram_tb.cache.ds.di_a[10] top.ahbl2sdram_tb.cache.ds.di_a[9] top.ahbl2sdram_tb.cache.ds.di_a[8] top.ahbl2sdram_tb.cache.ds.di_a[7] top.ahbl2sdram_tb.cache.ds.di_a[6] top.ahbl2sdram_tb.cache.ds.di_a[5] top.ahbl2sdram_tb.cache.ds.di_a[4] top.ahbl2sdram_tb.cache.ds.di_a[3] top.ahbl2sdram_tb.cache.ds.di_a[2] top.ahbl2sdram_tb.cache.ds.di_a[1] top.ahbl2sdram_tb.cache.ds.di_a[0]
-#{top.ahbl2sdram_tb.cache.ds.wr_mask_a[3:0]} top.ahbl2sdram_tb.cache.ds.wr_mask_a[3] top.ahbl2sdram_tb.cache.ds.wr_mask_a[2] top.ahbl2sdram_tb.cache.ds.wr_mask_a[1] top.ahbl2sdram_tb.cache.ds.wr_mask_a[0]
-#{top.ahbl2sdram_tb.cache.ds.do_a[31:0]} top.ahbl2sdram_tb.cache.ds.do_a[31] top.ahbl2sdram_tb.cache.ds.do_a[30] top.ahbl2sdram_tb.cache.ds.do_a[29] top.ahbl2sdram_tb.cache.ds.do_a[28] top.ahbl2sdram_tb.cache.ds.do_a[27] top.ahbl2sdram_tb.cache.ds.do_a[26] top.ahbl2sdram_tb.cache.ds.do_a[25] top.ahbl2sdram_tb.cache.ds.do_a[24] top.ahbl2sdram_tb.cache.ds.do_a[23] top.ahbl2sdram_tb.cache.ds.do_a[22] top.ahbl2sdram_tb.cache.ds.do_a[21] top.ahbl2sdram_tb.cache.ds.do_a[20] top.ahbl2sdram_tb.cache.ds.do_a[19] top.ahbl2sdram_tb.cache.ds.do_a[18] top.ahbl2sdram_tb.cache.ds.do_a[17] top.ahbl2sdram_tb.cache.ds.do_a[16] top.ahbl2sdram_tb.cache.ds.do_a[15] top.ahbl2sdram_tb.cache.ds.do_a[14] top.ahbl2sdram_tb.cache.ds.do_a[13] top.ahbl2sdram_tb.cache.ds.do_a[12] top.ahbl2sdram_tb.cache.ds.do_a[11] top.ahbl2sdram_tb.cache.ds.do_a[10] top.ahbl2sdram_tb.cache.ds.do_a[9] top.ahbl2sdram_tb.cache.ds.do_a[8] top.ahbl2sdram_tb.cache.ds.do_a[7] top.ahbl2sdram_tb.cache.ds.do_a[6] top.ahbl2sdram_tb.cache.ds.do_a[5] top.ahbl2sdram_tb.cache.ds.do_a[4] top.ahbl2sdram_tb.cache.ds.do_a[3] top.ahbl2sdram_tb.cache.ds.do_a[2] top.ahbl2sdram_tb.cache.ds.do_a[1] top.ahbl2sdram_tb.cache.ds.do_a[0]
-@28
-top.ahbl2sdram_tb.cache.ds.en_b
-top.ahbl2sdram_tb.cache.ds.we_b
-@22
-#{top.ahbl2sdram_tb.cache.ds.addr_b[9:0]} top.ahbl2sdram_tb.cache.ds.addr_b[9] top.ahbl2sdram_tb.cache.ds.addr_b[8] top.ahbl2sdram_tb.cache.ds.addr_b[7] top.ahbl2sdram_tb.cache.ds.addr_b[6] top.ahbl2sdram_tb.cache.ds.addr_b[5] top.ahbl2sdram_tb.cache.ds.addr_b[4] top.ahbl2sdram_tb.cache.ds.addr_b[3] top.ahbl2sdram_tb.cache.ds.addr_b[2] top.ahbl2sdram_tb.cache.ds.addr_b[1] top.ahbl2sdram_tb.cache.ds.addr_b[0]
-#{top.ahbl2sdram_tb.cache.ds.di_b[31:0]} top.ahbl2sdram_tb.cache.ds.di_b[31] top.ahbl2sdram_tb.cache.ds.di_b[30] top.ahbl2sdram_tb.cache.ds.di_b[29] top.ahbl2sdram_tb.cache.ds.di_b[28] top.ahbl2sdram_tb.cache.ds.di_b[27] top.ahbl2sdram_tb.cache.ds.di_b[26] top.ahbl2sdram_tb.cache.ds.di_b[25] top.ahbl2sdram_tb.cache.ds.di_b[24] top.ahbl2sdram_tb.cache.ds.di_b[23] top.ahbl2sdram_tb.cache.ds.di_b[22] top.ahbl2sdram_tb.cache.ds.di_b[21] top.ahbl2sdram_tb.cache.ds.di_b[20] top.ahbl2sdram_tb.cache.ds.di_b[19] top.ahbl2sdram_tb.cache.ds.di_b[18] top.ahbl2sdram_tb.cache.ds.di_b[17] top.ahbl2sdram_tb.cache.ds.di_b[16] top.ahbl2sdram_tb.cache.ds.di_b[15] top.ahbl2sdram_tb.cache.ds.di_b[14] top.ahbl2sdram_tb.cache.ds.di_b[13] top.ahbl2sdram_tb.cache.ds.di_b[12] top.ahbl2sdram_tb.cache.ds.di_b[11] top.ahbl2sdram_tb.cache.ds.di_b[10] top.ahbl2sdram_tb.cache.ds.di_b[9] top.ahbl2sdram_tb.cache.ds.di_b[8] top.ahbl2sdram_tb.cache.ds.di_b[7] top.ahbl2sdram_tb.cache.ds.di_b[6] top.ahbl2sdram_tb.cache.ds.di_b[5] top.ahbl2sdram_tb.cache.ds.di_b[4] top.ahbl2sdram_tb.cache.ds.di_b[3] top.ahbl2sdram_tb.cache.ds.di_b[2] top.ahbl2sdram_tb.cache.ds.di_b[1] top.ahbl2sdram_tb.cache.ds.di_b[0]
-#{top.ahbl2sdram_tb.cache.ds.wr_mask_b[3:0]} top.ahbl2sdram_tb.cache.ds.wr_mask_b[3] top.ahbl2sdram_tb.cache.ds.wr_mask_b[2] top.ahbl2sdram_tb.cache.ds.wr_mask_b[1] top.ahbl2sdram_tb.cache.ds.wr_mask_b[0]
-#{top.ahbl2sdram_tb.cache.ds.do_b[31:0]} top.ahbl2sdram_tb.cache.ds.do_b[31] top.ahbl2sdram_tb.cache.ds.do_b[30] top.ahbl2sdram_tb.cache.ds.do_b[29] top.ahbl2sdram_tb.cache.ds.do_b[28] top.ahbl2sdram_tb.cache.ds.do_b[27] top.ahbl2sdram_tb.cache.ds.do_b[26] top.ahbl2sdram_tb.cache.ds.do_b[25] top.ahbl2sdram_tb.cache.ds.do_b[24] top.ahbl2sdram_tb.cache.ds.do_b[23] top.ahbl2sdram_tb.cache.ds.do_b[22] top.ahbl2sdram_tb.cache.ds.do_b[21] top.ahbl2sdram_tb.cache.ds.do_b[20] top.ahbl2sdram_tb.cache.ds.do_b[19] top.ahbl2sdram_tb.cache.ds.do_b[18] top.ahbl2sdram_tb.cache.ds.do_b[17] top.ahbl2sdram_tb.cache.ds.do_b[16] top.ahbl2sdram_tb.cache.ds.do_b[15] top.ahbl2sdram_tb.cache.ds.do_b[14] top.ahbl2sdram_tb.cache.ds.do_b[13] top.ahbl2sdram_tb.cache.ds.do_b[12] top.ahbl2sdram_tb.cache.ds.do_b[11] top.ahbl2sdram_tb.cache.ds.do_b[10] top.ahbl2sdram_tb.cache.ds.do_b[9] top.ahbl2sdram_tb.cache.ds.do_b[8] top.ahbl2sdram_tb.cache.ds.do_b[7] top.ahbl2sdram_tb.cache.ds.do_b[6] top.ahbl2sdram_tb.cache.ds.do_b[5] top.ahbl2sdram_tb.cache.ds.do_b[4] top.ahbl2sdram_tb.cache.ds.do_b[3] top.ahbl2sdram_tb.cache.ds.do_b[2] top.ahbl2sdram_tb.cache.ds.do_b[1] top.ahbl2sdram_tb.cache.ds.do_b[0]
-@1401200
--ds
-@c00200
--ts
-@28
-top.ahbl2sdram_tb.cache.ts.en_a
-top.ahbl2sdram_tb.cache.ts.we_a
-@22
-#{top.ahbl2sdram_tb.cache.ts.addr_a[9:0]} top.ahbl2sdram_tb.cache.ts.addr_a[9] top.ahbl2sdram_tb.cache.ts.addr_a[8] top.ahbl2sdram_tb.cache.ts.addr_a[7] top.ahbl2sdram_tb.cache.ts.addr_a[6] top.ahbl2sdram_tb.cache.ts.addr_a[5] top.ahbl2sdram_tb.cache.ts.addr_a[4] top.ahbl2sdram_tb.cache.ts.addr_a[3] top.ahbl2sdram_tb.cache.ts.addr_a[2] top.ahbl2sdram_tb.cache.ts.addr_a[1] top.ahbl2sdram_tb.cache.ts.addr_a[0]
-#{top.ahbl2sdram_tb.cache.ts.di_a[15:0]} top.ahbl2sdram_tb.cache.ts.di_a[15] top.ahbl2sdram_tb.cache.ts.di_a[14] top.ahbl2sdram_tb.cache.ts.di_a[13] top.ahbl2sdram_tb.cache.ts.di_a[12] top.ahbl2sdram_tb.cache.ts.di_a[11] top.ahbl2sdram_tb.cache.ts.di_a[10] top.ahbl2sdram_tb.cache.ts.di_a[9] top.ahbl2sdram_tb.cache.ts.di_a[8] top.ahbl2sdram_tb.cache.ts.di_a[7] top.ahbl2sdram_tb.cache.ts.di_a[6] top.ahbl2sdram_tb.cache.ts.di_a[5] top.ahbl2sdram_tb.cache.ts.di_a[4] top.ahbl2sdram_tb.cache.ts.di_a[3] top.ahbl2sdram_tb.cache.ts.di_a[2] top.ahbl2sdram_tb.cache.ts.di_a[1] top.ahbl2sdram_tb.cache.ts.di_a[0]
-#{top.ahbl2sdram_tb.cache.ts.do_a[15:0]} top.ahbl2sdram_tb.cache.ts.do_a[15] top.ahbl2sdram_tb.cache.ts.do_a[14] top.ahbl2sdram_tb.cache.ts.do_a[13] top.ahbl2sdram_tb.cache.ts.do_a[12] top.ahbl2sdram_tb.cache.ts.do_a[11] top.ahbl2sdram_tb.cache.ts.do_a[10] top.ahbl2sdram_tb.cache.ts.do_a[9] top.ahbl2sdram_tb.cache.ts.do_a[8] top.ahbl2sdram_tb.cache.ts.do_a[7] top.ahbl2sdram_tb.cache.ts.do_a[6] top.ahbl2sdram_tb.cache.ts.do_a[5] top.ahbl2sdram_tb.cache.ts.do_a[4] top.ahbl2sdram_tb.cache.ts.do_a[3] top.ahbl2sdram_tb.cache.ts.do_a[2] top.ahbl2sdram_tb.cache.ts.do_a[1] top.ahbl2sdram_tb.cache.ts.do_a[0]
-@28
-top.ahbl2sdram_tb.cache.ts.en_b
-top.ahbl2sdram_tb.cache.ts.we_b
-@22
-#{top.ahbl2sdram_tb.cache.ts.addr_b[9:0]} top.ahbl2sdram_tb.cache.ts.addr_b[9] top.ahbl2sdram_tb.cache.ts.addr_b[8] top.ahbl2sdram_tb.cache.ts.addr_b[7] top.ahbl2sdram_tb.cache.ts.addr_b[6] top.ahbl2sdram_tb.cache.ts.addr_b[5] top.ahbl2sdram_tb.cache.ts.addr_b[4] top.ahbl2sdram_tb.cache.ts.addr_b[3] top.ahbl2sdram_tb.cache.ts.addr_b[2] top.ahbl2sdram_tb.cache.ts.addr_b[1] top.ahbl2sdram_tb.cache.ts.addr_b[0]
-#{top.ahbl2sdram_tb.cache.ts.di_b[15:0]} top.ahbl2sdram_tb.cache.ts.di_b[15] top.ahbl2sdram_tb.cache.ts.di_b[14] top.ahbl2sdram_tb.cache.ts.di_b[13] top.ahbl2sdram_tb.cache.ts.di_b[12] top.ahbl2sdram_tb.cache.ts.di_b[11] top.ahbl2sdram_tb.cache.ts.di_b[10] top.ahbl2sdram_tb.cache.ts.di_b[9] top.ahbl2sdram_tb.cache.ts.di_b[8] top.ahbl2sdram_tb.cache.ts.di_b[7] top.ahbl2sdram_tb.cache.ts.di_b[6] top.ahbl2sdram_tb.cache.ts.di_b[5] top.ahbl2sdram_tb.cache.ts.di_b[4] top.ahbl2sdram_tb.cache.ts.di_b[3] top.ahbl2sdram_tb.cache.ts.di_b[2] top.ahbl2sdram_tb.cache.ts.di_b[1] top.ahbl2sdram_tb.cache.ts.di_b[0]
-#{top.ahbl2sdram_tb.cache.ts.do_b[15:0]} top.ahbl2sdram_tb.cache.ts.do_b[15] top.ahbl2sdram_tb.cache.ts.do_b[14] top.ahbl2sdram_tb.cache.ts.do_b[13] top.ahbl2sdram_tb.cache.ts.do_b[12] top.ahbl2sdram_tb.cache.ts.do_b[11] top.ahbl2sdram_tb.cache.ts.do_b[10] top.ahbl2sdram_tb.cache.ts.do_b[9] top.ahbl2sdram_tb.cache.ts.do_b[8] top.ahbl2sdram_tb.cache.ts.do_b[7] top.ahbl2sdram_tb.cache.ts.do_b[6] top.ahbl2sdram_tb.cache.ts.do_b[5] top.ahbl2sdram_tb.cache.ts.do_b[4] top.ahbl2sdram_tb.cache.ts.do_b[3] top.ahbl2sdram_tb.cache.ts.do_b[2] top.ahbl2sdram_tb.cache.ts.do_b[1] top.ahbl2sdram_tb.cache.ts.do_b[0]
-@1401200
--ts
-@c00200
--cache
-@28
-top.ahbl2sdram_tb.cache.read_busy
-top.ahbl2sdram_tb.cache.write_busy
-top.ahbl2sdram_tb.cache.read_ws_zero
-top.ahbl2sdram_tb.cache.hit
-top.ahbl2sdram_tb.cache.hreadyout
-top.ahbl2sdram_tb.cache.hresp
-@1401200
--cache
-@c00200
--ahbl
-@28
-top.ahbl2sdram_tb.ahbl.hsel
-@22
-#{top.ahbl2sdram_tb.ahbl.haddr[31:0]} top.ahbl2sdram_tb.ahbl.haddr[31] top.ahbl2sdram_tb.ahbl.haddr[30] top.ahbl2sdram_tb.ahbl.haddr[29] top.ahbl2sdram_tb.ahbl.haddr[28] top.ahbl2sdram_tb.ahbl.haddr[27] top.ahbl2sdram_tb.ahbl.haddr[26] top.ahbl2sdram_tb.ahbl.haddr[25] top.ahbl2sdram_tb.ahbl.haddr[24] top.ahbl2sdram_tb.ahbl.haddr[23] top.ahbl2sdram_tb.ahbl.haddr[22] top.ahbl2sdram_tb.ahbl.haddr[21] top.ahbl2sdram_tb.ahbl.haddr[20] top.ahbl2sdram_tb.ahbl.haddr[19] top.ahbl2sdram_tb.ahbl.haddr[18] top.ahbl2sdram_tb.ahbl.haddr[17] top.ahbl2sdram_tb.ahbl.haddr[16] top.ahbl2sdram_tb.ahbl.haddr[15] top.ahbl2sdram_tb.ahbl.haddr[14] top.ahbl2sdram_tb.ahbl.haddr[13] top.ahbl2sdram_tb.ahbl.haddr[12] top.ahbl2sdram_tb.ahbl.haddr[11] top.ahbl2sdram_tb.ahbl.haddr[10] top.ahbl2sdram_tb.ahbl.haddr[9] top.ahbl2sdram_tb.ahbl.haddr[8] top.ahbl2sdram_tb.ahbl.haddr[7] top.ahbl2sdram_tb.ahbl.haddr[6] top.ahbl2sdram_tb.ahbl.haddr[5] top.ahbl2sdram_tb.ahbl.haddr[4] top.ahbl2sdram_tb.ahbl.haddr[3] top.ahbl2sdram_tb.ahbl.haddr[2] top.ahbl2sdram_tb.ahbl.haddr[1] top.ahbl2sdram_tb.ahbl.haddr[0]
-@28
-top.ahbl2sdram_tb.ahbl.hwrite
-#{top.ahbl2sdram_tb.ahbl.hsize[2:0]} top.ahbl2sdram_tb.ahbl.hsize[2] top.ahbl2sdram_tb.ahbl.hsize[1] top.ahbl2sdram_tb.ahbl.hsize[0]
-top.ahbl2sdram_tb.ahbl.htrans_sig
-top.ahbl2sdram_tb.ahbl.hready
-@22
-#{top.ahbl2sdram_tb.ahbl.hwdata[31:0]} top.ahbl2sdram_tb.ahbl.hwdata[31] top.ahbl2sdram_tb.ahbl.hwdata[30] top.ahbl2sdram_tb.ahbl.hwdata[29] top.ahbl2sdram_tb.ahbl.hwdata[28] top.ahbl2sdram_tb.ahbl.hwdata[27] top.ahbl2sdram_tb.ahbl.hwdata[26] top.ahbl2sdram_tb.ahbl.hwdata[25] top.ahbl2sdram_tb.ahbl.hwdata[24] top.ahbl2sdram_tb.ahbl.hwdata[23] top.ahbl2sdram_tb.ahbl.hwdata[22] top.ahbl2sdram_tb.ahbl.hwdata[21] top.ahbl2sdram_tb.ahbl.hwdata[20] top.ahbl2sdram_tb.ahbl.hwdata[19] top.ahbl2sdram_tb.ahbl.hwdata[18] top.ahbl2sdram_tb.ahbl.hwdata[17] top.ahbl2sdram_tb.ahbl.hwdata[16] top.ahbl2sdram_tb.ahbl.hwdata[15] top.ahbl2sdram_tb.ahbl.hwdata[14] top.ahbl2sdram_tb.ahbl.hwdata[13] top.ahbl2sdram_tb.ahbl.hwdata[12] top.ahbl2sdram_tb.ahbl.hwdata[11] top.ahbl2sdram_tb.ahbl.hwdata[10] top.ahbl2sdram_tb.ahbl.hwdata[9] top.ahbl2sdram_tb.ahbl.hwdata[8] top.ahbl2sdram_tb.ahbl.hwdata[7] top.ahbl2sdram_tb.ahbl.hwdata[6] top.ahbl2sdram_tb.ahbl.hwdata[5] top.ahbl2sdram_tb.ahbl.hwdata[4] top.ahbl2sdram_tb.ahbl.hwdata[3] top.ahbl2sdram_tb.ahbl.hwdata[2] top.ahbl2sdram_tb.ahbl.hwdata[1] top.ahbl2sdram_tb.ahbl.hwdata[0]
-#{top.ahbl2sdram_tb.ahbl.hrdata[31:0]} top.ahbl2sdram_tb.ahbl.hrdata[31] top.ahbl2sdram_tb.ahbl.hrdata[30] top.ahbl2sdram_tb.ahbl.hrdata[29] top.ahbl2sdram_tb.ahbl.hrdata[28] top.ahbl2sdram_tb.ahbl.hrdata[27] top.ahbl2sdram_tb.ahbl.hrdata[26] top.ahbl2sdram_tb.ahbl.hrdata[25] top.ahbl2sdram_tb.ahbl.hrdata[24] top.ahbl2sdram_tb.ahbl.hrdata[23] top.ahbl2sdram_tb.ahbl.hrdata[22] top.ahbl2sdram_tb.ahbl.hrdata[21] top.ahbl2sdram_tb.ahbl.hrdata[20] top.ahbl2sdram_tb.ahbl.hrdata[19] top.ahbl2sdram_tb.ahbl.hrdata[18] top.ahbl2sdram_tb.ahbl.hrdata[17] top.ahbl2sdram_tb.ahbl.hrdata[16] top.ahbl2sdram_tb.ahbl.hrdata[15] top.ahbl2sdram_tb.ahbl.hrdata[14] top.ahbl2sdram_tb.ahbl.hrdata[13] top.ahbl2sdram_tb.ahbl.hrdata[12] top.ahbl2sdram_tb.ahbl.hrdata[11] top.ahbl2sdram_tb.ahbl.hrdata[10] top.ahbl2sdram_tb.ahbl.hrdata[9] top.ahbl2sdram_tb.ahbl.hrdata[8] top.ahbl2sdram_tb.ahbl.hrdata[7] top.ahbl2sdram_tb.ahbl.hrdata[6] top.ahbl2sdram_tb.ahbl.hrdata[5] top.ahbl2sdram_tb.ahbl.hrdata[4] top.ahbl2sdram_tb.ahbl.hrdata[3] top.ahbl2sdram_tb.ahbl.hrdata[2] top.ahbl2sdram_tb.ahbl.hrdata[1] top.ahbl2sdram_tb.ahbl.hrdata[0]
-@28
-top.ahbl2sdram_tb.ahbl.current_state
-top.ahbl2sdram_tb.ahbl.current_index
-top.ahbl2sdram_tb.ahbl.current_delay_count
-@1401200
--ahbl
-@800200
 -mem_ctl
-@c00200
 -state
 @28
 top.ahbl2sdram_tb.mem_ctl.random_delay
@@ -230,7 +132,158 @@ top.ahbl2sdram_tb.mem_ctl.rd_writeen
 @1401200
 -group_end
 -lines
-@1000200
 -mem_ctl
+@28
+top.ahbl2sdram_tb.ahbl.reset_sig
+[color] 3
+top.ahbl2sdram_tb.dclk
+[color] 3
+top.ahbl2sdram_tb.hclk
+@800200
+-cache
+@28
+top.ahbl2sdram_tb.cache.read_busy
+top.ahbl2sdram_tb.cache.write_busy
+top.ahbl2sdram_tb.cache.read_ws_zero
+top.ahbl2sdram_tb.cache.hit
+top.ahbl2sdram_tb.cache.hreadyout
+top.ahbl2sdram_tb.cache.hresp
+@c00200
+-save
+@28
+#{top.ahbl2sdram_tb.cache.save0_hsize[2:0]} top.ahbl2sdram_tb.cache.save0_hsize[2] top.ahbl2sdram_tb.cache.save0_hsize[1] top.ahbl2sdram_tb.cache.save0_hsize[0]
+@22
+#{top.ahbl2sdram_tb.cache.save0_haddr[31:0]} top.ahbl2sdram_tb.cache.save0_haddr[31] top.ahbl2sdram_tb.cache.save0_haddr[30] top.ahbl2sdram_tb.cache.save0_haddr[29] top.ahbl2sdram_tb.cache.save0_haddr[28] top.ahbl2sdram_tb.cache.save0_haddr[27] top.ahbl2sdram_tb.cache.save0_haddr[26] top.ahbl2sdram_tb.cache.save0_haddr[25] top.ahbl2sdram_tb.cache.save0_haddr[24] top.ahbl2sdram_tb.cache.save0_haddr[23] top.ahbl2sdram_tb.cache.save0_haddr[22] top.ahbl2sdram_tb.cache.save0_haddr[21] top.ahbl2sdram_tb.cache.save0_haddr[20] top.ahbl2sdram_tb.cache.save0_haddr[19] top.ahbl2sdram_tb.cache.save0_haddr[18] top.ahbl2sdram_tb.cache.save0_haddr[17] top.ahbl2sdram_tb.cache.save0_haddr[16] top.ahbl2sdram_tb.cache.save0_haddr[15] top.ahbl2sdram_tb.cache.save0_haddr[14] top.ahbl2sdram_tb.cache.save0_haddr[13] top.ahbl2sdram_tb.cache.save0_haddr[12] top.ahbl2sdram_tb.cache.save0_haddr[11] top.ahbl2sdram_tb.cache.save0_haddr[10] top.ahbl2sdram_tb.cache.save0_haddr[9] top.ahbl2sdram_tb.cache.save0_haddr[8] top.ahbl2sdram_tb.cache.save0_haddr[7] top.ahbl2sdram_tb.cache.save0_haddr[6] top.ahbl2sdram_tb.cache.save0_haddr[5] top.ahbl2sdram_tb.cache.save0_haddr[4] top.ahbl2sdram_tb.cache.save0_haddr[3] top.ahbl2sdram_tb.cache.save0_haddr[2] top.ahbl2sdram_tb.cache.save0_haddr[1] top.ahbl2sdram_tb.cache.save0_haddr[0]
+@c00022
+#{top.ahbl2sdram_tb.cache.write_save1_haddr[31:0]} top.ahbl2sdram_tb.cache.write_save1_haddr[31] top.ahbl2sdram_tb.cache.write_save1_haddr[30] top.ahbl2sdram_tb.cache.write_save1_haddr[29] top.ahbl2sdram_tb.cache.write_save1_haddr[28] top.ahbl2sdram_tb.cache.write_save1_haddr[27] top.ahbl2sdram_tb.cache.write_save1_haddr[26] top.ahbl2sdram_tb.cache.write_save1_haddr[25] top.ahbl2sdram_tb.cache.write_save1_haddr[24] top.ahbl2sdram_tb.cache.write_save1_haddr[23] top.ahbl2sdram_tb.cache.write_save1_haddr[22] top.ahbl2sdram_tb.cache.write_save1_haddr[21] top.ahbl2sdram_tb.cache.write_save1_haddr[20] top.ahbl2sdram_tb.cache.write_save1_haddr[19] top.ahbl2sdram_tb.cache.write_save1_haddr[18] top.ahbl2sdram_tb.cache.write_save1_haddr[17] top.ahbl2sdram_tb.cache.write_save1_haddr[16] top.ahbl2sdram_tb.cache.write_save1_haddr[15] top.ahbl2sdram_tb.cache.write_save1_haddr[14] top.ahbl2sdram_tb.cache.write_save1_haddr[13] top.ahbl2sdram_tb.cache.write_save1_haddr[12] top.ahbl2sdram_tb.cache.write_save1_haddr[11] top.ahbl2sdram_tb.cache.write_save1_haddr[10] top.ahbl2sdram_tb.cache.write_save1_haddr[9] top.ahbl2sdram_tb.cache.write_save1_haddr[8] top.ahbl2sdram_tb.cache.write_save1_haddr[7] top.ahbl2sdram_tb.cache.write_save1_haddr[6] top.ahbl2sdram_tb.cache.write_save1_haddr[5] top.ahbl2sdram_tb.cache.write_save1_haddr[4] top.ahbl2sdram_tb.cache.write_save1_haddr[3] top.ahbl2sdram_tb.cache.write_save1_haddr[2] top.ahbl2sdram_tb.cache.write_save1_haddr[1] top.ahbl2sdram_tb.cache.write_save1_haddr[0]
+@28
+top.ahbl2sdram_tb.cache.write_save1_haddr[31]
+top.ahbl2sdram_tb.cache.write_save1_haddr[30]
+top.ahbl2sdram_tb.cache.write_save1_haddr[29]
+top.ahbl2sdram_tb.cache.write_save1_haddr[28]
+top.ahbl2sdram_tb.cache.write_save1_haddr[27]
+top.ahbl2sdram_tb.cache.write_save1_haddr[26]
+top.ahbl2sdram_tb.cache.write_save1_haddr[25]
+top.ahbl2sdram_tb.cache.write_save1_haddr[24]
+top.ahbl2sdram_tb.cache.write_save1_haddr[23]
+top.ahbl2sdram_tb.cache.write_save1_haddr[22]
+top.ahbl2sdram_tb.cache.write_save1_haddr[21]
+top.ahbl2sdram_tb.cache.write_save1_haddr[20]
+top.ahbl2sdram_tb.cache.write_save1_haddr[19]
+top.ahbl2sdram_tb.cache.write_save1_haddr[18]
+top.ahbl2sdram_tb.cache.write_save1_haddr[17]
+top.ahbl2sdram_tb.cache.write_save1_haddr[16]
+top.ahbl2sdram_tb.cache.write_save1_haddr[15]
+top.ahbl2sdram_tb.cache.write_save1_haddr[14]
+top.ahbl2sdram_tb.cache.write_save1_haddr[13]
+top.ahbl2sdram_tb.cache.write_save1_haddr[12]
+top.ahbl2sdram_tb.cache.write_save1_haddr[11]
+top.ahbl2sdram_tb.cache.write_save1_haddr[10]
+top.ahbl2sdram_tb.cache.write_save1_haddr[9]
+top.ahbl2sdram_tb.cache.write_save1_haddr[8]
+top.ahbl2sdram_tb.cache.write_save1_haddr[7]
+top.ahbl2sdram_tb.cache.write_save1_haddr[6]
+top.ahbl2sdram_tb.cache.write_save1_haddr[5]
+top.ahbl2sdram_tb.cache.write_save1_haddr[4]
+top.ahbl2sdram_tb.cache.write_save1_haddr[3]
+top.ahbl2sdram_tb.cache.write_save1_haddr[2]
+top.ahbl2sdram_tb.cache.write_save1_haddr[1]
+top.ahbl2sdram_tb.cache.write_save1_haddr[0]
+@1401200
+-group_end
+@22
+#{top.ahbl2sdram_tb.cache.write_save1_hwdata[31:0]} top.ahbl2sdram_tb.cache.write_save1_hwdata[31] top.ahbl2sdram_tb.cache.write_save1_hwdata[30] top.ahbl2sdram_tb.cache.write_save1_hwdata[29] top.ahbl2sdram_tb.cache.write_save1_hwdata[28] top.ahbl2sdram_tb.cache.write_save1_hwdata[27] top.ahbl2sdram_tb.cache.write_save1_hwdata[26] top.ahbl2sdram_tb.cache.write_save1_hwdata[25] top.ahbl2sdram_tb.cache.write_save1_hwdata[24] top.ahbl2sdram_tb.cache.write_save1_hwdata[23] top.ahbl2sdram_tb.cache.write_save1_hwdata[22] top.ahbl2sdram_tb.cache.write_save1_hwdata[21] top.ahbl2sdram_tb.cache.write_save1_hwdata[20] top.ahbl2sdram_tb.cache.write_save1_hwdata[19] top.ahbl2sdram_tb.cache.write_save1_hwdata[18] top.ahbl2sdram_tb.cache.write_save1_hwdata[17] top.ahbl2sdram_tb.cache.write_save1_hwdata[16] top.ahbl2sdram_tb.cache.write_save1_hwdata[15] top.ahbl2sdram_tb.cache.write_save1_hwdata[14] top.ahbl2sdram_tb.cache.write_save1_hwdata[13] top.ahbl2sdram_tb.cache.write_save1_hwdata[12] top.ahbl2sdram_tb.cache.write_save1_hwdata[11] top.ahbl2sdram_tb.cache.write_save1_hwdata[10] top.ahbl2sdram_tb.cache.write_save1_hwdata[9] top.ahbl2sdram_tb.cache.write_save1_hwdata[8] top.ahbl2sdram_tb.cache.write_save1_hwdata[7] top.ahbl2sdram_tb.cache.write_save1_hwdata[6] top.ahbl2sdram_tb.cache.write_save1_hwdata[5] top.ahbl2sdram_tb.cache.write_save1_hwdata[4] top.ahbl2sdram_tb.cache.write_save1_hwdata[3] top.ahbl2sdram_tb.cache.write_save1_hwdata[2] top.ahbl2sdram_tb.cache.write_save1_hwdata[1] top.ahbl2sdram_tb.cache.write_save1_hwdata[0]
+@28
+#{top.ahbl2sdram_tb.cache.write_save1_hsize[2:0]} top.ahbl2sdram_tb.cache.write_save1_hsize[2] top.ahbl2sdram_tb.cache.write_save1_hsize[1] top.ahbl2sdram_tb.cache.write_save1_hsize[0]
+@22
+#{top.ahbl2sdram_tb.cache.read_save1_haddr[31:0]} top.ahbl2sdram_tb.cache.read_save1_haddr[31] top.ahbl2sdram_tb.cache.read_save1_haddr[30] top.ahbl2sdram_tb.cache.read_save1_haddr[29] top.ahbl2sdram_tb.cache.read_save1_haddr[28] top.ahbl2sdram_tb.cache.read_save1_haddr[27] top.ahbl2sdram_tb.cache.read_save1_haddr[26] top.ahbl2sdram_tb.cache.read_save1_haddr[25] top.ahbl2sdram_tb.cache.read_save1_haddr[24] top.ahbl2sdram_tb.cache.read_save1_haddr[23] top.ahbl2sdram_tb.cache.read_save1_haddr[22] top.ahbl2sdram_tb.cache.read_save1_haddr[21] top.ahbl2sdram_tb.cache.read_save1_haddr[20] top.ahbl2sdram_tb.cache.read_save1_haddr[19] top.ahbl2sdram_tb.cache.read_save1_haddr[18] top.ahbl2sdram_tb.cache.read_save1_haddr[17] top.ahbl2sdram_tb.cache.read_save1_haddr[16] top.ahbl2sdram_tb.cache.read_save1_haddr[15] top.ahbl2sdram_tb.cache.read_save1_haddr[14] top.ahbl2sdram_tb.cache.read_save1_haddr[13] top.ahbl2sdram_tb.cache.read_save1_haddr[12] top.ahbl2sdram_tb.cache.read_save1_haddr[11] top.ahbl2sdram_tb.cache.read_save1_haddr[10] top.ahbl2sdram_tb.cache.read_save1_haddr[9] top.ahbl2sdram_tb.cache.read_save1_haddr[8] top.ahbl2sdram_tb.cache.read_save1_haddr[7] top.ahbl2sdram_tb.cache.read_save1_haddr[6] top.ahbl2sdram_tb.cache.read_save1_haddr[5] top.ahbl2sdram_tb.cache.read_save1_haddr[4] top.ahbl2sdram_tb.cache.read_save1_haddr[3] top.ahbl2sdram_tb.cache.read_save1_haddr[2] top.ahbl2sdram_tb.cache.read_save1_haddr[1] top.ahbl2sdram_tb.cache.read_save1_haddr[0]
+@28
+#{top.ahbl2sdram_tb.cache.read_save1_hsize[2:0]} top.ahbl2sdram_tb.cache.read_save1_hsize[2] top.ahbl2sdram_tb.cache.read_save1_hsize[1] top.ahbl2sdram_tb.cache.read_save1_hsize[0]
+@22
+#{top.ahbl2sdram_tb.cache.read_keep_dram_data[31:0]} top.ahbl2sdram_tb.cache.read_keep_dram_data[31] top.ahbl2sdram_tb.cache.read_keep_dram_data[30] top.ahbl2sdram_tb.cache.read_keep_dram_data[29] top.ahbl2sdram_tb.cache.read_keep_dram_data[28] top.ahbl2sdram_tb.cache.read_keep_dram_data[27] top.ahbl2sdram_tb.cache.read_keep_dram_data[26] top.ahbl2sdram_tb.cache.read_keep_dram_data[25] top.ahbl2sdram_tb.cache.read_keep_dram_data[24] top.ahbl2sdram_tb.cache.read_keep_dram_data[23] top.ahbl2sdram_tb.cache.read_keep_dram_data[22] top.ahbl2sdram_tb.cache.read_keep_dram_data[21] top.ahbl2sdram_tb.cache.read_keep_dram_data[20] top.ahbl2sdram_tb.cache.read_keep_dram_data[19] top.ahbl2sdram_tb.cache.read_keep_dram_data[18] top.ahbl2sdram_tb.cache.read_keep_dram_data[17] top.ahbl2sdram_tb.cache.read_keep_dram_data[16] top.ahbl2sdram_tb.cache.read_keep_dram_data[15] top.ahbl2sdram_tb.cache.read_keep_dram_data[14] top.ahbl2sdram_tb.cache.read_keep_dram_data[13] top.ahbl2sdram_tb.cache.read_keep_dram_data[12] top.ahbl2sdram_tb.cache.read_keep_dram_data[11] top.ahbl2sdram_tb.cache.read_keep_dram_data[10] top.ahbl2sdram_tb.cache.read_keep_dram_data[9] top.ahbl2sdram_tb.cache.read_keep_dram_data[8] top.ahbl2sdram_tb.cache.read_keep_dram_data[7] top.ahbl2sdram_tb.cache.read_keep_dram_data[6] top.ahbl2sdram_tb.cache.read_keep_dram_data[5] top.ahbl2sdram_tb.cache.read_keep_dram_data[4] top.ahbl2sdram_tb.cache.read_keep_dram_data[3] top.ahbl2sdram_tb.cache.read_keep_dram_data[2] top.ahbl2sdram_tb.cache.read_keep_dram_data[1] top.ahbl2sdram_tb.cache.read_keep_dram_data[0]
+@1401200
+-save
+@c00200
+-ts
+@28
+top.ahbl2sdram_tb.cache.ts.en_a
+top.ahbl2sdram_tb.cache.ts.we_a
+@22
+#{top.ahbl2sdram_tb.cache.ts.addr_a[9:0]} top.ahbl2sdram_tb.cache.ts.addr_a[9] top.ahbl2sdram_tb.cache.ts.addr_a[8] top.ahbl2sdram_tb.cache.ts.addr_a[7] top.ahbl2sdram_tb.cache.ts.addr_a[6] top.ahbl2sdram_tb.cache.ts.addr_a[5] top.ahbl2sdram_tb.cache.ts.addr_a[4] top.ahbl2sdram_tb.cache.ts.addr_a[3] top.ahbl2sdram_tb.cache.ts.addr_a[2] top.ahbl2sdram_tb.cache.ts.addr_a[1] top.ahbl2sdram_tb.cache.ts.addr_a[0]
+#{top.ahbl2sdram_tb.cache.ts.di_a[15:0]} top.ahbl2sdram_tb.cache.ts.di_a[15] top.ahbl2sdram_tb.cache.ts.di_a[14] top.ahbl2sdram_tb.cache.ts.di_a[13] top.ahbl2sdram_tb.cache.ts.di_a[12] top.ahbl2sdram_tb.cache.ts.di_a[11] top.ahbl2sdram_tb.cache.ts.di_a[10] top.ahbl2sdram_tb.cache.ts.di_a[9] top.ahbl2sdram_tb.cache.ts.di_a[8] top.ahbl2sdram_tb.cache.ts.di_a[7] top.ahbl2sdram_tb.cache.ts.di_a[6] top.ahbl2sdram_tb.cache.ts.di_a[5] top.ahbl2sdram_tb.cache.ts.di_a[4] top.ahbl2sdram_tb.cache.ts.di_a[3] top.ahbl2sdram_tb.cache.ts.di_a[2] top.ahbl2sdram_tb.cache.ts.di_a[1] top.ahbl2sdram_tb.cache.ts.di_a[0]
+#{top.ahbl2sdram_tb.cache.ts.do_a[15:0]} top.ahbl2sdram_tb.cache.ts.do_a[15] top.ahbl2sdram_tb.cache.ts.do_a[14] top.ahbl2sdram_tb.cache.ts.do_a[13] top.ahbl2sdram_tb.cache.ts.do_a[12] top.ahbl2sdram_tb.cache.ts.do_a[11] top.ahbl2sdram_tb.cache.ts.do_a[10] top.ahbl2sdram_tb.cache.ts.do_a[9] top.ahbl2sdram_tb.cache.ts.do_a[8] top.ahbl2sdram_tb.cache.ts.do_a[7] top.ahbl2sdram_tb.cache.ts.do_a[6] top.ahbl2sdram_tb.cache.ts.do_a[5] top.ahbl2sdram_tb.cache.ts.do_a[4] top.ahbl2sdram_tb.cache.ts.do_a[3] top.ahbl2sdram_tb.cache.ts.do_a[2] top.ahbl2sdram_tb.cache.ts.do_a[1] top.ahbl2sdram_tb.cache.ts.do_a[0]
+@28
+top.ahbl2sdram_tb.cache.ts.en_b
+top.ahbl2sdram_tb.cache.ts.we_b
+@22
+#{top.ahbl2sdram_tb.cache.ts.addr_b[9:0]} top.ahbl2sdram_tb.cache.ts.addr_b[9] top.ahbl2sdram_tb.cache.ts.addr_b[8] top.ahbl2sdram_tb.cache.ts.addr_b[7] top.ahbl2sdram_tb.cache.ts.addr_b[6] top.ahbl2sdram_tb.cache.ts.addr_b[5] top.ahbl2sdram_tb.cache.ts.addr_b[4] top.ahbl2sdram_tb.cache.ts.addr_b[3] top.ahbl2sdram_tb.cache.ts.addr_b[2] top.ahbl2sdram_tb.cache.ts.addr_b[1] top.ahbl2sdram_tb.cache.ts.addr_b[0]
+#{top.ahbl2sdram_tb.cache.ts.di_b[15:0]} top.ahbl2sdram_tb.cache.ts.di_b[15] top.ahbl2sdram_tb.cache.ts.di_b[14] top.ahbl2sdram_tb.cache.ts.di_b[13] top.ahbl2sdram_tb.cache.ts.di_b[12] top.ahbl2sdram_tb.cache.ts.di_b[11] top.ahbl2sdram_tb.cache.ts.di_b[10] top.ahbl2sdram_tb.cache.ts.di_b[9] top.ahbl2sdram_tb.cache.ts.di_b[8] top.ahbl2sdram_tb.cache.ts.di_b[7] top.ahbl2sdram_tb.cache.ts.di_b[6] top.ahbl2sdram_tb.cache.ts.di_b[5] top.ahbl2sdram_tb.cache.ts.di_b[4] top.ahbl2sdram_tb.cache.ts.di_b[3] top.ahbl2sdram_tb.cache.ts.di_b[2] top.ahbl2sdram_tb.cache.ts.di_b[1] top.ahbl2sdram_tb.cache.ts.di_b[0]
+#{top.ahbl2sdram_tb.cache.ts.do_b[15:0]} top.ahbl2sdram_tb.cache.ts.do_b[15] top.ahbl2sdram_tb.cache.ts.do_b[14] top.ahbl2sdram_tb.cache.ts.do_b[13] top.ahbl2sdram_tb.cache.ts.do_b[12] top.ahbl2sdram_tb.cache.ts.do_b[11] top.ahbl2sdram_tb.cache.ts.do_b[10] top.ahbl2sdram_tb.cache.ts.do_b[9] top.ahbl2sdram_tb.cache.ts.do_b[8] top.ahbl2sdram_tb.cache.ts.do_b[7] top.ahbl2sdram_tb.cache.ts.do_b[6] top.ahbl2sdram_tb.cache.ts.do_b[5] top.ahbl2sdram_tb.cache.ts.do_b[4] top.ahbl2sdram_tb.cache.ts.do_b[3] top.ahbl2sdram_tb.cache.ts.do_b[2] top.ahbl2sdram_tb.cache.ts.do_b[1] top.ahbl2sdram_tb.cache.ts.do_b[0]
+@1401200
+-ts
+@c00200
+-ds
+@28
+top.ahbl2sdram_tb.cache.ds.en_a
+top.ahbl2sdram_tb.cache.ds.we_a
+@22
+#{top.ahbl2sdram_tb.cache.ds.addr_a[9:0]} top.ahbl2sdram_tb.cache.ds.addr_a[9] top.ahbl2sdram_tb.cache.ds.addr_a[8] top.ahbl2sdram_tb.cache.ds.addr_a[7] top.ahbl2sdram_tb.cache.ds.addr_a[6] top.ahbl2sdram_tb.cache.ds.addr_a[5] top.ahbl2sdram_tb.cache.ds.addr_a[4] top.ahbl2sdram_tb.cache.ds.addr_a[3] top.ahbl2sdram_tb.cache.ds.addr_a[2] top.ahbl2sdram_tb.cache.ds.addr_a[1] top.ahbl2sdram_tb.cache.ds.addr_a[0]
+#{top.ahbl2sdram_tb.cache.ds.di_a[31:0]} top.ahbl2sdram_tb.cache.ds.di_a[31] top.ahbl2sdram_tb.cache.ds.di_a[30] top.ahbl2sdram_tb.cache.ds.di_a[29] top.ahbl2sdram_tb.cache.ds.di_a[28] top.ahbl2sdram_tb.cache.ds.di_a[27] top.ahbl2sdram_tb.cache.ds.di_a[26] top.ahbl2sdram_tb.cache.ds.di_a[25] top.ahbl2sdram_tb.cache.ds.di_a[24] top.ahbl2sdram_tb.cache.ds.di_a[23] top.ahbl2sdram_tb.cache.ds.di_a[22] top.ahbl2sdram_tb.cache.ds.di_a[21] top.ahbl2sdram_tb.cache.ds.di_a[20] top.ahbl2sdram_tb.cache.ds.di_a[19] top.ahbl2sdram_tb.cache.ds.di_a[18] top.ahbl2sdram_tb.cache.ds.di_a[17] top.ahbl2sdram_tb.cache.ds.di_a[16] top.ahbl2sdram_tb.cache.ds.di_a[15] top.ahbl2sdram_tb.cache.ds.di_a[14] top.ahbl2sdram_tb.cache.ds.di_a[13] top.ahbl2sdram_tb.cache.ds.di_a[12] top.ahbl2sdram_tb.cache.ds.di_a[11] top.ahbl2sdram_tb.cache.ds.di_a[10] top.ahbl2sdram_tb.cache.ds.di_a[9] top.ahbl2sdram_tb.cache.ds.di_a[8] top.ahbl2sdram_tb.cache.ds.di_a[7] top.ahbl2sdram_tb.cache.ds.di_a[6] top.ahbl2sdram_tb.cache.ds.di_a[5] top.ahbl2sdram_tb.cache.ds.di_a[4] top.ahbl2sdram_tb.cache.ds.di_a[3] top.ahbl2sdram_tb.cache.ds.di_a[2] top.ahbl2sdram_tb.cache.ds.di_a[1] top.ahbl2sdram_tb.cache.ds.di_a[0]
+#{top.ahbl2sdram_tb.cache.ds.wr_mask_a[3:0]} top.ahbl2sdram_tb.cache.ds.wr_mask_a[3] top.ahbl2sdram_tb.cache.ds.wr_mask_a[2] top.ahbl2sdram_tb.cache.ds.wr_mask_a[1] top.ahbl2sdram_tb.cache.ds.wr_mask_a[0]
+#{top.ahbl2sdram_tb.cache.ds.do_a[31:0]} top.ahbl2sdram_tb.cache.ds.do_a[31] top.ahbl2sdram_tb.cache.ds.do_a[30] top.ahbl2sdram_tb.cache.ds.do_a[29] top.ahbl2sdram_tb.cache.ds.do_a[28] top.ahbl2sdram_tb.cache.ds.do_a[27] top.ahbl2sdram_tb.cache.ds.do_a[26] top.ahbl2sdram_tb.cache.ds.do_a[25] top.ahbl2sdram_tb.cache.ds.do_a[24] top.ahbl2sdram_tb.cache.ds.do_a[23] top.ahbl2sdram_tb.cache.ds.do_a[22] top.ahbl2sdram_tb.cache.ds.do_a[21] top.ahbl2sdram_tb.cache.ds.do_a[20] top.ahbl2sdram_tb.cache.ds.do_a[19] top.ahbl2sdram_tb.cache.ds.do_a[18] top.ahbl2sdram_tb.cache.ds.do_a[17] top.ahbl2sdram_tb.cache.ds.do_a[16] top.ahbl2sdram_tb.cache.ds.do_a[15] top.ahbl2sdram_tb.cache.ds.do_a[14] top.ahbl2sdram_tb.cache.ds.do_a[13] top.ahbl2sdram_tb.cache.ds.do_a[12] top.ahbl2sdram_tb.cache.ds.do_a[11] top.ahbl2sdram_tb.cache.ds.do_a[10] top.ahbl2sdram_tb.cache.ds.do_a[9] top.ahbl2sdram_tb.cache.ds.do_a[8] top.ahbl2sdram_tb.cache.ds.do_a[7] top.ahbl2sdram_tb.cache.ds.do_a[6] top.ahbl2sdram_tb.cache.ds.do_a[5] top.ahbl2sdram_tb.cache.ds.do_a[4] top.ahbl2sdram_tb.cache.ds.do_a[3] top.ahbl2sdram_tb.cache.ds.do_a[2] top.ahbl2sdram_tb.cache.ds.do_a[1] top.ahbl2sdram_tb.cache.ds.do_a[0]
+@28
+top.ahbl2sdram_tb.cache.ds.en_b
+top.ahbl2sdram_tb.cache.ds.we_b
+@22
+#{top.ahbl2sdram_tb.cache.ds.addr_b[9:0]} top.ahbl2sdram_tb.cache.ds.addr_b[9] top.ahbl2sdram_tb.cache.ds.addr_b[8] top.ahbl2sdram_tb.cache.ds.addr_b[7] top.ahbl2sdram_tb.cache.ds.addr_b[6] top.ahbl2sdram_tb.cache.ds.addr_b[5] top.ahbl2sdram_tb.cache.ds.addr_b[4] top.ahbl2sdram_tb.cache.ds.addr_b[3] top.ahbl2sdram_tb.cache.ds.addr_b[2] top.ahbl2sdram_tb.cache.ds.addr_b[1] top.ahbl2sdram_tb.cache.ds.addr_b[0]
+#{top.ahbl2sdram_tb.cache.ds.di_b[31:0]} top.ahbl2sdram_tb.cache.ds.di_b[31] top.ahbl2sdram_tb.cache.ds.di_b[30] top.ahbl2sdram_tb.cache.ds.di_b[29] top.ahbl2sdram_tb.cache.ds.di_b[28] top.ahbl2sdram_tb.cache.ds.di_b[27] top.ahbl2sdram_tb.cache.ds.di_b[26] top.ahbl2sdram_tb.cache.ds.di_b[25] top.ahbl2sdram_tb.cache.ds.di_b[24] top.ahbl2sdram_tb.cache.ds.di_b[23] top.ahbl2sdram_tb.cache.ds.di_b[22] top.ahbl2sdram_tb.cache.ds.di_b[21] top.ahbl2sdram_tb.cache.ds.di_b[20] top.ahbl2sdram_tb.cache.ds.di_b[19] top.ahbl2sdram_tb.cache.ds.di_b[18] top.ahbl2sdram_tb.cache.ds.di_b[17] top.ahbl2sdram_tb.cache.ds.di_b[16] top.ahbl2sdram_tb.cache.ds.di_b[15] top.ahbl2sdram_tb.cache.ds.di_b[14] top.ahbl2sdram_tb.cache.ds.di_b[13] top.ahbl2sdram_tb.cache.ds.di_b[12] top.ahbl2sdram_tb.cache.ds.di_b[11] top.ahbl2sdram_tb.cache.ds.di_b[10] top.ahbl2sdram_tb.cache.ds.di_b[9] top.ahbl2sdram_tb.cache.ds.di_b[8] top.ahbl2sdram_tb.cache.ds.di_b[7] top.ahbl2sdram_tb.cache.ds.di_b[6] top.ahbl2sdram_tb.cache.ds.di_b[5] top.ahbl2sdram_tb.cache.ds.di_b[4] top.ahbl2sdram_tb.cache.ds.di_b[3] top.ahbl2sdram_tb.cache.ds.di_b[2] top.ahbl2sdram_tb.cache.ds.di_b[1] top.ahbl2sdram_tb.cache.ds.di_b[0]
+#{top.ahbl2sdram_tb.cache.ds.wr_mask_b[3:0]} top.ahbl2sdram_tb.cache.ds.wr_mask_b[3] top.ahbl2sdram_tb.cache.ds.wr_mask_b[2] top.ahbl2sdram_tb.cache.ds.wr_mask_b[1] top.ahbl2sdram_tb.cache.ds.wr_mask_b[0]
+#{top.ahbl2sdram_tb.cache.ds.do_b[31:0]} top.ahbl2sdram_tb.cache.ds.do_b[31] top.ahbl2sdram_tb.cache.ds.do_b[30] top.ahbl2sdram_tb.cache.ds.do_b[29] top.ahbl2sdram_tb.cache.ds.do_b[28] top.ahbl2sdram_tb.cache.ds.do_b[27] top.ahbl2sdram_tb.cache.ds.do_b[26] top.ahbl2sdram_tb.cache.ds.do_b[25] top.ahbl2sdram_tb.cache.ds.do_b[24] top.ahbl2sdram_tb.cache.ds.do_b[23] top.ahbl2sdram_tb.cache.ds.do_b[22] top.ahbl2sdram_tb.cache.ds.do_b[21] top.ahbl2sdram_tb.cache.ds.do_b[20] top.ahbl2sdram_tb.cache.ds.do_b[19] top.ahbl2sdram_tb.cache.ds.do_b[18] top.ahbl2sdram_tb.cache.ds.do_b[17] top.ahbl2sdram_tb.cache.ds.do_b[16] top.ahbl2sdram_tb.cache.ds.do_b[15] top.ahbl2sdram_tb.cache.ds.do_b[14] top.ahbl2sdram_tb.cache.ds.do_b[13] top.ahbl2sdram_tb.cache.ds.do_b[12] top.ahbl2sdram_tb.cache.ds.do_b[11] top.ahbl2sdram_tb.cache.ds.do_b[10] top.ahbl2sdram_tb.cache.ds.do_b[9] top.ahbl2sdram_tb.cache.ds.do_b[8] top.ahbl2sdram_tb.cache.ds.do_b[7] top.ahbl2sdram_tb.cache.ds.do_b[6] top.ahbl2sdram_tb.cache.ds.do_b[5] top.ahbl2sdram_tb.cache.ds.do_b[4] top.ahbl2sdram_tb.cache.ds.do_b[3] top.ahbl2sdram_tb.cache.ds.do_b[2] top.ahbl2sdram_tb.cache.ds.do_b[1] top.ahbl2sdram_tb.cache.ds.do_b[0]
+@1401200
+-ds
+@800200
+-r_fsm
+@28
+top.ahbl2sdram_tb.cache.r_fsm.request
+@29
+top.ahbl2sdram_tb.cache.r_fsm.hit
+@28
+top.ahbl2sdram_tb.cache.r_fsm.dram_busy
+top.ahbl2sdram_tb.cache.r_fsm.dram_empty
+top.ahbl2sdram_tb.cache.r_fsm.ws_zero
+top.ahbl2sdram_tb.cache.r_fsm.current_state
+@1000200
+-r_fsm
+@c00200
+-w_fsm
+@28
+top.ahbl2sdram_tb.cache.w_fsm.request
+top.ahbl2sdram_tb.cache.w_fsm.hit
+top.ahbl2sdram_tb.cache.w_fsm.dram_busy
+top.ahbl2sdram_tb.cache.w_fsm.current_state
+@1401200
+-w_fsm
+@1000200
+-cache
+@800200
+-ahbl
+@28
+top.ahbl2sdram_tb.ahbl.hsel
+@22
+#{top.ahbl2sdram_tb.ahbl.haddr[31:0]} top.ahbl2sdram_tb.ahbl.haddr[31] top.ahbl2sdram_tb.ahbl.haddr[30] top.ahbl2sdram_tb.ahbl.haddr[29] top.ahbl2sdram_tb.ahbl.haddr[28] top.ahbl2sdram_tb.ahbl.haddr[27] top.ahbl2sdram_tb.ahbl.haddr[26] top.ahbl2sdram_tb.ahbl.haddr[25] top.ahbl2sdram_tb.ahbl.haddr[24] top.ahbl2sdram_tb.ahbl.haddr[23] top.ahbl2sdram_tb.ahbl.haddr[22] top.ahbl2sdram_tb.ahbl.haddr[21] top.ahbl2sdram_tb.ahbl.haddr[20] top.ahbl2sdram_tb.ahbl.haddr[19] top.ahbl2sdram_tb.ahbl.haddr[18] top.ahbl2sdram_tb.ahbl.haddr[17] top.ahbl2sdram_tb.ahbl.haddr[16] top.ahbl2sdram_tb.ahbl.haddr[15] top.ahbl2sdram_tb.ahbl.haddr[14] top.ahbl2sdram_tb.ahbl.haddr[13] top.ahbl2sdram_tb.ahbl.haddr[12] top.ahbl2sdram_tb.ahbl.haddr[11] top.ahbl2sdram_tb.ahbl.haddr[10] top.ahbl2sdram_tb.ahbl.haddr[9] top.ahbl2sdram_tb.ahbl.haddr[8] top.ahbl2sdram_tb.ahbl.haddr[7] top.ahbl2sdram_tb.ahbl.haddr[6] top.ahbl2sdram_tb.ahbl.haddr[5] top.ahbl2sdram_tb.ahbl.haddr[4] top.ahbl2sdram_tb.ahbl.haddr[3] top.ahbl2sdram_tb.ahbl.haddr[2] top.ahbl2sdram_tb.ahbl.haddr[1] top.ahbl2sdram_tb.ahbl.haddr[0]
+@28
+top.ahbl2sdram_tb.ahbl.hwrite
+#{top.ahbl2sdram_tb.ahbl.hsize[2:0]} top.ahbl2sdram_tb.ahbl.hsize[2] top.ahbl2sdram_tb.ahbl.hsize[1] top.ahbl2sdram_tb.ahbl.hsize[0]
+top.ahbl2sdram_tb.ahbl.htrans_sig
+top.ahbl2sdram_tb.ahbl.hready
+@22
+#{top.ahbl2sdram_tb.ahbl.hwdata[31:0]} top.ahbl2sdram_tb.ahbl.hwdata[31] top.ahbl2sdram_tb.ahbl.hwdata[30] top.ahbl2sdram_tb.ahbl.hwdata[29] top.ahbl2sdram_tb.ahbl.hwdata[28] top.ahbl2sdram_tb.ahbl.hwdata[27] top.ahbl2sdram_tb.ahbl.hwdata[26] top.ahbl2sdram_tb.ahbl.hwdata[25] top.ahbl2sdram_tb.ahbl.hwdata[24] top.ahbl2sdram_tb.ahbl.hwdata[23] top.ahbl2sdram_tb.ahbl.hwdata[22] top.ahbl2sdram_tb.ahbl.hwdata[21] top.ahbl2sdram_tb.ahbl.hwdata[20] top.ahbl2sdram_tb.ahbl.hwdata[19] top.ahbl2sdram_tb.ahbl.hwdata[18] top.ahbl2sdram_tb.ahbl.hwdata[17] top.ahbl2sdram_tb.ahbl.hwdata[16] top.ahbl2sdram_tb.ahbl.hwdata[15] top.ahbl2sdram_tb.ahbl.hwdata[14] top.ahbl2sdram_tb.ahbl.hwdata[13] top.ahbl2sdram_tb.ahbl.hwdata[12] top.ahbl2sdram_tb.ahbl.hwdata[11] top.ahbl2sdram_tb.ahbl.hwdata[10] top.ahbl2sdram_tb.ahbl.hwdata[9] top.ahbl2sdram_tb.ahbl.hwdata[8] top.ahbl2sdram_tb.ahbl.hwdata[7] top.ahbl2sdram_tb.ahbl.hwdata[6] top.ahbl2sdram_tb.ahbl.hwdata[5] top.ahbl2sdram_tb.ahbl.hwdata[4] top.ahbl2sdram_tb.ahbl.hwdata[3] top.ahbl2sdram_tb.ahbl.hwdata[2] top.ahbl2sdram_tb.ahbl.hwdata[1] top.ahbl2sdram_tb.ahbl.hwdata[0]
+#{top.ahbl2sdram_tb.ahbl.hrdata[31:0]} top.ahbl2sdram_tb.ahbl.hrdata[31] top.ahbl2sdram_tb.ahbl.hrdata[30] top.ahbl2sdram_tb.ahbl.hrdata[29] top.ahbl2sdram_tb.ahbl.hrdata[28] top.ahbl2sdram_tb.ahbl.hrdata[27] top.ahbl2sdram_tb.ahbl.hrdata[26] top.ahbl2sdram_tb.ahbl.hrdata[25] top.ahbl2sdram_tb.ahbl.hrdata[24] top.ahbl2sdram_tb.ahbl.hrdata[23] top.ahbl2sdram_tb.ahbl.hrdata[22] top.ahbl2sdram_tb.ahbl.hrdata[21] top.ahbl2sdram_tb.ahbl.hrdata[20] top.ahbl2sdram_tb.ahbl.hrdata[19] top.ahbl2sdram_tb.ahbl.hrdata[18] top.ahbl2sdram_tb.ahbl.hrdata[17] top.ahbl2sdram_tb.ahbl.hrdata[16] top.ahbl2sdram_tb.ahbl.hrdata[15] top.ahbl2sdram_tb.ahbl.hrdata[14] top.ahbl2sdram_tb.ahbl.hrdata[13] top.ahbl2sdram_tb.ahbl.hrdata[12] top.ahbl2sdram_tb.ahbl.hrdata[11] top.ahbl2sdram_tb.ahbl.hrdata[10] top.ahbl2sdram_tb.ahbl.hrdata[9] top.ahbl2sdram_tb.ahbl.hrdata[8] top.ahbl2sdram_tb.ahbl.hrdata[7] top.ahbl2sdram_tb.ahbl.hrdata[6] top.ahbl2sdram_tb.ahbl.hrdata[5] top.ahbl2sdram_tb.ahbl.hrdata[4] top.ahbl2sdram_tb.ahbl.hrdata[3] top.ahbl2sdram_tb.ahbl.hrdata[2] top.ahbl2sdram_tb.ahbl.hrdata[1] top.ahbl2sdram_tb.ahbl.hrdata[0]
+@28
+top.ahbl2sdram_tb.ahbl.current_state
+top.ahbl2sdram_tb.ahbl.current_index
+top.ahbl2sdram_tb.ahbl.current_delay_count
+@1000200
+-ahbl
 [pattern_trace] 1
 [pattern_trace] 0
