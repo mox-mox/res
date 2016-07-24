@@ -351,7 +351,7 @@ begin
 	                  '0'              when (mem_calib_done = '0' and HSEL = '1')                   else
 	                  --'0'              when (mem_calib_done = '0' and (read_request = '1' or write_request = '1'))                   else
 	                  --'0'              when ((read_request = '1' and read_busy = '1') or (write_request = '1' and write_busy = '1')) else
-	                  '0'              when ((HSEL='1' and HWRITE='0' and read_busy = '1') or (HSEL='1' and HWRITE='1' and write_busy = '1')) else
+	                  '0'              when ((HWRITE='0' and read_busy = '1') or (HWRITE='1' and write_busy = '1')) else
 	                  hit              when (read_current_state=cmp_dlv)                                                             else
 	                  '0'              when (read_current_state=req0 or read_current_state=req1)                                     else
 	                  not p1_rd_empty  when (read_current_state=rd0)                                                                 else
