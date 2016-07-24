@@ -43,8 +43,8 @@ begin
 				Head := 0;
 				Tail := 0;
 				Looped := false;
-				Full  <= '0';
-				Empty <= '1';
+				Full  <= '0' after 3 ns;
+				Empty <= '1' after 3 ns;
 			else
 				if (ReadEn = '1') then
 					if ((Looped = true) or (Head /= Tail)) then
@@ -74,18 +74,18 @@ begin
 				end if;
 
 				-- Update data output
-				DataOut <= Memory(Tail);
+				DataOut <= Memory(Tail) after 3 ns;
 
 				-- Update Empty and Full flags
 				if (Head = Tail) then
 					if Looped then
-						Full <= '1';
+						Full <= '1' after 3 ns;
 					else
-						Empty <= '1';
+						Empty <= '1' after 3 ns;
 					end if;
 				else
-					Empty   <= '0';
-					Full    <= '0';
+					Empty   <= '0' after 3 ns;
+					Full    <= '0' after 3 ns;
 				end if;
 			end if;
 		end if;

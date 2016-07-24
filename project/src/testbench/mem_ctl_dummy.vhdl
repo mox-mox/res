@@ -38,6 +38,54 @@ entity MEM_CTL_DUMMY is
 end MEM_CTL_DUMMY;
 
 architecture normal of MEM_CTL_DUMMY is
+	--{{{
+	function to_hstring (value : STD_LOGIC_VECTOR) return STRING is
+		-- Taken from http://www.edaboard.com/thread148826.html#post638955
+	constant ne     : INTEGER := (value'length+3)/4;
+	variable pad    : STD_LOGIC_VECTOR(0 to (ne*4 - value'length) - 1);
+	variable ivalue : STD_LOGIC_VECTOR(0 to ne*4 - 1);
+	variable result : STRING(1 to ne);
+	variable quad   : STD_LOGIC_VECTOR(0 to 3);
+	begin
+		if value'length < 1 then
+			return "undef";
+		else
+			if value (value'left) = 'Z' then
+				pad := (others => 'Z');
+			else
+				pad := (others => '0');
+			end if;
+			ivalue := pad & value;
+			for i in 0 to ne-1 loop
+				quad := To_X01Z(ivalue(4*i to 4*i+3));
+				case quad is
+					when x"0"   => result(i+1) := '0';
+					when x"1"   => result(i+1) := '1';
+					when x"2"   => result(i+1) := '2';
+					when x"3"   => result(i+1) := '3';
+					when x"4"   => result(i+1) := '4';
+					when x"5"   => result(i+1) := '5';
+					when x"6"   => result(i+1) := '6';
+					when x"7"   => result(i+1) := '7';
+					when x"8"   => result(i+1) := '8';
+					when x"9"   => result(i+1) := '9';
+					when x"A"   => result(i+1) := 'A';
+					when x"B"   => result(i+1) := 'B';
+					when x"C"   => result(i+1) := 'C';
+					when x"D"   => result(i+1) := 'D';
+					when x"E"   => result(i+1) := 'E';
+					when x"F"   => result(i+1) := 'F';
+					when "ZZZZ" => result(i+1) := 'Z';
+					when others => result(i+1) := 'X';
+				end case;
+			end loop;
+			return result;
+		end if;
+	end function to_hstring;
+
+
+
+	--}}}
 
 	--{{{ Logic wiring
 
@@ -154,22 +202,22 @@ architecture normal of MEM_CTL_DUMMY is
 		-- ... or define it as signal, enabling viewing it in gtkwave, but reduce the size.
 	type ram_type is array (0 to 1024) of std_logic_vector (31 downto 0);
 	signal DRAM : ram_type := (
-	x"AA000000",
-	x"AA111111",
-	x"AA222222",
-	x"AA333333",
-	x"AA444444",
-	x"AA555555",
-	x"AA666666",
-	x"AA777777",
-	x"AA777777",
-	x"AA999999",
-	x"AAAAAAAA",
-	x"AABBBBBB",
-	x"AACCCCCC",
-	x"AADDDDDD",
-	x"AAEEEEEE",
-	x"AAFFFFFF",
+	x"AA000000", -- 0x00000000
+	x"AA111111", -- 0x00000004
+	x"AA222222", -- 0x00000008
+	x"AA333333", -- 0x0000000C
+	x"AA444444", -- 0x00000010
+	x"AA555555", -- 0x00000014
+	x"AA666666", -- 0x00000018
+	x"AA777777", -- 0x0000001C
+	x"AA888888", -- 0x00000020
+	x"AA999999", -- 0x00000024
+	x"AAAAAAAA", -- 0x00000028
+	x"AABBBBBB", -- 0x0000002C
+	x"AACCCCCC", -- 0x00000030
+	x"AADDDDDD", -- 0x00000034
+	x"AAEEEEEE", -- 0x00000038
+	x"AAFFFFFF", -- 0x0000003C
 
 	x"BB000000",
 	x"BB111111",
@@ -370,7 +418,8 @@ begin
 	--{{{ Do the actual work
 
 	--{{{
-	calculate_next_state : process (current_delay_count, p1_cmd_empty_sig, cmd_instr, current_burst_length) --TODO
+	--calculate_next_state : process (current_delay_count, p1_cmd_empty_sig, cmd_instr, current_burst_length, next_state, next_delay_count, next_burst_length, next_addr) --TODO
+	calculate_next_state : process (current_state, current_delay_count, p1_cmd_empty_sig, cmd_instr, cmd_bl, cmd_addr, current_burst_length, next_delay_count, next_burst_length, next_addr) --TODO
 	begin
 		next_state        <= current_state        after wire_delay; -- default assignement
 		next_delay_count  <= current_delay_count  after wire_delay;
@@ -378,10 +427,11 @@ begin
 		next_addr         <= current_addr         after wire_delay;
 		case current_state is
 			when idle =>
+				report (" mem_ctl_dummy::calculate_next_state::current_delay_count=" & integer'image(current_delay_count) & ", p1_cmd_empty_sig:");
 				if current_delay_count = 0 then
 					if p1_cmd_empty_sig = '0' then -- If there are commands waiting
-						next_burst_length <= to_integer(unsigned(cmd_bl))+1; -- TODO: Is the +1 really needed?
-						next_addr         <= to_integer(unsigned(cmd_addr));
+						next_burst_length <= to_integer(unsigned(cmd_bl)) after wire_delay;
+						next_addr         <= to_integer(unsigned(cmd_addr)) after wire_delay;
 						if cmd_instr=cmd_read_normal or cmd_instr=cmd_read_precharge then
 							next_state <= read after wire_delay;
 						else --cmd_instr=cmd_write_normal or cmd_instr=cmd_write_precharge then
@@ -397,6 +447,7 @@ begin
 				end if;
 			when read =>
 				if current_burst_length = 0 then -- When the current command is done
+					report("going idle");
 					next_state        <= idle                     after wire_delay;
 					next_delay_count  <= random_delay             after wire_delay;
 				else

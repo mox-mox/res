@@ -37,10 +37,10 @@ begin
 			if en_A = '1' then
 				if we_A = '1' then
 					 TAG_RAM(to_integer(unsigned(addr_A))) := di_A;
-					do_A <= di_A;
+					do_A <= di_A after 2 ns;
 				else
 					--report "addr_A" &  integer'image(to_integer(unsigned(addr_A)));
-					do_A <= TAG_RAM(to_integer(unsigned(addr_A)));
+					do_A <= TAG_RAM(to_integer(unsigned(addr_A))) after 2 ns;
 				end if;
 			end if;
 		end if;
@@ -52,9 +52,9 @@ begin
 			if en_B = '1' then
 				if we_B = '1' then
 					TAG_RAM(to_integer(unsigned(addr_B))) := di_B;
-					do_B <= di_B;
+					do_B <= di_B after 2 ns;
 				else
-					do_B <= TAG_RAM(to_integer(unsigned(addr_B)));
+					do_B <= TAG_RAM(to_integer(unsigned(addr_B))) after 2 ns;
 				end if;
 			end if;
 		end if;

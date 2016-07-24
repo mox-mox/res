@@ -162,8 +162,13 @@ architecture read_sequence of AHBL_DUMMY is
 	constant bus_sequence : bus_access_array := (
 		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 4),  -- dummy line
 		( 0, read,  to_addr("00000004"), to_data("00000000"), 4),
+		( 0, read,  to_addr("00000004"), to_data("00000000"), 4),
 		( 0, read,  to_addr("00000008"), to_data("00000000"), 4),
-		( 0, read,  to_addr("0000000c"), to_data("00000000"), 4),
+		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 1),
+		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 1),
+		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 1),
+		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 1),
+		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 1),
 		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 1),
 		(99, read,  to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
 		(99, read,  to_addr("ffffffff"), to_data("00000000"), 1)); -- dummy line
@@ -222,7 +227,7 @@ begin
 	--}}}
 
 	--{{{
-	calculate_next_state : process (current_delay_count, current_index, hreadyout) --TODO
+	calculate_next_state : process (current_state, current_delay_count, current_index, hreadyout) --TODO
 	begin
 		next_state        <= current_state        after wire_delay; -- default assignement
 		next_delay_count  <= current_delay_count  after wire_delay;
@@ -357,11 +362,11 @@ begin
 		if(rising_edge(HCLK)) then
 			if (current_state=read or current_state=read) and hreadyout='1' then
 				--assert hrdata = bus_sequence(current_index).data report ("Cache read error. Expected " & to_hstring(bus_sequence(current_index).data) & ", but got " & to_hstring(hrdata) & ".") severity warning;
-				if hrdata = bus_sequence(current_index).data then
-					report ("Cache read worked. Read " & to_hstring(hrdata) & " correctly.");
-				else
-					report ("Cache read error. Expected " & to_hstring(bus_sequence(current_index).data) & ", but got " & to_hstring(hrdata) & ".");
-				end if;
+				--if hrdata = bus_sequence(current_index).data then
+				--	report ("Cache read worked. Read " & to_hstring(hrdata) & " correctly.");
+				--else
+				--	report ("Cache read error. Expected " & to_hstring(bus_sequence(current_index).data) & ", but got " & to_hstring(hrdata) & ".");
+				--end if;
 			end if;
 		end if;
 	end process;

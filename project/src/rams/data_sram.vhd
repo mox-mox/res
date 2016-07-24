@@ -42,9 +42,9 @@ begin
 							DATA_RAM(to_integer(unsigned(addr_A)))(((i+1)*8)-1 downto (i*8)) := di_A(((i+1)*8)-1 downto (i*8));
 						end if;
 					end loop;
-					do_A <= di_A;
+					do_A <= di_A after 2 ns;
 				else
-					do_A <= DATA_RAM(to_integer(unsigned(addr_A)));
+					do_A <= DATA_RAM(to_integer(unsigned(addr_A))) after 2 ns;
 				end if;
 			end if;
 		end if;
@@ -60,9 +60,9 @@ begin
 							DATA_RAM(to_integer(unsigned(addr_B)))(((i+1)*8)-1 downto (i*8)) := di_B(((i+1)*8)-1 downto (i*8));
 						end if;
 					end loop;
-					do_B <= di_B;
+					do_B <= di_B after 2 ns;
 				else
-					do_B <= DATA_RAM(to_integer(unsigned(addr_B)));
+					do_B <= DATA_RAM(to_integer(unsigned(addr_B))) after 2 ns;
 				end if;
 			end if;
 		end if;
