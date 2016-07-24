@@ -29,8 +29,8 @@ end DATA_SRAM;
 
 architecture syn of DATA_SRAM is
 	type ram_type is array (0 to 1024) of std_logic_vector (31 downto 0); -- Let's see if the synthesis can create a ram consisting of two BRAMs.
-	shared variable DATA_RAM : ram_type := (others => x"cafebabe"); -- TODO: Change this back
-	--shared variable DATA_RAM : ram_type;
+	--signal DATA_RAM : ram_type := (others => "00000000000000000000000000000000"); -- TODO: Change this back
+	shared variable DATA_RAM : ram_type;
 begin
 	process (clk)
 	begin
@@ -39,12 +39,13 @@ begin
 				if we_A = '1' then
 					for i in 0 to 3 loop
 						if wr_mask_A(i) = '1' then
+							--DATA_RAM(to_integer(unsigned(addr_A)))(((i+1)*8)-1 downto (i*8)) <= di_A(((i+1)*8)-1 downto (i*8));  -- TODO: Change this back
 							DATA_RAM(to_integer(unsigned(addr_A)))(((i+1)*8)-1 downto (i*8)) := di_A(((i+1)*8)-1 downto (i*8));
 						end if;
 					end loop;
-					do_A <= di_A after 2 ns;
+					do_A <= di_A;
 				else
-					do_A <= DATA_RAM(to_integer(unsigned(addr_A))) after 2 ns;
+					do_A <= DATA_RAM(to_integer(unsigned(addr_A)));
 				end if;
 			end if;
 		end if;
@@ -57,12 +58,13 @@ begin
 				if we_B = '1' then
 					for i in 0 to 3 loop
 						if wr_mask_B(i) = '1' then
+							--DATA_RAM(to_integer(unsigned(addr_B)))(((i+1)*8)-1 downto (i*8)) <= di_B(((i+1)*8)-1 downto (i*8));  -- TODO: Change this back
 							DATA_RAM(to_integer(unsigned(addr_B)))(((i+1)*8)-1 downto (i*8)) := di_B(((i+1)*8)-1 downto (i*8));
 						end if;
 					end loop;
-					do_B <= di_B after 2 ns;
+					do_B <= di_B;
 				else
-					do_B <= DATA_RAM(to_integer(unsigned(addr_B))) after 2 ns;
+					do_B <= DATA_RAM(to_integer(unsigned(addr_B)));
 				end if;
 			end if;
 		end if;
