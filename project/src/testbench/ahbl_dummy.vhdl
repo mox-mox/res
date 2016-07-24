@@ -165,8 +165,8 @@ architecture read_sequence of AHBL_DUMMY is
 		( 0, read,  to_addr("00000004"), to_data("00000000"), 4),
 		( 0, read,  to_addr("00000008"), to_data("00000000"), 4),
 
-		( 0, write, to_addr("00000004"), to_data("b19b000b"), 4),
-		( 0, write, to_addr("00000014"), to_data("deadb00b"), 4),
+		(10, write, to_addr("00000004"), to_data("b19b000b"), 4),
+		(10, write, to_addr("00000014"), to_data("deadb00b"), 4),
 
 
 
