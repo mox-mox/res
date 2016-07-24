@@ -461,7 +461,7 @@ begin
 	end process;
 	write_dram_busy  <= p1_cmd_full or p1_rd_empty ;
 	--{{{
-	write_busy       <= '0'  when (write_current_state=idl_rdt or write_current_state=cmp_sto or write_current_state=sync) else
+	write_busy       <= '0'  when (write_current_state=idl_rdt or write_current_state=cmp_sto) else
 	                    '1' ;
 	--}}}
 	data_sram_a_en   <= '1'  when (write_current_state=cmp_sto) else '0' ;
@@ -500,7 +500,7 @@ begin
 	                    '0' after 10 ns;
 	--}}}
 	--{{{
-	read_busy        <= '0'  when (read_current_state=idl_rdt or read_current_state=cmp_dlv or read_current_state=req0 or read_current_state=req1 or read_current_state=rd0 or read_current_state=rd1_keep or read_current_state=sync) else
+	read_busy        <= '0'  when (read_current_state=idl_rdt or read_current_state=cmp_dlv or read_current_state=req0 or read_current_state=req1 or read_current_state=rd0 or read_current_state=rd1_keep) else
 	                    '1' ;
 	--}}}
 	--{{{
