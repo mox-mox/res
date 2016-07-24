@@ -233,6 +233,7 @@ architecture cache of AHBL2SDRAM is
 		DRAM_EMPTY        : in  std_logic;                      -- p1_rd_empty
 		WS_ZERO           : in  std_logic;                      -- Whether the requested word was the first in cache line
 		HCLK              : in  std_logic;
+		hready            : in  std_logic;
 
 		-- The state register
 		state             : out read_fsm_state_type
@@ -321,7 +322,7 @@ begin
 
 	r_fsm : read_fsm port map(dclk => DCLK, res_n => HRESETn,
 			request    => read_request, hit     => hit,          dram_busy => p1_cmd_full, -- The input variables to the state machine
-			dram_empty => p1_rd_empty,  ws_zero => read_ws_zero, HCLK      => HCLK_PHASE,
+			dram_empty => p1_rd_empty,  ws_zero => read_ws_zero, HCLK      => HCLK_PHASE, hready => hready,
 			state => read_current_state -- The state register
 		);
 	--}}}
@@ -352,7 +353,8 @@ begin
 	                  --'0'              when (mem_calib_done = '0' and (read_request = '1' or write_request = '1'))                   else
 	                  --'0'              when ((read_request = '1' and read_busy = '1') or (write_request = '1' and write_busy = '1')) else
 	                  '0'              when ((HWRITE='0' and read_busy = '1') or (HWRITE='1' and write_busy = '1')) else
-	                  hit              when (read_current_state=cmp_dlv)                                                             else
+	                  hit              when (read_current_state=cmp_dlv and hready = '1')                                                             else
+	                  '0'              when (read_current_state=cmp_dlv and hready = '0')                                                             else
 	                  '0'              when (read_current_state=req0 or read_current_state=req1)                                     else
 	                  not p1_rd_empty  when (read_current_state=rd0)                                                                 else
 	                  '1'              when (read_current_state=rd1_keep)                                                            else
@@ -491,7 +493,8 @@ begin
 	latch_read_reqest : process (HCLK)
 	begin
 		if(rising_edge(HCLK)) then
-			read_request     <= HSEL and HREADY and not HWRITE ;
+			--read_request <= HSEL and HREADY and not HWRITE ;
+			read_request <= HSEL and not HWRITE ;
 		end if;
 	end process;
 	--{{{

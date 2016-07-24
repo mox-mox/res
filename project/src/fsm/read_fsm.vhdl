@@ -15,6 +15,7 @@ entity READ_FSM is
 	    DRAM_EMPTY        : in  std_logic;                      -- pX_rd_empty
 		WS_ZERO           : in  std_logic;                      -- Whether the requested word was the first in cache line
 		HCLK              : in  std_logic;
+		HREADY            : in  std_logic;
 
 		-- The state register
 		state             : out read_fsm_state_type
@@ -27,7 +28,7 @@ architecture syn of READ_FSM is
 begin
 	state <= current_state;
 	--{{{
-	calculate_next_state: process(current_state, REQUEST, HIT, DRAM_BUSY, DRAM_EMPTY, WS_ZERO, HCLK)
+	calculate_next_state: process(current_state, REQUEST, HIT, DRAM_BUSY, DRAM_EMPTY, WS_ZERO, HCLK, HREADY)
 	begin
 		next_state        <= current_state        after next_state_delay; -- default assignement
 
@@ -38,7 +39,9 @@ begin
 				end if;
 
 			when cmp_dlv =>
-				if ( HIT = '1' ) then
+				if ( hready = '0' ) then
+					next_state<=cmp_dlv;
+				elsif ( HIT = '1' ) then
 					--if ( REQUEST = '0' ) then
 						next_state <= idl_rdt after next_state_delay;
 					--else -- REQUEST = '1'
@@ -148,11 +151,11 @@ begin
 				end if;
 
 			when sync =>
-				if ( REQUEST = '0' ) then
+				--if ( REQUEST = '0' ) then
 					next_state <= idl_rdt after next_state_delay;
-				else -- REQUEST = '1'
-					next_state <= cmp_dlv after next_state_delay;
-				end if;
+				--else -- REQUEST = '1'
+				--	next_state <= cmp_dlv after next_state_delay;
+				--end if;
 
 
 			when others =>

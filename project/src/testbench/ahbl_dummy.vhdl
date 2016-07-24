@@ -164,6 +164,12 @@ architecture read_sequence of AHBL_DUMMY is
 		( 0, read,  to_addr("00000004"), to_data("00000000"), 4),
 		( 0, read,  to_addr("00000004"), to_data("00000000"), 4),
 		( 0, read,  to_addr("00000008"), to_data("00000000"), 4),
+
+		( 0, write, to_addr("00000004"), to_data("00000000"), 4),
+		( 0, write, to_addr("00000014"), to_data("00000000"), 4),
+
+
+
 		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 1),
 		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 1),
 		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 1),
@@ -219,7 +225,8 @@ begin
 				   HTRANS_nonseq when HTRANS_sig=nonseq else
 				   HTRANS_seq    when HTRANS_sig=seq;
 
-	HREADY     <= '0' when reset_sig or current_state=reset else HREADYOUT after 1 ns;
+	--HREADY     <= '0' when reset_sig or current_state=reset else HREADYOUT after 1 ns;
+	HREADY     <= '0' when reset_sig or current_state=reset else '1' after 1 ns;
 
 	HWDATA     <= (others => '-') when reset_sig or current_state=reset else
 				  bus_sequence(current_index).data after wire_delay when current_delay_count=0 and (current_state=read or current_state=read_stall) else
