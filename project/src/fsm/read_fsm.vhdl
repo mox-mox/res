@@ -38,11 +38,11 @@ begin
 
 			when cmp_dlv =>
 				if ( HIT = '1' ) then
-					if ( REQUEST = '0' ) then
+					--if ( REQUEST = '0' ) then
 						next_state <= idl_rdt after 1 ns;
-					else -- REQUEST = '1'
-						next_state <= cmp_dlv after 1 ns;
-					end if;
+					--else -- REQUEST = '1'
+					--	next_state <= cmp_dlv after 1 ns;
+					--end if;
 				else -- HIT = '0'
 					if ( DRAM_BUSY = '1' ) then
 						next_state <= req0 after 1 ns;

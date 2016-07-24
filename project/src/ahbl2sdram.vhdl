@@ -361,10 +361,10 @@ begin
 	HREADYOUT      <= HREADYOUT_sig;
 	--}}}
 	--{{{
-	HRDATA         <= data_sram_b_do      when (read_current_state=cmp_dlv) else
-	                  p1_rd_data          when (read_current_state=rd0)     else
-	                  read_keep_dram_data when (read_current_state=rd1_keep) else
-	                  (others => '-') ;
+	HRDATA         <= data_sram_b_do      after 2 ns when (read_current_state=cmp_dlv) else
+	                  p1_rd_data          after 2 ns when (read_current_state=rd0)     else
+	                  read_keep_dram_data after 2 ns when (read_current_state=rd1_keep) else
+	                  (others => '-')     after 2 ns;
 	--}}}
 	--{{{
 	p1_cmd_instr   <= DRAM_CMD_READ    when ((read_current_state=cmp_dlv or read_current_state=req0 or read_current_state=req1) and hit='0') else
@@ -471,7 +471,7 @@ begin
 				write_SAVE1_HADDR  <= ( others => '0' );
 				write_SAVE1_HSIZE  <= ( others => '0' );
 				write_SAVE1_HWDATA <= ( others => '0' );
-			elsif ( write_current_state = cmp_sto ) then
+		elsif ( write_current_state = cmp_sto ) then
 				write_SAVE1_HADDR  <= SAVE0_HADDR;
 				write_SAVE1_HSIZE  <= SAVE0_HSIZE;
 				write_SAVE1_HWDATA <= HWDATA;
@@ -507,15 +507,15 @@ begin
 	--}}}
 	--{{{
 	data_sram_b_en   <= '1'  when (read_current_state=cmp_dlv) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd0) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd1_keep) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd1) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd2) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd3) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd4) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd5) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd6) or
-	                                        (p1_rd_empty = '1' and read_current_state=rd7) else
+	                              (p1_rd_empty = '0' and read_current_state=rd0) or
+	                              (p1_rd_empty = '0' and read_current_state=rd1_keep) or
+	                              (p1_rd_empty = '0' and read_current_state=rd1) or
+	                              (p1_rd_empty = '0' and read_current_state=rd2) or
+	                              (p1_rd_empty = '0' and read_current_state=rd3) or
+	                              (p1_rd_empty = '0' and read_current_state=rd4) or
+	                              (p1_rd_empty = '0' and read_current_state=rd5) or
+	                              (p1_rd_empty = '0' and read_current_state=rd6) or
+	                              (p1_rd_empty = '0' and read_current_state=rd7) else
 	                    '0' ;
 	--}}}
 	--{{{

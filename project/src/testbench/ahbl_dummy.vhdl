@@ -55,6 +55,55 @@ architecture read_sequence of AHBL_DUMMY is
 	--{{{ addr and data conversion functions
 
 	--{{{
+	function to_hstring (value : STD_LOGIC_VECTOR) return STRING is
+		-- Taken from http://www.edaboard.com/thread148826.html#post638955
+	constant ne     : INTEGER := (value'length+3)/4;
+	variable pad    : STD_LOGIC_VECTOR(0 to (ne*4 - value'length) - 1);
+	variable ivalue : STD_LOGIC_VECTOR(0 to ne*4 - 1);
+	variable result : STRING(1 to ne);
+	variable quad   : STD_LOGIC_VECTOR(0 to 3);
+	begin
+		if value'length < 1 then
+			return "undef";
+		else
+			if value (value'left) = 'Z' then
+				pad := (others => 'Z');
+			else
+				pad := (others => '0');
+			end if;
+			ivalue := pad & value;
+			for i in 0 to ne-1 loop
+				quad := To_X01Z(ivalue(4*i to 4*i+3));
+				case quad is
+					when x"0"   => result(i+1) := '0';
+					when x"1"   => result(i+1) := '1';
+					when x"2"   => result(i+1) := '2';
+					when x"3"   => result(i+1) := '3';
+					when x"4"   => result(i+1) := '4';
+					when x"5"   => result(i+1) := '5';
+					when x"6"   => result(i+1) := '6';
+					when x"7"   => result(i+1) := '7';
+					when x"8"   => result(i+1) := '8';
+					when x"9"   => result(i+1) := '9';
+					when x"A"   => result(i+1) := 'A';
+					when x"B"   => result(i+1) := 'B';
+					when x"C"   => result(i+1) := 'C';
+					when x"D"   => result(i+1) := 'D';
+					when x"E"   => result(i+1) := 'E';
+					when x"F"   => result(i+1) := 'F';
+					when "ZZZZ" => result(i+1) := 'Z';
+					when others => result(i+1) := 'X';
+				end case;
+			end loop;
+			return result;
+		end if;
+	end function to_hstring;
+
+
+
+	--}}}
+
+	--{{{
 	function hex_to_unsigned_32bit(data: string) return unsigned is
 	variable sum: unsigned(31 downto 0) := (others => '0');
 	variable tmp: integer;
@@ -111,13 +160,13 @@ architecture read_sequence of AHBL_DUMMY is
 
 	type bus_access_array is array (natural range <>) of ahbl_command_type;
 	constant bus_sequence : bus_access_array := (
-		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
-		(0, read,  to_addr("00000004"), to_data("00000000"), 4),
-		(4, read,  to_addr("00000006"), to_data("00000000"), 2),
---		(0, read,  to_addr("00000005"), to_data("00000000"), 1),
---		(0, read,  to_addr("00000006"), to_data("00000000"), 1),
---		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
-		(0, read,  to_addr("ffffffff"), to_data("00000000"), 1)); -- dummy line
+		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 4),  -- dummy line
+		( 0, read,  to_addr("00000004"), to_data("00000000"), 4),
+		( 0, read,  to_addr("00000008"), to_data("00000000"), 4),
+		( 0, read,  to_addr("0000000c"), to_data("00000000"), 4),
+		( 0, read,  to_addr("ffffffff"), to_data("00000000"), 1),
+		(99, read,  to_addr("ffffffff"), to_data("00000000"), 1),  -- dummy line
+		(99, read,  to_addr("ffffffff"), to_data("00000000"), 1)); -- dummy line
 	--}}}
 
 	type ahbl_dummy_state is (reset, idle, write, write_stall, read, read_stall, end_state);
@@ -241,6 +290,7 @@ begin
 				if hreadyout = '0' then
 					next_state <= read_stall after wire_delay;
 				else
+					--assert hrdata = bus_sequence(current_index).data report ("Cache read error. Expected " & integer'image(to_integer(unsigned(bus_sequence(current_index).data))) & ", but got " & integer'image(to_integer(unsigned(hrdata))) & ".") severity warning;
 					if current_index = bus_sequence'length-2 then
 						next_state <= end_state;
 					else
@@ -261,6 +311,7 @@ begin
 				if hreadyout = '0' then
 					next_state <= read_stall after wire_delay;
 				else
+					--assert hrdata = bus_sequence(current_index).data report ("Cache read error. Expected " & integer'image(to_integer(unsigned(bus_sequence(current_index).data))) & ", but got " & integer'image(to_integer(unsigned(hrdata))) & ".") severity warning;
 					if current_index = bus_sequence'length-2 then
 						next_state <= end_state;
 					else
@@ -300,145 +351,21 @@ begin
 	end process;
 	--}}}
 
+	--{{{
+	check_read_data : process (HCLK)
+	begin
+		if(rising_edge(HCLK)) then
+			if (current_state=read or current_state=read) and hreadyout='1' then
+				--assert hrdata = bus_sequence(current_index).data report ("Cache read error. Expected " & to_hstring(bus_sequence(current_index).data) & ", but got " & to_hstring(hrdata) & ".") severity warning;
+				if hrdata = bus_sequence(current_index).data then
+					report ("Cache read worked. Read " & to_hstring(hrdata) & " correctly.");
+				else
+					report ("Cache read error. Expected " & to_hstring(bus_sequence(current_index).data) & ", but got " & to_hstring(hrdata) & ".");
+				end if;
+			end if;
+		end if;
+	end process;
+	--}}}
+
 end read_sequence;
 --}}}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
---
-----{{{
---architecture read_sequence of AHBL_DUMMY is
---	signal reset : boolean                               := true;
---
---	signal HADDR_sig : std_logic_vector(31 downto 0)     := (others => '0');
---	signal HWDATA_sig : std_logic_vector(31 downto 0)    := (others => '0');
---	signal HWRITE_sig : std_logic                        := '0';
---	signal HSIZE_sig : std_logic_vector( 2 downto 0)     := (others => '0');
---	signal HREADY_sig : std_logic                        := '0';
---	signal index         : natural                       := 1;
---	constant delay : time := 17 ns;
---
---begin
---
---	reset       <= true, false after 12 ns;
---	HRESETn     <= '0' when reset else '1';
---	HSEL        <= '0' when reset else '1' after delay when HADDR_sig(31 downto 24) = (HADDR_sig(31 downto 24)'range => '0') else '0' after delay;
---	HTRANS      <= (others => 'X') when reset else "00" after delay when HADDR_sig(31 downto 24) = (HADDR_sig(31 downto 24)'range => '0') else "10" after delay;
---	HADDR       <= (others => 'X') when reset else HADDR_sig  after delay;
---	HREADY      <= HREADY_sig after delay;
---
---	HWDATA      <= (others => 'X') when reset else HWDATA_sig after delay;
---	HWRITE      <= 'X'             when reset else HWRITE_sig after delay;
---	HSIZE       <= (others => 'X') when reset else HSIZE_sig  after delay;
---
---	set_hready : process(HCLK)
---	begin
---		if(rising_edge(HCLK)) then
---			if reset then
---				HREADY_sig <= '0';
---			else
---				HREADY_sig <= HREADYOUT;
---			end if;
---		end if;
---	end process;
---
---
---	--{{{
---	drive_bus : process(HCLK)
---		type bus_access_type is record
---			write : boolean;                                 -- 1: write, 0: read
---			addr  : unsigned(31 downto 0);                   -- Where to read or write
---			size  : positive range 1 to 4;                    -- The number of byts to read or write
---			data  : unsigned(31 downto 0);                   -- For writes, the datum to be written, for reads the datum expected.
---			delay : natural;                                 -- How long to wait before sending this request over the bus.
---		end record;
---		--  The patterns to apply.
---		type bus_access_array is array (natural range <>) of bus_access_type;
---		constant patterns : bus_access_array := ( --{{{
---			(false, to_unsigned(16#7fffffff#, 32), 1, to_unsigned(16#00000000#, 32), 0), -- dummy line
---			(false, to_unsigned(16#00000004#, 32), 4, to_unsigned(16#00000000#, 32), 0),
---			(false, to_unsigned(16#00000004#, 32), 1, to_unsigned(16#00000000#, 32), 0),
---			(false, to_unsigned(16#00000005#, 32), 1, to_unsigned(16#00000000#, 32), 0),
---			(false, to_unsigned(16#7f111111#, 32), 1, to_unsigned(16#00000000#, 32), 0),
---			(false, to_unsigned(16#00222222#, 32), 1, to_unsigned(16#00000000#, 32), 0),
---			(false, to_unsigned(16#00333333#, 32), 1, to_unsigned(16#00000000#, 32), 0),
---			(true,  to_unsigned(16#7fffffff#, 32), 1, to_unsigned(16#00000000#, 32), 0)); --}}}
---		variable delay_counter : natural := 0;
---	begin
---		if(rising_edge(HCLK)) then
---			if reset then
---				HADDR_sig  <= (others => '0');
---				HWDATA_sig <= (others => '0');
---				HWRITE_sig <= '0';
---				HSIZE_sig  <= (others => '0');
---				delay_counter := patterns(0).delay;
---			else
---				if delay_counter = 0 then
---					if(HREADYOUT = '1') then
---						HADDR_sig <= std_logic_vector(patterns(index).addr);
---						delay_counter := patterns(index).delay;
---						if(patterns(index).write = true) then
---							HWDATA_sig <= std_logic_vector(patterns(index).data);
---							HWRITE_sig <= '1';
---						else
---							HWDATA_sig <= (others => '-');
---							HWRITE_sig <= '0';
---						end if;
---					else
---						HADDR_sig <= std_logic_vector(patterns(index-1).addr);
---						if(patterns(index).write = true) then
---							HWDATA_sig <= std_logic_vector(patterns(index-1).data);
---							HWRITE_sig <= '1';
---						else
---							HWDATA_sig <= (others => '-');
---							HWRITE_sig <= '0';
---						end if;
---					end if;
---					--if not patterns(index-1).write then
---					--	assert patterns(index).data = unsigned(HRDATA) report "Mismatch between expected and actual read-back value" severity failure;
---					--end if;
---					case patterns(index).size is
---						when 1 =>
---							HSIZE_sig <= "000";
---						when 2 =>
---							HSIZE_sig <= "001";
---						when 3 =>
---								--HSIZE_sig <= "000";
---							assert true report "Trying to send 3 bytes of data over the bus (should be either 1, 2 or 4" severity failure;
---						when 4 =>
---							HSIZE_sig <= "010";
---						when others => -- shouldn't happen
---							assert true report "Invalid HSIZE" severity failure;
---					end case;
---
---						--report "patterns'length" &  integer'image(integer(patterns'length));
---					if(HREADYOUT = '1') then
---						if patterns'length = index+1 then
---							index <= patterns'length - 1;
---							ENDSIM <= true;
---						else
---							index <= index+1;
---							ENDSIM <= false;
---						end if;
---					end if;
---				else
---					delay_counter := delay_counter - 1;
---				end if;
---			end if;
---		end if;
---	end process;
---	--}}}
---end read_sequence;
-----}}}
---
