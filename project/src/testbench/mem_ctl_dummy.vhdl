@@ -427,7 +427,7 @@ begin
 		next_addr         <= current_addr         after wire_delay;
 		case current_state is
 			when idle =>
-				report (" mem_ctl_dummy::calculate_next_state::current_delay_count=" & integer'image(current_delay_count) & ", p1_cmd_empty_sig:");
+				--report (" mem_ctl_dummy::calculate_next_state::current_delay_count=" & integer'image(current_delay_count) & ", p1_cmd_empty_sig:");
 				if current_delay_count = 0 then
 					if p1_cmd_empty_sig = '0' then -- If there are commands waiting
 						next_burst_length <= to_integer(unsigned(cmd_bl)) after wire_delay;
@@ -447,7 +447,7 @@ begin
 				end if;
 			when read =>
 				if current_burst_length = 0 then -- When the current command is done
-					report("going idle");
+					--report("going idle");
 					next_state        <= idle                     after wire_delay;
 					next_delay_count  <= random_delay             after wire_delay;
 				else
@@ -513,9 +513,9 @@ begin
 		if(rising_edge(p1_cmd_clk)) then
 			if(rst='0' and current_state=write) then
 				for i in 0 to 3 loop
-					if wr_mask(i) = '1' then
-						DRAM(current_addr)(((i+1)*8)-1 downto (i*8)) <= wr_data(((i+1)*8)-1 downto (i*8));
-					end if;
+					--if wr_mask(i) = '1' then -- TODO: Wieder rein kommentieren, GHDL ist nur leider zu doof dafür.
+						DRAM(current_addr)((((i+1)*8)-1) downto (i*8)) <= wr_data((((i+1)*8)-1) downto (i*8));
+					--end if;
 				end loop;
 			end if;
 		end if;

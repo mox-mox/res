@@ -458,10 +458,11 @@ begin
 	latch_write_reqest : process (HCLK)
 	begin
 		if(rising_edge(HCLK)) then
-			write_request    <= HWRITE and HREADY and HSEL ;
+			--write_request    <= HWRITE and HREADY and HSEL ;
+			write_request    <= HWRITE and HSEL ;
 		end if;
 	end process;
-	write_dram_busy  <= p1_cmd_full or p1_rd_empty ;
+	write_dram_busy  <= p1_cmd_full or p1_wr_full ;
 	--{{{
 	write_busy       <= '0'  when (write_current_state=idl_rdt or write_current_state=cmp_sto) else
 	                    '1' ;

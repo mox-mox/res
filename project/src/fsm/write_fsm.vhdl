@@ -30,15 +30,15 @@ begin
 
 		case current_state is
 			when idl_rdt =>
-				if( REQUEST = '1' and HCLK = '0' ) then
+				if( REQUEST = '1' and HCLK = '1' ) then
 					next_state        <= cmp_sto after 1 ns;
 				end if;
 
 			when cmp_sto =>
 				if( dram_busy = '1' ) then
 					next_state <= wait_sto after 1 ns;
-				elsif( REQUEST = '1' ) then
-					next_state <= cmp_sto after 1 ns;
+				--elsif( REQUEST = '1' ) then
+				--	next_state <= cmp_sto after 1 ns;
 				else
 					next_state <= idl_rdt after 1 ns;
 				end if;
