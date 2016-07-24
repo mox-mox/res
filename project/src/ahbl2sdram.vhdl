@@ -453,7 +453,12 @@ begin
 
 	--{{{ Write FSM signals
 
-	write_request    <= HWRITE and HREADY and HSEL ;
+	latch_write_reqest : process (HCLK)
+	begin
+		if(rising_edge(HCLK)) then
+			write_request    <= HWRITE and HREADY and HSEL ;
+		end if;
+	end process;
 	write_dram_busy  <= p1_cmd_full or p1_rd_empty ;
 	--{{{
 	write_busy       <= '0'  when (write_current_state=idl_rdt or write_current_state=cmp_sto or write_current_state=sync) else
@@ -483,7 +488,12 @@ begin
 
 	--{{{ Read FSM signals
 
-	read_request     <= HSEL and HREADY and not HWRITE ;
+	latch_read_reqest : process (HCLK)
+	begin
+		if(rising_edge(HCLK)) then
+			read_request     <= HSEL and HREADY and not HWRITE ;
+		end if;
+	end process;
 	--{{{
 	read_ws_zero     <= '1'  when (read_current_state=cmp_dlv and SAVE0_HADDR_WS = "000") else
 	                    '1'  when (read_current_state=req0 and read_SAVE1_HADDR_WS = "000") else
